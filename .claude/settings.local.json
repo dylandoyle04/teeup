@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s --max-time 12 -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" \"https://caledoniagolfandfishclub.com/\" -o /tmp/test_caledonia.html -w \"HTTP %{http_code}, bytes %{size_download}\\\\n\")",
+      "Read(//tmp/**)"
+    ]
+  }
+}
