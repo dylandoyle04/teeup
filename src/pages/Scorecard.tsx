@@ -1,27 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../store'
-import type { Member, Round } from '../types'
+import type { Member, Round, WolfMode } from '../types'
 import { Avatar } from '../components/ui'
+import {
+  GAMES,
+  computeHighLow,
+  computeSkins,
+  computeStableford,
+  computeWolf,
+  isTeamGame,
+  parPlayed,
+  relLabel,
+  strokeBoard,
+  sum,
+  wolfForHole,
+} from '../games'
 
-const GAMES = ['Stroke Play', 'Skins', 'Match Play', 'Stableford', 'Best Ball']
-
-function sum(arr: (number | null)[]): number {
-  return arr.reduce<number>((a, b) => a + (b ?? 0), 0)
-}
-
-/** par over only the holes that have a score entered */
-function parPlayed(round: Round, scores: (number | null)[]): number {
-  return round.holePars.reduce(
-    (acc, p, i) => acc + (scores[i] != null ? p : 0),
-    0,
-  )
-}
-
-function relLabel(rel: number): string {
-  if (rel === 0) return 'E'
-  return rel > 0 ? `+${rel}` : `${rel}`
-}
+type Row = { id: string; name: string; color: string }
+const TEAM_COLORS = ['#1b6b46', '#b8941f']
 
 function cellClass(strokes: number | null, par: number): string {
   if (strokes == null) return ''
@@ -38,14 +35,13 @@ export default function Scorecard() {
   const trip = useStore((s) => s.getTrip(tripId))
   const members = useStore((s) => s.tripMembers(tripId))
   const addRound = useStore((s) => s.addRound)
-  const setScore = useStore((s) => s.setScore)
   const deleteRound = useStore((s) => s.deleteRound)
 
   const [activeRoundId, setActiveRoundId] = useState<string | null>(null)
   const [adding, setAdding] = useState(false)
   const [courseName, setCourseName] = useState('')
   const [date, setDate] = useState('')
-  const [game, setGame] = useState(GAMES[0])
+  const [game, setGame] = useState<string>(GAMES[0])
 
   if (!trip) {
     return (
@@ -61,7 +57,6 @@ export default function Scorecard() {
   const rounds = trip.rounds
   const active =
     rounds.find((r) => r.id === activeRoundId) ?? rounds[rounds.length - 1]
-
   const courseSuggestions = trip.courses.map((c) => c.name)
 
   function createRound() {
@@ -98,11 +93,9 @@ export default function Scorecard() {
       {active ? (
         <RoundCard
           key={active.id}
+          tripId={tripId}
           round={active}
           members={members}
-          onScore={(memberId, hole, strokes) =>
-            setScore(tripId, active.id, memberId, hole, strokes)
-          }
           onDelete={() => {
             if (confirm(`Delete the round at ${active.courseName}?`)) {
               deleteRound(tripId, active.id)
@@ -175,34 +168,48 @@ export default function Scorecard() {
 }
 
 function RoundCard({
+  tripId,
   round,
   members,
-  onScore,
   onDelete,
 }: {
+  tripId: string
   round: Round
   members: Member[]
-  onScore: (memberId: string, hole: number, strokes: number | null) => void
   onDelete: () => void
 }) {
+  const setScore = useStore((s) => s.setScore)
+  const setRoundGame = useStore((s) => s.setRoundGame)
+  const setRoundTeams = useStore((s) => s.setRoundTeams)
+
+  const team = isTeamGame(round.game)
+
+  // auto-create two balanced teams when a team game has none
+  useEffect(() => {
+    if (team && round.teams.length < 2 && members.length >= 2) {
+      const a: string[] = []
+      const b: string[] = []
+      members.forEach((m, i) => (i % 2 === 0 ? a : b).push(m.id))
+      setRoundTeams(tripId, round.id, [
+        { id: 'teamA', name: 'Team 1', memberIds: a },
+        { id: 'teamB', name: 'Team 2', memberIds: b },
+      ])
+    }
+  }, [team, round.teams.length, members.length, tripId, round.id, setRoundTeams])
+
+  const scramble = round.game === 'Scramble'
+  const teamRows: Row[] =
+    round.teams.length >= 2
+      ? round.teams.map((t, i) => ({
+          id: t.id,
+          name: t.name,
+          color: TEAM_COLORS[i % TEAM_COLORS.length],
+        }))
+      : []
+  const rows: Row[] = scramble && teamRows.length ? teamRows : members
+
   const front = [0, 1, 2, 3, 4, 5, 6, 7, 8]
   const back = [9, 10, 11, 12, 13, 14, 15, 16, 17]
-
-  // leaderboard rows
-  const board = members
-    .map((m) => {
-      const scores = round.scores[m.id] ?? Array(18).fill(null)
-      const total = sum(scores)
-      const holesIn = scores.filter((s) => s != null).length
-      const rel = total - parPlayed(round, scores)
-      return { member: m, total, holesIn, rel }
-    })
-    .sort((a, b) => {
-      if (a.holesIn === 0 && b.holesIn === 0) return 0
-      if (a.holesIn === 0) return 1
-      if (b.holesIn === 0) return -1
-      return a.rel - b.rel
-    })
 
   return (
     <>
@@ -216,59 +223,49 @@ function RoundCard({
               {round.date || 'Today'} · Par {sum(round.holePars)}
             </div>
           </div>
-          <div className="row" style={{ gap: 8 }}>
-            {round.game && <span className="pill gold">{round.game}</span>}
-            <button className="icon-btn" onClick={onDelete} aria-label="Delete round">
-              🗑️
-            </button>
-          </div>
+          <button className="icon-btn" onClick={onDelete} aria-label="Delete round">
+            🗑️
+          </button>
+        </div>
+        <div className="field" style={{ marginTop: 12, marginBottom: 0 }}>
+          <label>Game</label>
+          <select
+            value={round.game}
+            onChange={(e) => setRoundGame(tripId, round.id, e.target.value)}
+          >
+            {GAMES.map((g) => (
+              <option key={g}>{g}</option>
+            ))}
+          </select>
         </div>
       </div>
 
-      <div className="section-title">Leaderboard</div>
-      <div className="card">
-        {board.every((b) => b.holesIn === 0) ? (
-          <p className="muted" style={{ margin: 0 }}>
-            Enter scores below to see the leaderboard.
-          </p>
-        ) : (
-          board.map((b, i) => (
-            <div className={`lb-row ${i === 0 ? 'first' : ''}`} key={b.member.id}>
-              <span className="lb-rank">
-                {b.holesIn === 0 ? '–' : i === 0 ? '🏆' : i + 1}
-              </span>
-              <Avatar member={b.member} size="sm" />
-              <span className="lb-name">{b.member.name}</span>
-              {b.holesIn === 0 ? (
-                <span className="lb-rel">not started</span>
-              ) : (
-                <>
-                  <span className="lb-rel">thru {b.holesIn}</span>
-                  <span className="lb-score" style={{ marginLeft: 10 }}>
-                    {b.total}
-                  </span>
-                  <span
-                    className="lb-rel"
-                    style={{ marginLeft: 8, minWidth: 30, textAlign: 'right' }}
-                  >
-                    {relLabel(b.rel)}
-                  </span>
-                </>
-              )}
-            </div>
-          ))
-        )}
-      </div>
+      {team && round.teams.length >= 2 && (
+        <TeamSetup tripId={tripId} round={round} members={members} />
+      )}
 
-      <div className="section-title">Enter scores</div>
+      <div className="section-title">
+        {round.game === 'Stroke Play'
+          ? 'Leaderboard'
+          : `${round.game} standings`}
+      </div>
+      <Results round={round} members={members} rows={rows} />
+
+      {round.game === 'Wolf' && (
+        <WolfPanel tripId={tripId} round={round} members={members} />
+      )}
+
+      <div className="section-title">
+        Enter scores{scramble ? ' (one per team)' : ''}
+      </div>
       <div className="card flush">
         <div className="scorecard-wrap">
           <HoleTable
             holes={front}
             label="OUT"
             round={round}
-            members={members}
-            onScore={onScore}
+            rows={rows}
+            onScore={(id, h, s) => setScore(tripId, round.id, id, h, s)}
           />
         </div>
       </div>
@@ -278,11 +275,296 @@ function RoundCard({
             holes={back}
             label="IN"
             round={round}
-            members={members}
-            onScore={onScore}
+            rows={rows}
+            onScore={(id, h, s) => setScore(tripId, round.id, id, h, s)}
             showTotal
           />
         </div>
+      </div>
+    </>
+  )
+}
+
+function Results({
+  round,
+  members,
+  rows,
+}: {
+  round: Round
+  members: Member[]
+  rows: Row[]
+}) {
+  const memberIds = members.map((m) => m.id)
+  const byId = new Map(members.map((m) => [m.id, m]))
+
+  // High-Low
+  if (round.game === 'High-Low') {
+    const hl = computeHighLow(round)
+    if (!hl)
+      return (
+        <div className="card">
+          <p className="muted" style={{ margin: 0 }}>
+            Set up two teams to start High-Low scoring.
+          </p>
+        </div>
+      )
+    const leader = hl.aPts === hl.bPts ? null : hl.aPts > hl.bPts ? 'A' : 'B'
+    return (
+      <div className="card">
+        <div className="hl-score">
+          <div className={`hl-team ${leader === 'A' ? 'win' : ''}`}>
+            <div className="hl-name">{hl.A.name}</div>
+            <div className="hl-pts">{hl.aPts}</div>
+          </div>
+          <span className="hl-vs">vs</span>
+          <div className={`hl-team ${leader === 'B' ? 'win' : ''}`}>
+            <div className="hl-name">{hl.B.name}</div>
+            <div className="hl-pts">{hl.bPts}</div>
+          </div>
+        </div>
+        <p className="hint" style={{ marginTop: 10, textAlign: 'center' }}>
+          1 pt for the better low ball + 1 pt for the better high ball, each hole.
+        </p>
+      </div>
+    )
+  }
+
+  // Stableford
+  if (round.game === 'Stableford') {
+    const board = computeStableford(round, memberIds)
+    if (board.every((b) => b.thru === 0)) return <EnterPrompt />
+    return (
+      <div className="card">
+        {board.map((b, i) => {
+          const m = byId.get(b.id)!
+          return (
+            <div className={`lb-row ${i === 0 ? 'first' : ''}`} key={b.id}>
+              <span className="lb-rank">
+                {b.thru === 0 ? '–' : i === 0 ? '🏆' : i + 1}
+              </span>
+              <Avatar member={m} size="sm" />
+              <span className="lb-name">{m.name}</span>
+              <span className="lb-rel">thru {b.thru}</span>
+              <span className="lb-score" style={{ marginLeft: 10 }}>
+                {b.points} pts
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Skins
+  if (round.game === 'Skins') {
+    const { rows: sk } = computeSkins(round, memberIds)
+    if (sk.every((s) => s.skins === 0)) return <EnterPrompt label="No skins won yet — enter scores below." />
+    return (
+      <div className="card">
+        {sk.map((s, i) => {
+          const m = byId.get(s.id)!
+          return (
+            <div className={`lb-row ${i === 0 ? 'first' : ''}`} key={s.id}>
+              <span className="lb-rank">{i === 0 ? '🏆' : i + 1}</span>
+              <Avatar member={m} size="sm" />
+              <span className="lb-name">{m.name}</span>
+              <span className="lb-score">
+                {s.skins} {s.skins === 1 ? 'skin' : 'skins'}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Wolf
+  if (round.game === 'Wolf') {
+    const { rows: wr } = computeWolf(round, memberIds)
+    return (
+      <div className="card">
+        {wr.map((w, i) => {
+          const m = byId.get(w.id)!
+          return (
+            <div className={`lb-row ${i === 0 ? 'first' : ''}`} key={w.id}>
+              <span className="lb-rank">{i === 0 ? '🏆' : i + 1}</span>
+              <Avatar member={m} size="sm" />
+              <span className="lb-name">{m.name}</span>
+              <span className="lb-score">{w.points} pts</span>
+            </div>
+          )
+        })}
+        <p className="hint" style={{ marginTop: 8 }}>
+          Set the wolf's call per hole below; winners are scored from strokes.
+        </p>
+      </div>
+    )
+  }
+
+  // Stroke Play & Scramble (stroke board over rows)
+  const board = strokeBoard(
+    round,
+    rows.map((r) => ({ id: r.id, member: r as Member })),
+  )
+  if (board.every((b) => b.thru === 0)) return <EnterPrompt />
+  return (
+    <div className="card">
+      {board.map((b, i) => (
+        <div className={`lb-row ${i === 0 ? 'first' : ''}`} key={b.id}>
+          <span className="lb-rank">
+            {b.thru === 0 ? '–' : i === 0 ? '🏆' : i + 1}
+          </span>
+          <Avatar member={b.member} size="sm" />
+          <span className="lb-name">{b.member.name}</span>
+          {b.thru === 0 ? (
+            <span className="lb-rel">not started</span>
+          ) : (
+            <>
+              <span className="lb-rel">thru {b.thru}</span>
+              <span className="lb-score" style={{ marginLeft: 10 }}>
+                {b.total}
+              </span>
+              <span
+                className="lb-rel"
+                style={{ marginLeft: 8, minWidth: 30, textAlign: 'right' }}
+              >
+                {relLabel(b.rel)}
+              </span>
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function EnterPrompt({ label }: { label?: string }) {
+  return (
+    <div className="card">
+      <p className="muted" style={{ margin: 0 }}>
+        {label ?? 'Enter scores below to see the standings.'}
+      </p>
+    </div>
+  )
+}
+
+function TeamSetup({
+  tripId,
+  round,
+  members,
+}: {
+  tripId: string
+  round: Round
+  members: Member[]
+}) {
+  const setRoundTeams = useStore((s) => s.setRoundTeams)
+  const teamOf = (id: string) =>
+    round.teams.findIndex((t) => t.memberIds.includes(id))
+
+  function assign(memberId: string, teamIdx: number) {
+    const teams = round.teams.map((t, i) => ({
+      ...t,
+      memberIds:
+        i === teamIdx
+          ? Array.from(new Set([...t.memberIds, memberId]))
+          : t.memberIds.filter((id) => id !== memberId),
+    }))
+    setRoundTeams(tripId, round.id, teams)
+  }
+
+  return (
+    <>
+      <div className="section-title">Teams</div>
+      <div className="card">
+        {members.map((m) => {
+          const ti = teamOf(m.id)
+          return (
+            <div className="list-row" key={m.id}>
+              <Avatar member={m} size="sm" />
+              <span style={{ flex: 1, fontWeight: 700 }}>{m.name}</span>
+              <div className="team-toggle">
+                {round.teams.map((t, i) => (
+                  <button
+                    key={t.id}
+                    className={ti === i ? 'on' : ''}
+                    onClick={() => assign(m.id, i)}
+                  >
+                    {t.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
+function WolfPanel({
+  tripId,
+  round,
+  members,
+}: {
+  tripId: string
+  round: Round
+  members: Member[]
+}) {
+  const setWolfPick = useStore((s) => s.setWolfPick)
+  const memberIds = members.map((m) => m.id)
+  const byId = new Map(members.map((m) => [m.id, m]))
+
+  return (
+    <>
+      <div className="section-title">Wolf — the call each hole</div>
+      <div className="card">
+        {round.holePars.map((_, h) => {
+          const wolfId = wolfForHole(memberIds, h)
+          const wolf = wolfId ? byId.get(wolfId) : undefined
+          const pick = round.wolf[h]
+          const value = !pick
+            ? ''
+            : pick.mode === 'partner'
+              ? `partner:${pick.partnerId}`
+              : pick.mode
+          return (
+            <div className="wolf-row" key={h}>
+              <span className="wolf-hole">#{h + 1}</span>
+              <span className="wolf-who">
+                🐺 {wolf?.name ?? '—'}
+              </span>
+              <select
+                className="wolf-select"
+                value={value}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (!v) return setWolfPick(tripId, round.id, h, null)
+                  if (v === 'lone' || v === 'blind')
+                    return setWolfPick(tripId, round.id, h, {
+                      mode: v as WolfMode,
+                      partnerId: null,
+                    })
+                  const partnerId = v.split(':')[1]
+                  setWolfPick(tripId, round.id, h, {
+                    mode: 'partner',
+                    partnerId,
+                  })
+                }}
+              >
+                <option value="">— call —</option>
+                {memberIds
+                  .filter((id) => id !== wolfId)
+                  .map((id) => (
+                    <option key={id} value={`partner:${id}`}>
+                      Partner: {byId.get(id)?.name}
+                    </option>
+                  ))}
+                <option value="lone">Lone Wolf (+2)</option>
+                <option value="blind">Blind Wolf (+3)</option>
+              </select>
+            </div>
+          )
+        })}
       </div>
     </>
   )
@@ -292,15 +574,15 @@ function HoleTable({
   holes,
   label,
   round,
-  members,
+  rows,
   onScore,
   showTotal,
 }: {
   holes: number[]
   label: string
   round: Round
-  members: Member[]
-  onScore: (memberId: string, hole: number, strokes: number | null) => void
+  rows: Row[]
+  onScore: (rowId: string, hole: number, strokes: number | null) => void
   showTotal?: boolean
 }) {
   return (
@@ -324,7 +606,7 @@ function HoleTable({
           <td>{sum(holes.map((h) => round.holePars[h]))}</td>
           {showTotal && <td>{sum(round.holePars)}</td>}
         </tr>
-        {members.map((m) => {
+        {rows.map((m) => {
           const scores = round.scores[m.id] ?? Array(18).fill(null)
           const nineTotal = sum(holes.map((h) => scores[h]))
           const grandTotal = sum(scores)

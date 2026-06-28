@@ -47,14 +47,30 @@ export interface FlightOption {
 /** category -> optionId -> list of member ids who voted */
 export type VoteMap = Record<VoteCategory, Record<ID, ID[]>>
 
+export interface Team {
+  id: ID
+  name: string
+  memberIds: ID[]
+}
+
+export type WolfMode = 'partner' | 'lone' | 'blind'
+export interface WolfPick {
+  mode: WolfMode
+  partnerId: ID | null
+}
+
 export interface Round {
   id: ID
   courseName: string
   date: string
   holePars: number[]
-  /** memberId -> 18 strokes (null = not entered) */
+  /** memberId (or teamId for Scramble) -> 18 strokes (null = not entered) */
   scores: Record<ID, (number | null)[]>
   game: string
+  /** 2v2 / scramble team assignments (team games only) */
+  teams: Team[]
+  /** per-hole wolf decision (Wolf only); index = hole 0..17 */
+  wolf: (WolfPick | null)[]
 }
 
 export interface Bet {

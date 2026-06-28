@@ -9,8 +9,10 @@ import type {
   ID,
   Member,
   Round,
+  Team,
   Trip,
   VoteCategory,
+  WolfPick,
 } from './types'
 import {
   MEMBER_COLORS,
@@ -80,6 +82,14 @@ interface State {
 
   // scoring
   addRound: (tripId: ID, courseName: string, date: string, game: string) => void
+  setRoundGame: (tripId: ID, roundId: ID, game: string) => void
+  setRoundTeams: (tripId: ID, roundId: ID, teams: Team[]) => void
+  setWolfPick: (
+    tripId: ID,
+    roundId: ID,
+    hole: number,
+    pick: WolfPick | null,
+  ) => void
   setScore: (
     tripId: ID,
     roundId: ID,
@@ -321,6 +331,8 @@ export const useStore = create<State>()(
           holePars: [...STANDARD_HOLE_PARS],
           scores,
           game: game.trim(),
+          teams: [],
+          wolf: Array(18).fill(null),
         }
         set({
           trips: patchTrip(get().trips, tripId, (t) => ({
@@ -329,6 +341,48 @@ export const useStore = create<State>()(
           })),
         })
       },
+
+      setRoundGame: (tripId, roundId, game) =>
+        set({
+          trips: patchTrip(get().trips, tripId, (t) => ({
+            ...t,
+            rounds: t.rounds.map((r) =>
+              r.id === roundId
+                ? {
+                    ...r,
+                    game,
+                    wolf:
+                      r.wolf && r.wolf.length === 18
+                        ? r.wolf
+                        : Array(18).fill(null),
+                  }
+                : r,
+            ),
+          })),
+        }),
+
+      setRoundTeams: (tripId, roundId, teams) =>
+        set({
+          trips: patchTrip(get().trips, tripId, (t) => ({
+            ...t,
+            rounds: t.rounds.map((r) =>
+              r.id === roundId ? { ...r, teams } : r,
+            ),
+          })),
+        }),
+
+      setWolfPick: (tripId, roundId, hole, pick) =>
+        set({
+          trips: patchTrip(get().trips, tripId, (t) => ({
+            ...t,
+            rounds: t.rounds.map((r) => {
+              if (r.id !== roundId) return r
+              const wolf = [...(r.wolf ?? Array(18).fill(null))]
+              wolf[hole] = pick
+              return { ...r, wolf }
+            }),
+          })),
+        }),
 
       setScore: (tripId, roundId, memberId, hole, strokes) =>
         set({
@@ -390,7 +444,7 @@ export const useStore = create<State>()(
     }),
     {
       name: 'birdie-trips-v1',
-      version: 2,
+      version: 3,
       migrate: (persisted, version) => {
         const state = persisted as { trips?: unknown[] } | undefined
         if (!state) return persisted as never
@@ -407,6 +461,17 @@ export const useStore = create<State>()(
               ...t,
             }
           })
+        }
+        if (version < 3 && Array.isArray(state.trips)) {
+          for (const raw of state.trips) {
+            const t = raw as Record<string, unknown>
+            if (Array.isArray(t.rounds)) {
+              for (const r of t.rounds as Record<string, unknown>[]) {
+                if (!Array.isArray(r.teams)) r.teams = []
+                if (!Array.isArray(r.wolf)) r.wolf = Array(18).fill(null)
+              }
+            }
+          }
         }
         return state as never
       },

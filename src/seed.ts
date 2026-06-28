@@ -144,6 +144,8 @@ export function makeSampleTrip(): Trip {
       holePars: STANDARD_PARS,
       scores: emptyScores(memberIds),
       game: 'Skins',
+      teams: [],
+      wolf: Array(18).fill(null),
     },
   ]
 

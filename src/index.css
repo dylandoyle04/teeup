@@ -1436,3 +1436,105 @@ table.scorecard .total-cell {
   width: 7px;
   height: 7px;
 }
+
+/* ---------- Game modes ---------- */
+.team-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--green-100);
+  border-radius: 9px;
+  padding: 3px;
+}
+
+.team-toggle button {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.team-toggle button.on {
+  background: #fff;
+  color: var(--green-900);
+  box-shadow: var(--shadow);
+}
+
+.hl-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hl-team {
+  flex: 1;
+  text-align: center;
+  padding: 14px 8px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+}
+
+.hl-team.win {
+  border-color: var(--gold);
+  background: #fffdf3;
+}
+
+.hl-team .hl-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.hl-team .hl-pts {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--green-900);
+  font-variant-numeric: tabular-nums;
+}
+
+.hl-vs {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.wolf-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.wolf-row:last-child {
+  border-bottom: none;
+}
+
+.wolf-hole {
+  width: 34px;
+  font-weight: 800;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.wolf-who {
+  flex: 1;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wolf-select {
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
+  padding: 7px 8px;
+  background: #fff;
+  font-size: 13px;
+  max-width: 50%;
+}
