@@ -6,6 +6,7 @@ import type {
   Round,
   Trip,
 } from './types'
+import { parsForCourseName } from './coursePars'
 
 export const MEMBER_COLORS = [
   '#1b6b46',
@@ -141,7 +142,7 @@ export function makeSampleTrip(): Trip {
       id: 'r1',
       courseName: 'Caledonia Golf & Fish Club',
       date: '2026-09-19',
-      holePars: STANDARD_PARS,
+      holePars: parsForCourseName('Caledonia Golf & Fish Club') ?? STANDARD_PARS,
       scores: emptyScores(memberIds),
       game: 'Skins',
       teams: [],

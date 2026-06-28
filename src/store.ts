@@ -22,6 +22,7 @@ import {
   uid,
 } from './seed'
 import type { TripPackage } from './packages'
+import { parsForCourseName } from './coursePars'
 
 const DEFAULT_TEE_TIMES = ['7:40 AM', '8:30 AM', '9:20 AM', '1:10 PM']
 
@@ -324,11 +325,12 @@ export const useStore = create<State>()(
         if (!trip) return
         const scores: Round['scores'] = {}
         for (const id of trip.memberIds) scores[id] = Array(18).fill(null)
+        const name = courseName.trim() || 'New Round'
         const round: Round = {
           id: uid('r'),
-          courseName: courseName.trim() || 'New Round',
+          courseName: name,
           date,
-          holePars: [...STANDARD_HOLE_PARS],
+          holePars: parsForCourseName(name) ?? [...STANDARD_HOLE_PARS],
           scores,
           game: game.trim(),
           teams: [],
