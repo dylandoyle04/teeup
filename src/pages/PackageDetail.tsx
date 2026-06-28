@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
 import { money } from '../components/ui'
+import Carousel from '../components/Carousel'
 
 export default function PackageDetail() {
   const { packageId = '' } = useParams()
@@ -61,30 +62,10 @@ export default function PackageDetail() {
         <div className="section-title">The Courses</div>
         {pkg.courses.map((c) => (
           <div className="course-card" key={c.name}>
-            <img className="course-img" src={c.image} alt={c.name} loading="lazy" />
+            <Carousel images={c.images} alt={c.name} />
             <div className="course-info">
               <h3 className="course-name">{c.name}</h3>
               <p className="course-blurb">{c.blurb}</p>
-              <div className="course-links">
-                <a
-                  className="course-link"
-                  href={c.website}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Course site ↗
-                </a>
-                {c.golfNow && (
-                  <a
-                    className="course-link gn"
-                    href={c.golfNow}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Tee times (GolfNow) ↗
-                  </a>
-                )}
-              </div>
             </div>
           </div>
         ))}
