@@ -208,7 +208,7 @@ export default function Home() {
           <span className="co-text">
             <span className="co-title">Create your own</span>
             <span className="co-sub">
-              Build a custom trip and invite your group to vote.
+              Build a custom trip and invite friends to keep score.
             </span>
           </span>
           <span className="co-arrow" aria-hidden="true">

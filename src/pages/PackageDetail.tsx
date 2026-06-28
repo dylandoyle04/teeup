@@ -55,8 +55,8 @@ export default function PackageDetail() {
           Start a trip from this package →
         </button>
         <p className="hint" style={{ textAlign: 'center', marginTop: 8 }}>
-          Pre-loads these courses so your group can vote on tee times, hotels,
-          and flights.
+          Pre-loads these courses so you can set your dates and invite friends to
+          keep score.
         </p>
 
         <div className="section-title">The Courses</div>

@@ -50,8 +50,8 @@ export default function NewTrip() {
         Set up the trip
       </h1>
       <p className="page-sub">
-        You're the organizer — lock in the basics, then invite the group to vote
-        on courses, tee times, and more.
+        You're the organizer — book the trip, then invite friends to join the
+        scorecard.
       </p>
 
       <form className="card" onSubmit={submit}>

@@ -242,17 +242,17 @@ export default function TripSetup() {
           </button>
         </div>
         <p className="hint" style={{ marginTop: 8 }}>
-          You set the trip up; everyone you invite gets to vote on courses, tee
-          times, hotels, and flights.
+          You book the trip; invite friends to join the scorecard once you're
+          there.
         </p>
       </div>
 
       <Link
-        to={`/trip/${tripId}/vote`}
+        to={`/trip/${tripId}/score`}
         className="btn full gold"
         style={{ marginTop: 4 }}
       >
-        Invite the group to vote →
+        Go to the scorecard →
       </Link>
 
       <button

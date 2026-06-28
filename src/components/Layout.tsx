@@ -3,7 +3,6 @@ import { Link, NavLink, useLocation, useParams } from 'react-router-dom'
 function TripNav({ tripId }: { tripId: string }) {
   const tabs = [
     { to: `/trip/${tripId}/setup`, icon: '🗓️', label: 'Trip' },
-    { to: `/trip/${tripId}/vote`, icon: '🗳️', label: 'Vote' },
     { to: `/trip/${tripId}/score`, icon: '⛳', label: 'Score' },
     { to: `/trip/${tripId}/bets`, icon: '💰', label: 'Bets' },
   ]
