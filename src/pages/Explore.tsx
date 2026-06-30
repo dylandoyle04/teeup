@@ -1,17 +1,26 @@
+import { useLayoutEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { PACKAGES } from '../packages'
 import { AvatarStack, fmtDateRange, money } from '../components/ui'
+import { gsap, reduceMotion, revealOnScroll } from '../anim'
 
 export default function Explore() {
   const trips = useStore((s) => s.trips)
   const tripMembers = useStore((s) => s.tripMembers)
   const resetAll = useStore((s) => s.resetAll)
   const navigate = useNavigate()
+  const root = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (reduceMotion()) return
+    const ctx = gsap.context(() => revealOnScroll(root.current), root)
+    return () => ctx.revert()
+  }, [])
 
   return (
-    <>
-      <div className="page-head">
+    <div ref={root}>
+      <div className="page-head" data-reveal>
         <h1 className="page-title">Plan your golf trip</h1>
         <p className="page-sub">
           Start from a curated package or build your own — then invite friends to
@@ -19,10 +28,17 @@ export default function Explore() {
         </p>
       </div>
 
-      <h2 className="section-title">Our Preplanned Trips</h2>
+      <h2 className="section-title" data-reveal>
+        Our Preplanned Trips
+      </h2>
       <div className="pkg-grid">
         {PACKAGES.map((p) => (
-          <Link className="slide-card" key={p.id} to={`/package/${p.id}`}>
+          <Link
+            className="slide-card"
+            key={p.id}
+            to={`/package/${p.id}`}
+            data-reveal
+          >
             <img className="slide-bg" src={p.image} alt={p.destination} />
             <span className={`slide-tier ${p.tier}`}>{p.tierLabel}</span>
             <div className="slide-body">
@@ -37,8 +53,14 @@ export default function Explore() {
         ))}
       </div>
 
-      <h2 className="section-title">Or start from scratch</h2>
-      <button className="create-own" onClick={() => navigate('/new')}>
+      <h2 className="section-title" data-reveal>
+        Or start from scratch
+      </h2>
+      <button
+        className="create-own"
+        onClick={() => navigate('/new')}
+        data-reveal
+      >
         <span className="co-icon" aria-hidden="true">
           ⛳
         </span>
@@ -55,7 +77,9 @@ export default function Explore() {
 
       {trips.length > 0 && (
         <>
-          <h2 className="section-title">Your Trips</h2>
+          <h2 className="section-title" data-reveal>
+            Your Trips
+          </h2>
           <div className="pkg-grid">
             {[...trips]
               .sort((a, b) => b.createdAt - a.createdAt)
@@ -66,6 +90,7 @@ export default function Explore() {
                     key={trip.id}
                     to={`/trip/${trip.id}/setup`}
                     className="trip-card"
+                    data-reveal
                   >
                     <div className="banner">
                       <h3>{trip.name}</h3>
@@ -104,6 +129,6 @@ export default function Explore() {
           Reset demo data
         </button>
       </div>
-    </>
+    </div>
   )
 }

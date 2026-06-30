@@ -1,10 +1,40 @@
+import { useLayoutEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { gsap, reduceMotion } from '../anim'
 
 export default function Home() {
   const navigate = useNavigate()
+  const root = useRef<HTMLElement>(null)
+
+  useLayoutEffect(() => {
+    if (reduceMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.set('.hero-content', { autoAlpha: 1 })
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      tl.from('.hero-logo', { y: 36, autoAlpha: 0, scale: 0.96, duration: 0.9 })
+        .from(
+          '.ball-divider',
+          { scaleX: 0, autoAlpha: 0, duration: 0.6, transformOrigin: 'center' },
+          '-=0.4',
+        )
+        .from(
+          '.hero-tag',
+          { y: 22, autoAlpha: 0, duration: 0.7, stagger: 0.14 },
+          '-=0.3',
+        )
+        .from('.hero-cta', { y: 20, autoAlpha: 0, duration: 0.6 }, '-=0.25')
+      // slow ken-burns drift on the photo
+      gsap.fromTo(
+        '.hero-photo',
+        { scale: 1.02 },
+        { scale: 1.12, duration: 18, ease: 'none' },
+      )
+    }, root)
+    return () => ctx.revert()
+  }, [])
 
   return (
-    <section className="hero">
+    <section className="hero" ref={root}>
       <img
         className="hero-photo"
         src={`${import.meta.env.BASE_URL}hero.jpg`}

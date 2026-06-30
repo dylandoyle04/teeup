@@ -1,14 +1,38 @@
+import { useLayoutEffect, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
 import { money } from '../components/ui'
 import Carousel from '../components/Carousel'
+import { gsap, reduceMotion, revealOnScroll } from '../anim'
 
 export default function PackageDetail() {
   const { packageId = '' } = useParams()
   const navigate = useNavigate()
   const pkg = getPackage(packageId)
   const createTripFromPackage = useStore((s) => s.createTripFromPackage)
+  const root = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (!pkg || reduceMotion()) return
+    const ctx = gsap.context(() => {
+      gsap.from('.pkg-hero-text > *', {
+        y: 24,
+        autoAlpha: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.12,
+        delay: 0.15,
+      })
+      gsap.from('.pkg-hero-img', {
+        scale: 1.12,
+        duration: 1.6,
+        ease: 'power2.out',
+      })
+      revealOnScroll(root.current)
+    }, root)
+    return () => ctx.revert()
+  }, [pkg?.id])
 
   if (!pkg) {
     return (
@@ -27,7 +51,7 @@ export default function PackageDetail() {
   }
 
   return (
-    <div className="pkg">
+    <div className="pkg" ref={root}>
       <div className="pkg-hero">
         <img className="pkg-hero-img" src={pkg.image} alt={pkg.destination} />
         <div className="pkg-hero-scrim" />
@@ -49,9 +73,11 @@ export default function PackageDetail() {
       </div>
 
       <div className="pkg-body">
-        <p className="pkg-blurb">{pkg.blurb}</p>
+        <p className="pkg-blurb" data-reveal>
+          {pkg.blurb}
+        </p>
 
-        <button className="btn full gold" onClick={startTrip}>
+        <button className="btn full gold" onClick={startTrip} data-reveal>
           Start a trip from this package →
         </button>
         <p className="hint" style={{ textAlign: 'center', marginTop: 8 }}>
@@ -60,7 +86,7 @@ export default function PackageDetail() {
         </p>
 
         <div className="section-title">Book hotels &amp; travel</div>
-        <div className="book-row">
+        <div className="book-row" data-reveal>
           <a
             className="book-link"
             href={`https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(
@@ -86,7 +112,7 @@ export default function PackageDetail() {
         <div className="section-title">The Courses</div>
         <div className="courses-grid">
           {pkg.courses.map((c) => (
-            <div className="course-card" key={c.name}>
+            <div className="course-card" key={c.name} data-reveal>
               <Carousel images={c.images} alt={c.name} />
               <div className="course-info">
                 <h3 className="course-name">{c.name}</h3>
