@@ -1,4 +1,5 @@
-import { Link, NavLink, useLocation, useParams } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useStore } from '../store'
 
 function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
@@ -22,9 +23,11 @@ function TripTabs({ tripId }: { tripId: string }) {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { tripId } = useParams()
   const { pathname } = useLocation()
   const isHome = pathname === '/'
+  // Layout sits above <Routes>, so derive the trip id from the path directly.
+  const tripId = pathname.match(/^\/trip\/([^/]+)/)?.[1]
+  const trip = useStore((s) => (tripId ? s.getTrip(tripId) : undefined))
 
   return (
     <div className="app">
@@ -34,6 +37,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" className="brand">
               Tee<span className="mark">Up</span>
             </Link>
+            {trip && <span className="nav-trip">{trip.name}</span>}
             {tripId ? (
               <TripTabs tripId={tripId} />
             ) : (
@@ -49,9 +53,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
       )}
+
       <main className={`content ${isHome ? 'content-home' : ''}`}>
         {!isHome ? <div className="container">{children}</div> : children}
       </main>
+
+      {!isHome && (
+        <footer className="footer">
+          <div className="footer-inner">
+            <Link to="/" className="footer-brand">
+              Tee<span className="mark">Up</span>
+            </Link>
+            <p className="footer-tag">
+              Golf trips made easy — book it, invite friends, keep score.
+            </p>
+            <div className="footer-links">
+              <Link to="/explore">Explore trips</Link>
+              <Link to="/new">Create a trip</Link>
+            </div>
+            <p className="footer-copy">© 2026 TeeUp</p>
+          </div>
+        </footer>
+      )}
     </div>
   )
 }
