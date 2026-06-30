@@ -43,7 +43,7 @@ export default function NewTrip() {
 
   return (
     <>
-      <button className="back-btn" onClick={() => navigate('/')}>
+      <button className="back-btn" onClick={() => navigate('/explore')}>
         ← Back to menu
       </button>
       <h1 className="page-title" style={{ marginTop: 12 }}>

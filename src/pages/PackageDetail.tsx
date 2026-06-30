@@ -31,8 +31,8 @@ export default function PackageDetail() {
       <div className="pkg-hero">
         <img className="pkg-hero-img" src={pkg.image} alt={pkg.destination} />
         <div className="pkg-hero-scrim" />
-        <button className="pkg-back" onClick={() => navigate('/')}>
-          ← Menu
+        <button className="pkg-back" onClick={() => navigate('/explore')}>
+          ← All trips
         </button>
         <div className="pkg-hero-text">
           <span className={`tier-badge ${pkg.tier}`}>{pkg.tierLabel}</span>
@@ -60,18 +60,24 @@ export default function PackageDetail() {
         </p>
 
         <div className="section-title">The Courses</div>
-        {pkg.courses.map((c) => (
-          <div className="course-card" key={c.name}>
-            <Carousel images={c.images} alt={c.name} />
-            <div className="course-info">
-              <h3 className="course-name">{c.name}</h3>
-              <p className="course-blurb">{c.blurb}</p>
+        <div className="courses-grid">
+          {pkg.courses.map((c) => (
+            <div className="course-card" key={c.name}>
+              <Carousel images={c.images} alt={c.name} />
+              <div className="course-info">
+                <h3 className="course-name">{c.name}</h3>
+                <p className="course-blurb">{c.blurb}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
-        <button className="btn full ghost" onClick={() => navigate('/')}>
-          ← Back to menu
+        <button
+          className="btn ghost"
+          style={{ marginTop: 18 }}
+          onClick={() => navigate('/explore')}
+        >
+          ← Back to all trips
         </button>
       </div>
     </div>

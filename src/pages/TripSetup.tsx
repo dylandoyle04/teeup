@@ -40,8 +40,8 @@ export default function TripSetup() {
 
   return (
     <>
-      <button className="back-btn" onClick={() => navigate('/')}>
-        ← Back to menu
+      <button className="back-btn" onClick={() => navigate('/explore')}>
+        ← All trips
       </button>
 
       {/* Trip header / organizer setup */}
@@ -258,9 +258,9 @@ export default function TripSetup() {
       <button
         className="btn full ghost"
         style={{ marginTop: 10 }}
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/explore')}
       >
-        ← Back to menu
+        ← Back to all trips
       </button>
 
       <div style={{ marginTop: 24, textAlign: 'center' }}>
@@ -269,7 +269,7 @@ export default function TripSetup() {
           onClick={() => {
             if (confirm(`Delete "${trip.name}"? This can't be undone.`)) {
               deleteTrip(tripId)
-              navigate('/')
+              navigate('/explore')
             }
           }}
         >

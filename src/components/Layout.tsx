@@ -1,22 +1,19 @@
 import { Link, NavLink, useLocation, useParams } from 'react-router-dom'
 
-function TripNav({ tripId }: { tripId: string }) {
+function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
-    { to: `/trip/${tripId}/setup`, icon: '🗓️', label: 'Trip' },
-    { to: `/trip/${tripId}/score`, icon: '⛳', label: 'Score' },
-    { to: `/trip/${tripId}/bets`, icon: '💰', label: 'Bets' },
+    { to: `/trip/${tripId}/setup`, label: 'Trip' },
+    { to: `/trip/${tripId}/score`, label: 'Scorecard' },
+    { to: `/trip/${tripId}/bets`, label: 'Bets' },
   ]
   return (
-    <nav className="bottom-nav" aria-label="Trip sections">
+    <nav className="top-tabs" aria-label="Trip sections">
       {tabs.map((t) => (
         <NavLink
           key={t.to}
           to={t.to}
           className={({ isActive }) => (isActive ? 'active' : '')}
         >
-          <span className="icon" aria-hidden>
-            {t.icon}
-          </span>
           {t.label}
         </NavLink>
       ))}
@@ -32,14 +29,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="app">
       {!isHome && (
-        <header className="topbar">
-          <Link to="/" className="brand">
-            Tee<span className="mark">Up</span>
-          </Link>
+        <header className="navbar">
+          <div className="nav-inner">
+            <Link to="/" className="brand">
+              Tee<span className="mark">Up</span>
+            </Link>
+            {tripId ? (
+              <TripTabs tripId={tripId} />
+            ) : (
+              <nav className="top-tabs">
+                <NavLink
+                  to="/explore"
+                  className={({ isActive }) => (isActive ? 'active' : '')}
+                >
+                  Explore
+                </NavLink>
+              </nav>
+            )}
+          </div>
         </header>
       )}
-      <main className={`content ${isHome ? 'content-home' : ''}`}>{children}</main>
-      {tripId && <TripNav tripId={tripId} />}
+      <main className={`content ${isHome ? 'content-home' : ''}`}>
+        {!isHome ? <div className="container">{children}</div> : children}
+      </main>
     </div>
   )
 }

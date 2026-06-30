@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
+import Explore from './pages/Explore'
 import NewTrip from './pages/NewTrip'
 import PackageDetail from './pages/PackageDetail'
 import TripSetup from './pages/TripSetup'
@@ -12,6 +13,7 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
         <Route path="/new" element={<NewTrip />} />
         <Route path="/package/:packageId" element={<PackageDetail />} />
         <Route path="/trip/:tripId" element={<Navigate to="setup" replace />} />
