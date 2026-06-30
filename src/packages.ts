@@ -65,7 +65,7 @@ const PHOTO_COUNTS: Record<string, number> = {
   kierland: 11,
   mcdowell: 14,
   'tpc-myrtle': 14,
-  caledonia: 7,
+  caledonia: 4,
   'barefoot-dye': 2,
   'kings-north': 12,
   'world-tour': 14,
