@@ -5,6 +5,38 @@ export interface PackageCourse {
   slug: string
   blurb: string
   images: string[]
+  /** GolfNow tee-times affiliate link (where available) */
+  golfNow?: string
+}
+
+// GolfNow tee-time links per course (from the partner's package doc)
+const GOLFNOW: Record<string, string> = {
+  'troon-north':
+    'https://www.golfnow.com/tee-times/facility/813-troon-north-golf-club/search',
+  'tpc-stadium':
+    'https://www.golfnow.com/tee-times/facility/3482-the-stadium-course-at-tpc-scottsdale/search',
+  'tpc-champions':
+    'https://www.golfnow.com/tee-times/facility/7076-tpc-scottsdale-champions-course/search',
+  kierland:
+    'https://www.golfnow.com/tee-times/facility/80-kierland-golf-club/search',
+  mcdowell:
+    'https://www.golfnow.com/tee-times/facility/4872-mcdowell-mountain-golf-club/search',
+  'tpc-myrtle':
+    'https://www.golfnow.com/tee-times/facility/5426-tpc-myrtle-beach/search',
+  caledonia:
+    'https://www.golfnow.com/tee-times/facility/5415-caledonia-golf-fish-club/search',
+  'barefoot-dye':
+    'https://www.golfnow.com/tee-times/facility/5348-barefoot-resort-dye/search',
+  'kings-north':
+    'https://www.golfnow.com/tee-times/facility/5398-myrtle-beach-national-kings-north/search',
+  'world-tour':
+    'https://www.golfnow.com/tee-times/facility/5413-world-tour-golf-links/search',
+  'man-o-war':
+    'https://www.golfnow.com/tee-times/facility/5400-man-o-war-golf-course/search',
+  arrowhead:
+    'https://www.golfnow.com/tee-times/facility/5391-arrowhead-country-club/search',
+  'indigo-creek':
+    'https://www.golfnow.com/tee-times/facility/5420-indigo-creek-golf-club/search',
 }
 
 export interface TripPackage {
@@ -50,7 +82,7 @@ const imgs = (slug: string): string[] =>
   )
 
 function course(name: string, slug: string, blurb: string): PackageCourse {
-  return { name, slug, blurb, images: imgs(slug) }
+  return { name, slug, blurb, images: imgs(slug), golfNow: GOLFNOW[slug] }
 }
 
 const COURSES: Record<string, PackageCourse> = {

@@ -1758,3 +1758,33 @@ table.scorecard .total-cell {
     filter: brightness(1.05);
   }
 }
+
+/* ---------- Expedia booking row ---------- */
+.book-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.book-link {
+  flex: 1 1 220px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid var(--gold);
+  color: var(--gold-dark);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.book-link:hover {
+  background: #fffdf3;
+  transform: translateY(-2px);
+}

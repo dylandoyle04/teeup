@@ -59,6 +59,30 @@ export default function PackageDetail() {
           keep score.
         </p>
 
+        <div className="section-title">Book hotels &amp; travel</div>
+        <div className="book-row">
+          <a
+            className="book-link"
+            href={`https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(
+              pkg.destination,
+            )}`}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            🏨 Find hotels on Expedia ↗
+          </a>
+          <a
+            className="book-link"
+            href={`https://www.expedia.com/Flights-Search?leg1=to:${encodeURIComponent(
+              pkg.destination,
+            )}`}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            ✈️ Find flights on Expedia ↗
+          </a>
+        </div>
+
         <div className="section-title">The Courses</div>
         <div className="courses-grid">
           {pkg.courses.map((c) => (
@@ -67,6 +91,18 @@ export default function PackageDetail() {
               <div className="course-info">
                 <h3 className="course-name">{c.name}</h3>
                 <p className="course-blurb">{c.blurb}</p>
+                {c.golfNow && (
+                  <div className="course-links">
+                    <a
+                      className="course-link gn"
+                      href={c.golfNow}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Tee times on GolfNow ↗
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           ))}
