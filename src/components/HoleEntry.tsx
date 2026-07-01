@@ -9,6 +9,7 @@ export default function HoleEntry({
   round,
   row,
   hole,
+  yards,
   onClose,
   onNext,
 }: {
@@ -16,6 +17,7 @@ export default function HoleEntry({
   round: Round
   row: Row
   hole: number
+  yards: number | null
   onClose: () => void
   onNext: (() => void) | null
 }) {
@@ -54,6 +56,7 @@ export default function HoleEntry({
           </div>
           <div className="sheet-hole">
             Hole {hole + 1} · Par {par}
+            {yards ? ` · ${yards} yds` : ''}
           </div>
           <button className="icon-btn" onClick={onClose} aria-label="Close">
             ✕

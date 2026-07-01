@@ -4,6 +4,7 @@ import { useStore } from '../store'
 import type { Member, Round, WolfMode } from '../types'
 import { Avatar } from '../components/ui'
 import HoleEntry from '../components/HoleEntry'
+import { yardsForCourseName } from '../coursePars'
 import {
   GAMES,
   computeHighLow,
@@ -213,6 +214,8 @@ function RoundCard({
 
   const front = [0, 1, 2, 3, 4, 5, 6, 7, 8]
   const back = [9, 10, 11, 12, 13, 14, 15, 16, 17]
+  const yards = yardsForCourseName(round.courseName)
+  const totalYards = yards ? yards.reduce((a, b) => a + b, 0) : 0
 
   return (
     <>
@@ -224,6 +227,7 @@ function RoundCard({
             </div>
             <div className="muted" style={{ fontSize: 13 }}>
               {round.date || 'Today'} · Par {sum(round.holePars)}
+              {totalYards > 0 && ` · ${totalYards.toLocaleString()} yds`}
             </div>
           </div>
           <button className="icon-btn" onClick={onDelete} aria-label="Delete round">
@@ -271,6 +275,7 @@ function RoundCard({
             label="OUT"
             round={round}
             rows={rows}
+            yards={yards}
             onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
           />
         </div>
@@ -282,6 +287,7 @@ function RoundCard({
             label="IN"
             round={round}
             rows={rows}
+            yards={yards}
             onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
             showTotal
           />
@@ -301,6 +307,7 @@ function RoundCard({
               round={round}
               row={row}
               hole={entry.hole}
+              yards={yards ? yards[entry.hole] : null}
               onClose={() => setEntry(null)}
               onNext={
                 entry.hole < 17
@@ -665,6 +672,7 @@ function HoleTable({
   label,
   round,
   rows,
+  yards,
   onCellTap,
   showTotal,
 }: {
@@ -672,6 +680,7 @@ function HoleTable({
   label: string
   round: Round
   rows: Row[]
+  yards: number[] | null
   onCellTap: (rowId: string, hole: number) => void
   showTotal?: boolean
 }) {
@@ -688,6 +697,16 @@ function HoleTable({
         </tr>
       </thead>
       <tbody>
+        {yards && (
+          <tr className="yard-row">
+            <td className="name-cell">Yards</td>
+            {holes.map((h) => (
+              <td key={h}>{yards[h]}</td>
+            ))}
+            <td>{sum(holes.map((h) => yards[h]))}</td>
+            {showTotal && <td>{yards.reduce((a, b) => a + b, 0)}</td>}
+          </tr>
+        )}
         <tr className="par-row">
           <td className="name-cell">Par</td>
           {holes.map((h) => (
