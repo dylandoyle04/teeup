@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import type { Member, Round, WolfMode } from '../types'
 import { Avatar } from '../components/ui'
+import HoleEntry from '../components/HoleEntry'
 import {
   GAMES,
   computeHighLow,
@@ -178,9 +179,11 @@ function RoundCard({
   members: Member[]
   onDelete: () => void
 }) {
-  const setScore = useStore((s) => s.setScore)
   const setRoundGame = useStore((s) => s.setRoundGame)
   const setRoundTeams = useStore((s) => s.setRoundTeams)
+  const [entry, setEntry] = useState<{ rowId: string; hole: number } | null>(
+    null,
+  )
 
   const team = isTeamGame(round.game)
 
@@ -258,6 +261,9 @@ function RoundCard({
       <div className="section-title">
         Enter scores{scramble ? ' (one per team)' : ''}
       </div>
+      <p className="hint" style={{ margin: '-4px 4px 10px' }}>
+        Tap any box to log the score, putts, fairway &amp; GIR for that hole.
+      </p>
       <div className="card flush">
         <div className="scorecard-wrap">
           <HoleTable
@@ -265,7 +271,7 @@ function RoundCard({
             label="OUT"
             round={round}
             rows={rows}
-            onScore={(id, h, s) => setScore(tripId, round.id, id, h, s)}
+            onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
           />
         </div>
       </div>
@@ -276,10 +282,94 @@ function RoundCard({
             label="IN"
             round={round}
             rows={rows}
-            onScore={(id, h, s) => setScore(tripId, round.id, id, h, s)}
+            onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
             showTotal
           />
         </div>
+      </div>
+
+      <StatsSummary round={round} rows={rows} />
+
+      {entry &&
+        (() => {
+          const row = rows.find((r) => r.id === entry.rowId)
+          if (!row) return null
+          return (
+            <HoleEntry
+              key={`${entry.rowId}-${entry.hole}`}
+              tripId={tripId}
+              round={round}
+              row={row}
+              hole={entry.hole}
+              onClose={() => setEntry(null)}
+              onNext={
+                entry.hole < 17
+                  ? () =>
+                      setEntry({ rowId: entry.rowId, hole: entry.hole + 1 })
+                  : null
+              }
+            />
+          )
+        })()}
+    </>
+  )
+}
+
+function StatsSummary({ round, rows }: { round: Round; rows: Row[] }) {
+  const data = rows.map((r) => {
+    const stats = round.stats?.[r.id] ?? []
+    let putts = 0
+    let firHit = 0
+    let firPoss = 0
+    let girHit = 0
+    let girPoss = 0
+    stats.forEach((s, i) => {
+      if (s.putts != null) putts += s.putts
+      if (round.holePars[i] > 3) {
+        if (s.fir != null) {
+          firPoss++
+          if (s.fir) firHit++
+        }
+      }
+      if (s.gir != null) {
+        girPoss++
+        if (s.gir) girHit++
+      }
+    })
+    return { r, putts, firHit, firPoss, girHit, girPoss }
+  })
+
+  const anyStats = data.some(
+    (d) => d.putts > 0 || d.firPoss > 0 || d.girPoss > 0,
+  )
+  if (!anyStats) return null
+
+  return (
+    <>
+      <div className="section-title">Round stats</div>
+      <div className="card flush">
+        <table className="stat-table">
+          <thead>
+            <tr>
+              <th className="name-cell">Player</th>
+              <th>Putts</th>
+              <th>FIR</th>
+              <th>GIR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((d) => (
+              <tr key={d.r.id}>
+                <td className="name-cell">
+                  <span style={{ color: d.r.color }}>●</span> {d.r.name}
+                </td>
+                <td>{d.putts || '–'}</td>
+                <td>{d.firPoss ? `${d.firHit}/${d.firPoss}` : '–'}</td>
+                <td>{d.girPoss ? `${d.girHit}/${d.girPoss}` : '–'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   )
@@ -575,14 +665,14 @@ function HoleTable({
   label,
   round,
   rows,
-  onScore,
+  onCellTap,
   showTotal,
 }: {
   holes: number[]
   label: string
   round: Round
   rows: Row[]
-  onScore: (rowId: string, hole: number, strokes: number | null) => void
+  onCellTap: (rowId: string, hole: number) => void
   showTotal?: boolean
 }) {
   return (
@@ -608,6 +698,7 @@ function HoleTable({
         </tr>
         {rows.map((m) => {
           const scores = round.scores[m.id] ?? Array(18).fill(null)
+          const stats = round.stats?.[m.id] ?? []
           const nineTotal = sum(holes.map((h) => scores[h]))
           const grandTotal = sum(scores)
           return (
@@ -617,18 +708,15 @@ function HoleTable({
               </td>
               {holes.map((h) => (
                 <td key={h} className={cellClass(scores[h], round.holePars[h])}>
-                  <input
-                    className="score-input"
-                    type="number"
-                    inputMode="numeric"
-                    min={1}
-                    max={15}
-                    value={scores[h] ?? ''}
-                    onChange={(e) => {
-                      const v = e.target.value
-                      onScore(m.id, h, v === '' ? null : Number(v))
-                    }}
-                  />
+                  <button
+                    className="score-cell"
+                    onClick={() => onCellTap(m.id, h)}
+                  >
+                    {scores[h] ?? ''}
+                    {stats[h]?.putts != null && (
+                      <span className="putt-dot" aria-hidden="true" />
+                    )}
+                  </button>
                 </td>
               ))}
               <td className="total-cell">{nineTotal || ''}</td>

@@ -17,6 +17,7 @@ import type {
 import {
   MEMBER_COLORS,
   STANDARD_HOLE_PARS,
+  emptyStats,
   makeSampleMembers,
   makeSampleTrip,
   uid,
@@ -97,6 +98,18 @@ interface State {
     memberId: ID,
     hole: number,
     strokes: number | null,
+  ) => void
+  setHoleEntry: (
+    tripId: ID,
+    roundId: ID,
+    rowId: ID,
+    hole: number,
+    entry: {
+      score: number | null
+      putts: number | null
+      fir: boolean | null
+      gir: boolean | null
+    },
   ) => void
   deleteRound: (tripId: ID, roundId: ID) => void
 
@@ -224,6 +237,7 @@ export const useStore = create<State>()(
             rounds: t.rounds.map((r) => ({
               ...r,
               scores: { ...r.scores, [id]: Array(18).fill(null) },
+              stats: { ...r.stats, [id]: emptyStats([id])[id] },
             })),
           })),
         })
@@ -332,6 +346,7 @@ export const useStore = create<State>()(
           date,
           holePars: parsForCourseName(name) ?? [...STANDARD_HOLE_PARS],
           scores,
+          stats: emptyStats(trip.memberIds),
           game: game.trim(),
           teams: [],
           wolf: Array(18).fill(null),
@@ -400,6 +415,31 @@ export const useStore = create<State>()(
           })),
         }),
 
+      setHoleEntry: (tripId, roundId, rowId, hole, entry) =>
+        set({
+          trips: patchTrip(get().trips, tripId, (t) => ({
+            ...t,
+            rounds: t.rounds.map((r) => {
+              if (r.id !== roundId) return r
+              const scores = [...(r.scores[rowId] ?? Array(18).fill(null))]
+              scores[hole] = entry.score
+              const statArr = (r.stats?.[rowId] ?? emptyStats([rowId])[rowId]).map(
+                (s) => ({ ...s }),
+              )
+              statArr[hole] = {
+                putts: entry.putts,
+                fir: entry.fir,
+                gir: entry.gir,
+              }
+              return {
+                ...r,
+                scores: { ...r.scores, [rowId]: scores },
+                stats: { ...r.stats, [rowId]: statArr },
+              }
+            }),
+          })),
+        }),
+
       deleteRound: (tripId, roundId) =>
         set({
           trips: patchTrip(get().trips, tripId, (t) => ({
@@ -446,7 +486,7 @@ export const useStore = create<State>()(
     }),
     {
       name: 'birdie-trips-v1',
-      version: 3,
+      version: 4,
       migrate: (persisted, version) => {
         const state = persisted as { trips?: unknown[] } | undefined
         if (!state) return persisted as never
@@ -471,6 +511,27 @@ export const useStore = create<State>()(
               for (const r of t.rounds as Record<string, unknown>[]) {
                 if (!Array.isArray(r.teams)) r.teams = []
                 if (!Array.isArray(r.wolf)) r.wolf = Array(18).fill(null)
+              }
+            }
+          }
+        }
+        if (version < 4 && Array.isArray(state.trips)) {
+          for (const raw of state.trips) {
+            const t = raw as Record<string, unknown>
+            if (Array.isArray(t.rounds)) {
+              for (const r of t.rounds as Record<string, unknown>[]) {
+                if (!r.stats || typeof r.stats !== 'object') {
+                  const stats: Record<string, unknown> = {}
+                  const scores = (r.scores ?? {}) as Record<string, unknown>
+                  for (const id of Object.keys(scores)) {
+                    stats[id] = Array.from({ length: 18 }, () => ({
+                      putts: null,
+                      fir: null,
+                      gir: null,
+                    }))
+                  }
+                  r.stats = stats
+                }
               }
             }
           }

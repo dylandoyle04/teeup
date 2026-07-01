@@ -34,6 +34,17 @@ function emptyScores(memberIds: string[]): Round['scores'] {
   return scores
 }
 
+export function emptyStats(memberIds: string[]): Round['stats'] {
+  const stats: Round['stats'] = {}
+  for (const id of memberIds)
+    stats[id] = Array.from({ length: 18 }, () => ({
+      putts: null,
+      fir: null,
+      gir: null,
+    }))
+  return stats
+}
+
 export function makeSampleTrip(): Trip {
   const members: Member[] = [
     { id: 'm1', name: 'You', color: MEMBER_COLORS[0] },
@@ -144,6 +155,7 @@ export function makeSampleTrip(): Trip {
       date: '2026-09-19',
       holePars: parsForCourseName('Caledonia Golf & Fish Club') ?? STANDARD_PARS,
       scores: emptyScores(memberIds),
+      stats: emptyStats(memberIds),
       game: 'Skins',
       teams: [],
       wolf: Array(18).fill(null),

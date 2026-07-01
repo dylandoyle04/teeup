@@ -59,6 +59,14 @@ export interface WolfPick {
   partnerId: ID | null
 }
 
+export interface HoleStat {
+  putts: number | null
+  /** fairway in regulation (null on par 3s / not entered) */
+  fir: boolean | null
+  /** green in regulation */
+  gir: boolean | null
+}
+
 export interface Round {
   id: ID
   courseName: string
@@ -66,6 +74,8 @@ export interface Round {
   holePars: number[]
   /** memberId (or teamId for Scramble) -> 18 strokes (null = not entered) */
   scores: Record<ID, (number | null)[]>
+  /** memberId -> per-hole putts / fairway / GIR stats */
+  stats: Record<ID, HoleStat[]>
   game: string
   /** 2v2 / scramble team assignments (team games only) */
   teams: Team[]
