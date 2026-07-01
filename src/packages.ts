@@ -7,6 +7,26 @@ export interface PackageCourse {
   images: string[]
   /** GolfNow tee-times affiliate link (where available) */
   golfNow?: string
+  /** official course website — shown when a course isn't on GolfNow */
+  website?: string
+}
+
+// Official course websites (fallback link for courses not on GolfNow)
+const WEBSITE: Record<string, string> = {
+  wekopa: 'https://wekopa.com/',
+  'troon-north': 'https://www.troonnorthgolf.com/',
+  'tpc-stadium': 'https://tpc.com/scottsdale/stadium-course/',
+  'tpc-champions': 'https://tpc.com/scottsdale/champions-course/',
+  kierland: 'https://www.kierlandgolf.com/',
+  mcdowell: 'https://arcisgolf.com/clubs/mcdowell-mountain-golf-club/golf-course',
+  'tpc-myrtle': 'https://www.tpcmyrtlebeach.com/',
+  caledonia: 'https://caledoniagolfandfishclub.com/',
+  'barefoot-dye': 'https://barefootgolf.com/',
+  'kings-north': 'https://www.myrtlebeachnational.com/about-myrtle-beach-national/',
+  'world-tour': 'https://www.theworldtourgolf.com/',
+  'man-o-war': 'https://www.mysticalgolf.com/',
+  arrowhead: 'https://arrowheadcc.com/',
+  'indigo-creek': 'https://www.indigocreekgolfclub.com/',
 }
 
 // GolfNow tee-time links per course (from the partner's package doc)
@@ -82,7 +102,14 @@ const imgs = (slug: string): string[] =>
   )
 
 function course(name: string, slug: string, blurb: string): PackageCourse {
-  return { name, slug, blurb, images: imgs(slug), golfNow: GOLFNOW[slug] }
+  return {
+    name,
+    slug,
+    blurb,
+    images: imgs(slug),
+    golfNow: GOLFNOW[slug],
+    website: WEBSITE[slug],
+  }
 }
 
 const COURSES: Record<string, PackageCourse> = {

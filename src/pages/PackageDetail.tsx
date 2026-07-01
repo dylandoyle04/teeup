@@ -117,7 +117,7 @@ export default function PackageDetail() {
               <div className="course-info">
                 <h3 className="course-name">{c.name}</h3>
                 <p className="course-blurb">{c.blurb}</p>
-                {c.golfNow && (
+                {c.golfNow ? (
                   <div className="course-links">
                     <a
                       className="course-link gn"
@@ -128,7 +128,18 @@ export default function PackageDetail() {
                       Tee times on GolfNow ↗
                     </a>
                   </div>
-                )}
+                ) : c.website ? (
+                  <div className="course-links">
+                    <a
+                      className="course-link"
+                      href={c.website}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Visit course website ↗
+                    </a>
+                  </div>
+                ) : null}
               </div>
             </div>
           ))}
