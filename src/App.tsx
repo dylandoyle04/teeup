@@ -5,6 +5,7 @@ import Explore from './pages/Explore'
 import NewTrip from './pages/NewTrip'
 import PackageDetail from './pages/PackageDetail'
 import TripSetup from './pages/TripSetup'
+import Booking from './pages/Booking'
 import Scorecard from './pages/Scorecard'
 import Bets from './pages/Bets'
 
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/package/:packageId" element={<PackageDetail />} />
         <Route path="/trip/:tripId" element={<Navigate to="setup" replace />} />
         <Route path="/trip/:tripId/setup" element={<TripSetup />} />
+        <Route path="/trip/:tripId/book" element={<Booking />} />
         <Route
           path="/trip/:tripId/vote"
           element={<Navigate to="../score" replace />}

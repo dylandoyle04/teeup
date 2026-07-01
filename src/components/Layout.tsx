@@ -4,6 +4,7 @@ import { useStore } from '../store'
 function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
     { to: `/trip/${tripId}/setup`, label: 'Trip' },
+    { to: `/trip/${tripId}/book`, label: 'Book' },
     { to: `/trip/${tripId}/score`, label: 'Scorecard' },
     { to: `/trip/${tripId}/bets`, label: 'Bets' },
   ]

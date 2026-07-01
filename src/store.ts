@@ -204,6 +204,7 @@ export const useStore = create<State>()(
           needsFlights: pkg.needsFlights,
           notes: `Started from the "${pkg.title}" package.`,
           organizerId,
+          sourcePackageId: pkg.id,
           memberIds: [organizerId],
           courses,
           hotels: [],

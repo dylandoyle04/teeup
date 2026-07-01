@@ -47,7 +47,7 @@ export default function PackageDetail() {
 
   function startTrip() {
     const id = createTripFromPackage(pkg!)
-    navigate(`/trip/${id}/setup`)
+    navigate(`/trip/${id}/book`)
   }
 
   return (
@@ -81,33 +81,9 @@ export default function PackageDetail() {
           Start a trip from this package →
         </button>
         <p className="hint" style={{ textAlign: 'center', marginTop: 8 }}>
-          Pre-loads these courses so you can set your dates and invite friends to
-          keep score.
+          Opens a booking page with hotel, flight, and tee-time links for these
+          courses.
         </p>
-
-        <div className="section-title">Book hotels &amp; travel</div>
-        <div className="book-row" data-reveal>
-          <a
-            className="book-link"
-            href={`https://www.expedia.com/Hotel-Search?destination=${encodeURIComponent(
-              pkg.destination,
-            )}`}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            🏨 Find hotels on Expedia ↗
-          </a>
-          <a
-            className="book-link"
-            href={`https://www.expedia.com/Flights-Search?leg1=to:${encodeURIComponent(
-              pkg.destination,
-            )}`}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            ✈️ Find flights on Expedia ↗
-          </a>
-        </div>
 
         <div className="section-title">The Courses</div>
         <div className="courses-grid">

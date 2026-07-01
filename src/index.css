@@ -2034,3 +2034,23 @@ table.scorecard .yard-row .name-cell {
   color: var(--muted);
   font-size: 12px;
 }
+
+/* ---------- Booking page tee-time rows ---------- */
+.book-course {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.book-course:last-child {
+  border-bottom: none;
+}
+
+.book-course-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--green-900);
+}

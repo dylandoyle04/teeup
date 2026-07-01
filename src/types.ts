@@ -108,6 +108,8 @@ export interface Trip {
   needsFlights: boolean
   notes: string
   organizerId: ID
+  /** package this trip was started from (for booking links); undefined for custom trips */
+  sourcePackageId?: string
   memberIds: ID[]
   courses: CourseOption[]
   hotels: HotelOption[]
