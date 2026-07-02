@@ -3,14 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 
 function IntroScene() {
-  // transparent — plays directly over the hero photo (cup + ball only)
+  // small, centered scene positioned just under the logo (cup + ball only)
   return (
-    <svg
-      className="intro-scene"
-      viewBox="0 0 1000 600"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
+    <svg className="intro-scene" viewBox="0 0 400 140" aria-hidden="true">
       <defs>
         <radialGradient id="cup" cx="50%" cy="28%" r="72%">
           <stop offset="0%" stopColor="#04140d" />
@@ -18,11 +13,11 @@ function IntroScene() {
         </radialGradient>
       </defs>
 
-      {/* the cup, sitting on the photo's green */}
-      <ellipse cx="560" cy="510" rx="19" ry="7.5" fill="url(#cup)" />
+      {/* the cup */}
+      <ellipse cx="278" cy="98" rx="19" ry="7.5" fill="url(#cup)" />
       <ellipse
-        cx="560"
-        cy="510"
+        cx="278"
+        cy="98"
         rx="19"
         ry="7.5"
         fill="none"
@@ -32,8 +27,8 @@ function IntroScene() {
       {/* ring pulse (on sink) */}
       <ellipse
         className="hole-ring"
-        cx="560"
-        cy="510"
+        cx="278"
+        cy="98"
         rx="19"
         ry="7.5"
         fill="none"
@@ -45,8 +40,8 @@ function IntroScene() {
       {/* ball shadow */}
       <ellipse
         className="intro-ball-shadow"
-        cx="150"
-        cy="519"
+        cx="70"
+        cy="107"
         rx="10"
         ry="3.5"
         fill="#000000"
@@ -56,13 +51,13 @@ function IntroScene() {
       {/* ball */}
       <g className="intro-ball-wrap">
         <g className="intro-ball">
-          <circle cx="150" cy="510" r="10" fill="#ffffff" />
+          <circle cx="70" cy="98" r="10" fill="#ffffff" />
           <g fill="#cdd4c6">
-            <circle cx="147" cy="507" r="0.9" />
-            <circle cx="152" cy="506" r="0.9" />
-            <circle cx="155" cy="510" r="0.9" />
-            <circle cx="149" cy="512" r="0.9" />
-            <circle cx="153" cy="513" r="0.9" />
+            <circle cx="67" cy="95" r="0.9" />
+            <circle cx="72" cy="94" r="0.9" />
+            <circle cx="75" cy="98" r="0.9" />
+            <circle cx="69" cy="101" r="0.9" />
+            <circle cx="73" cy="102" r="0.9" />
           </g>
         </g>
       </g>
@@ -136,19 +131,19 @@ export default function Home() {
       })
       tl.current = t
 
-      // roll the ball across the photo toward the cup
-      t.to('.intro-ball-wrap', { x: 390, duration: 1.5, ease: 'power1.out' }, 0)
+      // roll the ball toward the cup (viewBox 400x140)
+      t.to('.intro-ball-wrap', { x: 188, duration: 1.4, ease: 'power1.out' }, 0)
         .to(
           '.intro-ball',
-          { rotation: 900, duration: 1.5, ease: 'power1.out', transformOrigin: '50% 50%' },
+          { rotation: 720, duration: 1.4, ease: 'power1.out', transformOrigin: '50% 50%' },
           0,
         )
-        .to('.intro-ball-shadow', { x: 390, duration: 1.5, ease: 'power1.out' }, 0)
+        .to('.intro-ball-shadow', { x: 188, duration: 1.4, ease: 'power1.out' }, 0)
         // settle at the lip then drop in
-        .to('.intro-ball-wrap', { x: 410, y: 4, duration: 0.18, ease: 'power1.in' })
-        .to('.intro-ball-wrap', { y: 16, duration: 0.3, ease: 'power2.in' })
-        .to('.intro-ball', { scale: 0.2, autoAlpha: 0, duration: 0.28, ease: 'power2.in' }, '<')
-        .to('.intro-ball-shadow', { scale: 0.3, autoAlpha: 0, duration: 0.24 }, '<')
+        .to('.intro-ball-wrap', { x: 208, y: 3, duration: 0.16, ease: 'power1.in' })
+        .to('.intro-ball-wrap', { y: 14, duration: 0.28, ease: 'power2.in' })
+        .to('.intro-ball', { scale: 0.2, autoAlpha: 0, duration: 0.26, ease: 'power2.in' }, '<')
+        .to('.intro-ball-shadow', { scale: 0.3, autoAlpha: 0, duration: 0.22 }, '<')
         .fromTo(
           '.hole-ring',
           { scale: 0.35, opacity: 0.9, transformOrigin: '50% 50%' },

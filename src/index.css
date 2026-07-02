@@ -2062,12 +2062,17 @@ table.scorecard .yard-row .name-cell {
   z-index: 6;
   overflow: hidden;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .intro-scene {
-  width: 100%;
-  height: 100%;
+  width: min(360px, 62vw);
+  height: auto;
   display: block;
+  /* sit just below where the TeeUp logo reveals */
+  transform: translateY(-88px);
 }
 
 .intro-skip {
