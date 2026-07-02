@@ -163,13 +163,25 @@ export default function Home() {
     return () => ctx.revert()
   }, [showIntro])
 
+  // ?bg=troon|wekopa|caledonia|mcdowell|kierland lets you preview backgrounds
+  const bg =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('bg')
+      : null
+  const heroSrc = bg
+    ? `${import.meta.env.BASE_URL}heroes/${bg}.jpg`
+    : `${import.meta.env.BASE_URL}hero.jpg`
+
   return (
     <section className="hero" ref={root}>
       <img
         className="hero-photo"
-        src={`${import.meta.env.BASE_URL}hero.jpg`}
+        src={heroSrc}
         alt=""
         aria-hidden="true"
+        onError={(e) => {
+          e.currentTarget.src = `${import.meta.env.BASE_URL}hero.jpg`
+        }}
       />
       <div className="hero-overlay" />
 
