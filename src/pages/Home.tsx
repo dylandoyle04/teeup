@@ -89,6 +89,9 @@ function IntroScene() {
   )
 }
 
+// plays on each full page load, but not on client-side nav back to Home
+let introPlayed = false
+
 export default function Home() {
   const navigate = useNavigate()
   const root = useRef<HTMLElement>(null)
@@ -97,7 +100,7 @@ export default function Home() {
     () =>
       typeof window !== 'undefined' &&
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-      !sessionStorage.getItem('teeup_intro'),
+      !introPlayed,
   )
 
   useLayoutEffect(() => {
@@ -146,7 +149,7 @@ export default function Home() {
       gsap.set('.hero-content', { autoAlpha: 0 })
       const t = gsap.timeline({
         onComplete: () => {
-          sessionStorage.setItem('teeup_intro', '1')
+          introPlayed = true
           setShowIntro(false)
         },
       })
