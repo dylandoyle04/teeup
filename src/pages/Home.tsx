@@ -19,50 +19,50 @@ function IntroScene() {
       </defs>
 
       {/* the cup, sitting on the photo's green */}
-      <ellipse cx="560" cy="500" rx="30" ry="12" fill="url(#cup)" />
+      <ellipse cx="560" cy="510" rx="19" ry="7.5" fill="url(#cup)" />
       <ellipse
         cx="560"
-        cy="500"
-        rx="30"
-        ry="12"
+        cy="510"
+        rx="19"
+        ry="7.5"
         fill="none"
         stroke="rgba(0,0,0,0.4)"
-        strokeWidth="2"
+        strokeWidth="1.5"
       />
       {/* ring pulse (on sink) */}
       <ellipse
         className="hole-ring"
         cx="560"
-        cy="500"
-        rx="30"
-        ry="12"
+        cy="510"
+        rx="19"
+        ry="7.5"
         fill="none"
         stroke="#ffffff"
-        strokeWidth="4"
+        strokeWidth="3"
         opacity="0"
       />
 
       {/* ball shadow */}
       <ellipse
         className="intro-ball-shadow"
-        cx="120"
-        cy="515"
-        rx="16"
-        ry="5"
+        cx="150"
+        cy="519"
+        rx="10"
+        ry="3.5"
         fill="#000000"
-        opacity="0.32"
+        opacity="0.3"
       />
 
       {/* ball */}
       <g className="intro-ball-wrap">
         <g className="intro-ball">
-          <circle cx="120" cy="500" r="16" fill="#ffffff" />
+          <circle cx="150" cy="510" r="10" fill="#ffffff" />
           <g fill="#cdd4c6">
-            <circle cx="115" cy="496" r="1.4" />
-            <circle cx="122" cy="494" r="1.4" />
-            <circle cx="127" cy="499" r="1.4" />
-            <circle cx="118" cy="503" r="1.4" />
-            <circle cx="124" cy="505" r="1.4" />
+            <circle cx="147" cy="507" r="0.9" />
+            <circle cx="152" cy="506" r="0.9" />
+            <circle cx="155" cy="510" r="0.9" />
+            <circle cx="149" cy="512" r="0.9" />
+            <circle cx="153" cy="513" r="0.9" />
           </g>
         </g>
       </g>
@@ -137,18 +137,18 @@ export default function Home() {
       tl.current = t
 
       // roll the ball across the photo toward the cup
-      t.to('.intro-ball-wrap', { x: 415, duration: 1.5, ease: 'power1.out' }, 0)
+      t.to('.intro-ball-wrap', { x: 390, duration: 1.5, ease: 'power1.out' }, 0)
         .to(
           '.intro-ball',
-          { rotation: 940, duration: 1.5, ease: 'power1.out', transformOrigin: '50% 50%' },
+          { rotation: 900, duration: 1.5, ease: 'power1.out', transformOrigin: '50% 50%' },
           0,
         )
-        .to('.intro-ball-shadow', { x: 415, duration: 1.5, ease: 'power1.out' }, 0)
+        .to('.intro-ball-shadow', { x: 390, duration: 1.5, ease: 'power1.out' }, 0)
         // settle at the lip then drop in
-        .to('.intro-ball-wrap', { x: 440, y: 6, duration: 0.18, ease: 'power1.in' })
-        .to('.intro-ball-wrap', { y: 30, duration: 0.32, ease: 'power2.in' })
-        .to('.intro-ball', { scale: 0.2, autoAlpha: 0, duration: 0.3, ease: 'power2.in' }, '<')
-        .to('.intro-ball-shadow', { scale: 0.3, autoAlpha: 0, duration: 0.25 }, '<')
+        .to('.intro-ball-wrap', { x: 410, y: 4, duration: 0.18, ease: 'power1.in' })
+        .to('.intro-ball-wrap', { y: 16, duration: 0.3, ease: 'power2.in' })
+        .to('.intro-ball', { scale: 0.2, autoAlpha: 0, duration: 0.28, ease: 'power2.in' }, '<')
+        .to('.intro-ball-shadow', { scale: 0.3, autoAlpha: 0, duration: 0.24 }, '<')
         .fromTo(
           '.hole-ring',
           { scale: 0.35, opacity: 0.9, transformOrigin: '50% 50%' },
@@ -161,7 +161,9 @@ export default function Home() {
       addHeroIn(t, 'reveal+=0.25')
     }, root)
     return () => ctx.revert()
-  }, [showIntro])
+    // run once on mount; the intro's onComplete flips showIntro without re-running
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // ?bg=troon|wekopa|caledonia|mcdowell|kierland lets you preview backgrounds
   const bg =
