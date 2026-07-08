@@ -229,20 +229,53 @@ a {
 }
 
 .hero-logo {
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: center;
-  font-size: clamp(64px, 9vw, 108px);
-  line-height: 0.92;
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(38px, 6.4vw, 82px);
+  line-height: 0.95;
   font-weight: 900;
-  letter-spacing: -2px;
+  letter-spacing: -1px;
   color: #ffffff;
   margin: 0;
-  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.28);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.32);
 }
 
 .hero-logo .accent {
   color: var(--tee-green);
+}
+
+/* the "o" in Fore, styled as a golf hole/ring */
+.logo-o {
+  position: relative;
+  display: inline-block;
+  width: 0.64em;
+  height: 0.64em;
+  border-radius: 50%;
+  border: 0.12em solid #fff;
+  background: rgba(3, 16, 8, 0.5);
+  box-sizing: border-box;
+  vertical-align: -0.09em;
+  margin: 0 0.02em;
+}
+
+.o-ring {
+  position: absolute;
+  inset: -0.12em;
+  border-radius: 50%;
+  border: 0.12em solid var(--tee-green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.putt-ball {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff, #d9dfd2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+  visibility: hidden;
 }
 
 .hero-flag {
