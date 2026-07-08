@@ -155,7 +155,7 @@ const PHOTO_COUNTS: Record<string, number> = {
   "boulder-creek": 4,
   "arroyo-red-rock": 0,
   "disney-magnolia": 7,
-  "waldorf-astoria": 7,
+  "waldorf-astoria": 3,
   "crooked-cat": 7,
   "shingle-creek": 6,
   "panther-lake": 7,
