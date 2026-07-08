@@ -12,7 +12,12 @@ export default function Carousel({
   const [i, setI] = useState(0)
   const touchX = useRef<number | null>(null)
 
-  if (images.length === 0) return null
+  if (images.length === 0)
+    return (
+      <div className={`${heightClass} carousel-empty`} aria-label={alt}>
+        <span aria-hidden="true">⛳</span>
+      </div>
+    )
 
   const go = (dir: number) =>
     setI((prev) => (prev + dir + images.length) % images.length)

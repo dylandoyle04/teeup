@@ -2087,3 +2087,12 @@ table.scorecard .yard-row .name-cell {
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
+
+.carousel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(150deg, #1f7a4f 0%, #0b3d2c 100%);
+  font-size: 40px;
+  opacity: 0.9;
+}
