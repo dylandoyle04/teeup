@@ -134,7 +134,7 @@ export interface TripPackage {
 
 // Number of gallery photos downloaded per course (public/packages/<slug>-N.jpg)
 const PHOTO_COUNTS: Record<string, number> = {
-  "harbour-town": 8,
+  "harbour-town": 10,
   "atlantic-dunes": 3,
   "heron-point": 3,
   "oyster-reef": 0,
@@ -162,9 +162,9 @@ const PHOTO_COUNTS: Record<string, number> = {
   "disney-palm": 7,
   aviara: 3,
   maderas: 7,
-  "torrey-pines": 2,
+  "torrey-pines": 4,
   "singing-hills": 1,
-  "steele-canyon": 1,
+  "steele-canyon": 4,
   "mt-woodson": 4,
   wekopa: 8,
   'troon-north': 9,
