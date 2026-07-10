@@ -1,4 +1,4 @@
-# ForeRight Trips — golf trips made easy
+# Flagstick Finder — golf trips made easy
 
 A group-first golf trip planner: organize the whole getaway in one place instead
 of juggling separate sites for courses, hotels, and flights. Optimized for

@@ -36,7 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <header className="navbar">
           <div className="nav-inner">
             <Link to="/" className="brand">
-              ForeRight<span className="mark"> Trips</span>
+              Flagstick<span className="mark"> Finder</span>
             </Link>
             {trip && <span className="nav-trip">{trip.name}</span>}
             {tripId ? (
@@ -63,7 +63,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <footer className="footer">
           <div className="footer-inner">
             <Link to="/" className="footer-brand">
-              ForeRight<span className="mark"> Trips</span>
+              Flagstick<span className="mark"> Finder</span>
             </Link>
             <p className="footer-tag">
               Golf trips made easy — book it, invite friends, keep score.
@@ -72,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/explore">Explore trips</Link>
               <Link to="/new">Create a trip</Link>
             </div>
-            <p className="footer-copy">© 2026 ForeRight Trips</p>
+            <p className="footer-copy">© 2026 Flagstick Finder</p>
           </div>
         </footer>
       )}

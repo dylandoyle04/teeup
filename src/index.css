@@ -244,25 +244,30 @@ a {
   color: var(--tee-green);
 }
 
-/* the "o" in Fore, styled as a golf hole/ring */
-.logo-o {
+/* the dotless "i" in Finder; the putt ball settles in as its dot */
+.logo-i {
   position: relative;
   display: inline-block;
-  width: 0.64em;
-  height: 0.64em;
+}
+
+.logo-tittle {
+  position: absolute;
+  left: 50%;
+  top: 0.28em;
+  width: 0.2em;
+  height: 0.2em;
+  transform: translateX(-50%);
   border-radius: 50%;
-  border: 0.12em solid #fff;
-  background: rgba(3, 16, 8, 0.5);
-  box-sizing: border-box;
-  vertical-align: -0.09em;
-  margin: 0 0.02em;
+  background: radial-gradient(circle at 34% 30%, #ffffff, #dfe4d8);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
 }
 
 .o-ring {
   position: absolute;
-  inset: -0.12em;
+  inset: -0.14em;
   border-radius: 50%;
-  border: 0.12em solid var(--tee-green);
+  border: 0.1em solid var(--tee-green);
   opacity: 0;
   pointer-events: none;
 }
@@ -325,22 +330,28 @@ a {
 
 .hero-cta {
   position: relative;
-  margin-top: 26px;
+  margin-top: 32px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: var(--tee-green);
-  color: #133d12;
-  border: none;
-  border-radius: 14px;
-  padding: 16px 32px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  padding: 15px 44px;
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 1.8px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2.6px;
   text-transform: uppercase;
-  box-shadow: 0 8px 22px rgba(8, 30, 8, 0.45);
-  transition: transform 0.08s ease, background 0.15s ease;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.08s ease;
+}
+
+.hero-cta:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #ffffff;
 }
 
 .hero-cta::before {

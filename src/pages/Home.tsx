@@ -41,29 +41,33 @@ export default function Home() {
       gsap.fromTo('.hero-photo', { scale: 1.02 }, { scale: 1.12, duration: 18, ease: 'none' })
 
       if (!showIntro || reduceMotion() || !root.current || !oRef.current) {
-        gsap.set('.logo-let', { autoAlpha: 1 })
+        gsap.set(['.logo-let', '.logo-tittle'], { autoAlpha: 1 })
         const t = gsap.timeline()
         revealRest(t, 0)
         return
       }
 
-      // hide letters + supporting content; keep the "o" (hole) visible as the target
-      gsap.set('.logo-let', { autoAlpha: 0 })
+      // hide letters + the i-dot; the ball rolls in and becomes the dot
+      gsap.set(['.logo-let', '.logo-tittle'], { autoAlpha: 0 })
       gsap.set('.hero-content', { autoAlpha: 1 })
 
       const hero = root.current.getBoundingClientRect()
-      const o = oRef.current.getBoundingClientRect()
-      const oCx = o.left - hero.left + o.width / 2
-      const oCy = o.top - hero.top + o.height / 2
-      const size = Math.max(15, o.width * 0.52)
+      const dot = oRef.current.getBoundingClientRect()
+      const cx = dot.left - hero.left + dot.width / 2
+      const cy = dot.top - hero.top + dot.height / 2
+      const tittleSize = Math.max(6, dot.width)
+      const rollSize = Math.max(16, tittleSize * 2.2)
 
       const ball = '.putt-ball'
       gsap.set(ball, {
-        width: size,
-        height: size,
+        width: rollSize,
+        height: rollSize,
         x: 36,
-        y: oCy - size / 2,
+        y: cy - rollSize / 2,
+        scale: 1,
+        rotation: 0,
         autoAlpha: 1,
+        transformOrigin: 'center center',
       })
 
       const t = gsap.timeline({
@@ -73,19 +77,21 @@ export default function Home() {
         },
       })
       tl.current = t
-      // roll toward the hole
-      t.to(ball, { x: oCx - size / 2 - o.width * 0.5, duration: 1.35, ease: 'power1.out' }, 0)
-        .to(ball, { rotation: 900, duration: 1.35, ease: 'power1.out' }, 0)
-        // settle into the cup + sink
-        .to(ball, { x: oCx - size / 2, duration: 0.22, ease: 'power1.in' })
-        .to(ball, { scale: 0.16, autoAlpha: 0, duration: 0.28, ease: 'power2.in' })
+      // roll across and settle centered over the i
+      t.to(ball, { x: cx - rollSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
+        .to(ball, { rotation: 900, duration: 1.4, ease: 'power2.out' }, 0)
+        // shrink down to i-dot size (scales about its center, staying put)
+        .addLabel('settle')
+        .to(ball, { scale: tittleSize / rollSize, duration: 0.32, ease: 'power2.out' }, 'settle')
+        .to('.logo-tittle', { autoAlpha: 1, duration: 0.2 }, 'settle+=0.12')
+        .to(ball, { autoAlpha: 0, duration: 0.2 }, 'settle+=0.18')
         .fromTo(
           '.o-ring',
           { scale: 0.5, opacity: 0.85 },
-          { scale: 2, opacity: 0, duration: 0.6, ease: 'power2.out' },
-          '<',
+          { scale: 2.4, opacity: 0, duration: 0.6, ease: 'power2.out' },
+          'settle+=0.05',
         )
-        .addLabel('reveal', '-=0.05')
+        .addLabel('reveal', 'settle+=0.14')
         .to('.intro', { autoAlpha: 0, duration: 0.4 }, 'reveal')
       revealRest(t, 'reveal')
     }, root)
@@ -107,13 +113,22 @@ export default function Home() {
       <div className="hero-overlay" />
 
       <div className="hero-content">
-        <h1 className="hero-logo">
-          <span className="logo-let">F</span>
-          <span className="logo-o" ref={oRef} aria-hidden="true">
-            <span className="o-ring" />
+        <h1 className="hero-logo" aria-label="Flagstick Finder">
+          <span className="logo-let" aria-hidden="true">
+            Flagstick
           </span>
-          <span className="logo-let">reRight</span>
-          <span className="logo-let accent">&nbsp;Trips</span>
+          <span className="logo-let accent" aria-hidden="true">
+            &nbsp;F
+          </span>
+          <span className="logo-i" aria-hidden="true">
+            <span className="logo-let accent">&#305;</span>
+            <span className="logo-tittle" ref={oRef}>
+              <span className="o-ring" />
+            </span>
+          </span>
+          <span className="logo-let accent" aria-hidden="true">
+            nder
+          </span>
         </h1>
 
         <div className="ball-divider" aria-hidden="true">
@@ -129,10 +144,7 @@ export default function Home() {
         </p>
 
         <button className="hero-cta" onClick={() => navigate('/explore')}>
-          <span className="tee" aria-hidden="true">
-            🏌️
-          </span>
-          PLAN YOUR TRIP
+          Plan your trip
         </button>
       </div>
 
