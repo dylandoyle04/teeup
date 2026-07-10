@@ -21,9 +21,10 @@ export default function Home() {
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('bg')
       : null
+  // bump when the hero image is swapped so browsers don't serve a stale cache
   const heroSrc = bg
     ? `${import.meta.env.BASE_URL}heroes/${bg}.jpg`
-    : `${import.meta.env.BASE_URL}hero.jpg`
+    : `${import.meta.env.BASE_URL}hero.jpg?v=wekopa`
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
