@@ -57,7 +57,7 @@ export default function Home() {
       const cx = cup.left - hero.left + cup.width / 2
       const cy = cup.top - hero.top + cup.height / 2
       const cupSize = Math.max(8, cup.width)
-      const ballSize = Math.max(16, cupSize * 1.5)
+      const ballSize = Math.max(9, cupSize * 0.78)
 
       const ball = '.putt-ball'
       gsap.set(ball, {
