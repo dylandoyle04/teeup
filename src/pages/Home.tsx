@@ -47,23 +47,24 @@ export default function Home() {
         return
       }
 
-      // hide letters + the i-dot; the ball rolls in and becomes the dot
-      gsap.set(['.logo-let', '.logo-tittle'], { autoAlpha: 0 })
+      // hide the letters; keep the cup (i-dot) visible as the putt target
+      gsap.set('.logo-let', { autoAlpha: 0 })
+      gsap.set('.logo-tittle', { autoAlpha: 1 })
       gsap.set('.hero-content', { autoAlpha: 1 })
 
       const hero = root.current.getBoundingClientRect()
-      const dot = oRef.current.getBoundingClientRect()
-      const cx = dot.left - hero.left + dot.width / 2
-      const cy = dot.top - hero.top + dot.height / 2
-      const tittleSize = Math.max(6, dot.width)
-      const rollSize = Math.max(16, tittleSize * 2.2)
+      const cup = oRef.current.getBoundingClientRect()
+      const cx = cup.left - hero.left + cup.width / 2
+      const cy = cup.top - hero.top + cup.height / 2
+      const cupSize = Math.max(8, cup.width)
+      const ballSize = Math.max(16, cupSize * 1.5)
 
       const ball = '.putt-ball'
       gsap.set(ball, {
-        width: rollSize,
-        height: rollSize,
+        width: ballSize,
+        height: ballSize,
         x: 36,
-        y: cy - rollSize / 2,
+        y: cy - ballSize / 2,
         scale: 1,
         rotation: 0,
         autoAlpha: 1,
@@ -77,21 +78,19 @@ export default function Home() {
         },
       })
       tl.current = t
-      // roll across and settle centered over the i
-      t.to(ball, { x: cx - rollSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
+      // roll across to the lip of the cup...
+      t.to(ball, { x: cx - ballSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
         .to(ball, { rotation: 900, duration: 1.4, ease: 'power2.out' }, 0)
-        // shrink down to i-dot size (scales about its center, staying put)
-        .addLabel('settle')
-        .to(ball, { scale: tittleSize / rollSize, duration: 0.32, ease: 'power2.out' }, 'settle')
-        .to('.logo-tittle', { autoAlpha: 1, duration: 0.2 }, 'settle+=0.12')
-        .to(ball, { autoAlpha: 0, duration: 0.2 }, 'settle+=0.18')
+        // ...then drop into the hole: sink + fade with a rim pulse
+        .addLabel('drop')
+        .to(ball, { scale: 0.14, autoAlpha: 0, duration: 0.42, ease: 'power2.in' }, 'drop')
         .fromTo(
           '.o-ring',
-          { scale: 0.5, opacity: 0.85 },
-          { scale: 2.4, opacity: 0, duration: 0.6, ease: 'power2.out' },
-          'settle+=0.05',
+          { scale: 0.6, opacity: 0.9 },
+          { scale: 2.4, opacity: 0, duration: 0.65, ease: 'power2.out' },
+          'drop+=0.1',
         )
-        .addLabel('reveal', 'settle+=0.14')
+        .addLabel('reveal', 'drop+=0.22')
         .to('.intro', { autoAlpha: 0, duration: 0.4 }, 'reveal')
       revealRest(t, 'reveal')
     }, root)

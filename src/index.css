@@ -253,13 +253,14 @@ a {
 .logo-tittle {
   position: absolute;
   left: 50%;
-  top: 0.28em;
-  width: 0.2em;
-  height: 0.2em;
+  top: 0.12em;
+  width: 0.26em;
+  height: 0.26em;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #ffffff, #dfe4d8);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  background: rgba(3, 16, 8, 0.72);
+  border: 0.045em solid rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
   pointer-events: none;
 }
 
