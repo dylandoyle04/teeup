@@ -253,9 +253,9 @@ a {
 .logo-tittle {
   position: absolute;
   left: 50%;
-  top: 0.12em;
-  width: 0.26em;
-  height: 0.26em;
+  top: -0.04em;
+  width: 0.19em;
+  height: 0.19em;
   transform: translateX(-50%);
   border-radius: 50%;
   background: rgba(3, 16, 8, 0.72);
