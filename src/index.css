@@ -1670,6 +1670,88 @@ table.scorecard .total-cell {
   margin: 0;
 }
 
+/* ---------- Where to eat ---------- */
+.dining-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.dining-card {
+  display: block;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.dining-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--green-300, #bcd8c4);
+  box-shadow: 0 10px 26px rgba(8, 30, 8, 0.12);
+}
+
+.dining-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dining-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--green-900);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.dining-rating {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  white-space: nowrap;
+}
+
+.dining-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.dining-price {
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.dining-dot {
+  opacity: 0.5;
+}
+
+.dining-note {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink, #24312a);
+  margin: 10px 0 12px;
+}
+
+.dining-map {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
 @media (min-width: 720px) {
   .carousel .course-img {
     height: 220px;
