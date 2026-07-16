@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// In production (GitHub Pages project site) assets live under /teeup/.
-// In dev we serve from root so localhost stays clean.
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/teeup/' : '/',
+// Served from the root of the custom domain (flagstickfinder.com), so the
+// base is '/' in both dev and production.
+export default defineConfig(() => ({
+  base: '/',
   plugins: [react()],
   server: {
     host: true,
