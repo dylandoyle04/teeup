@@ -38,7 +38,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link to="/" className="brand">
               Flagstick<span className="mark"> Finder</span>
             </Link>
-            {trip && <span className="nav-trip">{trip.name}</span>}
             {tripId ? (
               <TripTabs tripId={tripId} />
             ) : (
@@ -51,6 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </NavLink>
               </nav>
             )}
+            {trip && <span className="nav-trip">{trip.name}</span>}
           </div>
         </header>
       )}
