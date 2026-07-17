@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
@@ -6,6 +7,7 @@ export default function Booking() {
   const { tripId = '' } = useParams()
   const navigate = useNavigate()
   const trip = useStore((s) => s.getTrip(tripId))
+  const [hotel, setHotel] = useState('')
 
   if (!trip) {
     return (
@@ -67,7 +69,19 @@ export default function Booking() {
         >
           🏨 Find hotels on Expedia ↗
         </a>
+        <a
+          className="book-link"
+          href={`https://www.airbnb.com/s/${dest}/homes`}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          🏠 Find Airbnbs ↗
+        </a>
       </div>
+      <p className="hint" style={{ margin: '2px 4px 0' }}>
+        Searches {trip.destination || 'the destination'} — use the drive-time
+        check below to see how close a place is to your courses.
+      </p>
 
       <div className="section-title">Travel</div>
       <div className="book-row">
@@ -110,6 +124,51 @@ export default function Booking() {
             </div>
           ))
         )}
+      </div>
+
+      <div className="section-title">Drive times</div>
+      <div className="card">
+        <div className="field" style={{ marginBottom: 10 }}>
+          <label>Your hotel or Airbnb</label>
+          <input
+            value={hotel}
+            onChange={(e) => setHotel(e.target.value)}
+            placeholder="e.g. Marriott Grande Ocean, Hilton Head"
+          />
+        </div>
+        {teeLinks.length === 0 ? (
+          <p className="muted" style={{ margin: 0 }}>
+            Add courses to the trip to check drive times.
+          </p>
+        ) : (
+          teeLinks.map((c) => {
+            const destPlace = encodeURIComponent(
+              `${c.name}, ${trip.destination || ''}`,
+            )
+            const href = hotel.trim()
+              ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(
+                  hotel,
+                )}&destination=${destPlace}`
+              : `https://www.google.com/maps/search/?api=1&query=${destPlace}`
+            return (
+              <div className="book-course" key={c.name}>
+                <span className="book-course-name">⛳ {c.name}</span>
+                <a
+                  className="course-link"
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {hotel.trim() ? 'Directions ↗' : 'Map ↗'}
+                </a>
+              </div>
+            )
+          })
+        )}
+        <p className="hint" style={{ margin: '8px 4px 0' }}>
+          Opens Google Maps with live traffic time from your place to each
+          course.
+        </p>
       </div>
 
       <Link

@@ -1024,6 +1024,11 @@ a {
   box-shadow: var(--shadow);
 }
 
+.entry-seg {
+  max-width: 240px;
+  margin-bottom: 8px;
+}
+
 /* ---------- Scorecard table ---------- */
 .scorecard-wrap {
   overflow-x: auto;

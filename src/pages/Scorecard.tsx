@@ -182,9 +182,11 @@ function RoundCard({
 }) {
   const setRoundGame = useStore((s) => s.setRoundGame)
   const setRoundTeams = useStore((s) => s.setRoundTeams)
+  const setScore = useStore((s) => s.setScore)
   const [entry, setEntry] = useState<{ rowId: string; hole: number } | null>(
     null,
   )
+  const [entryMode, setEntryMode] = useState<'quick' | 'detailed'>('quick')
 
   const team = isTeamGame(round.game)
 
@@ -265,8 +267,24 @@ function RoundCard({
       <div className="section-title">
         Enter scores{scramble ? ' (one per team)' : ''}
       </div>
-      <p className="hint" style={{ margin: '-4px 4px 10px' }}>
-        Tap any box to log the score, putts, fairway &amp; GIR for that hole.
+      <div className="seg entry-seg">
+        <button
+          className={entryMode === 'quick' ? 'on' : ''}
+          onClick={() => setEntryMode('quick')}
+        >
+          Quick
+        </button>
+        <button
+          className={entryMode === 'detailed' ? 'on' : ''}
+          onClick={() => setEntryMode('detailed')}
+        >
+          Detailed
+        </button>
+      </div>
+      <p className="hint" style={{ margin: '-2px 4px 10px' }}>
+        {entryMode === 'quick'
+          ? 'Type a score — it jumps down to the next player automatically.'
+          : 'Tap any box to log the score, putts, fairway & GIR for that hole.'}
       </p>
       <div className="card flush">
         <div className="scorecard-wrap">
@@ -276,6 +294,8 @@ function RoundCard({
             round={round}
             rows={rows}
             yards={yards}
+            mode={entryMode}
+            commitScore={(rowId, h, v) => setScore(tripId, round.id, rowId, h, v)}
             onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
           />
         </div>
@@ -288,6 +308,8 @@ function RoundCard({
             round={round}
             rows={rows}
             yards={yards}
+            mode={entryMode}
+            commitScore={(rowId, h, v) => setScore(tripId, round.id, rowId, h, v)}
             onCellTap={(id, h) => setEntry({ rowId: id, hole: h })}
             showTotal
           />
@@ -673,6 +695,8 @@ function HoleTable({
   round,
   rows,
   yards,
+  mode,
+  commitScore,
   onCellTap,
   showTotal,
 }: {
@@ -681,9 +705,35 @@ function HoleTable({
   round: Round
   rows: Row[]
   yards: number[] | null
+  mode: 'quick' | 'detailed'
+  commitScore: (rowId: string, hole: number, value: number | null) => void
   onCellTap: (rowId: string, hole: number) => void
   showTotal?: boolean
 }) {
+  // move focus down to the next player's same hole; wrap to the first
+  // player of the next hole after the last player
+  function focusNext(rowIdx: number, hole: number) {
+    let id: string | null = null
+    if (rowIdx + 1 < rows.length) id = `qs-${rowIdx + 1}-${hole}`
+    else if (hole < 17) id = `qs-0-${hole + 1}`
+    if (id) document.getElementById(id)?.focus()
+  }
+
+  function handleInput(rowIdx: number, hole: number, raw: string) {
+    const digits = raw.replace(/\D/g, '').slice(0, 2)
+    if (!digits) {
+      commitScore(rows[rowIdx].id, hole, null)
+      return
+    }
+    let n = Number(digits)
+    if (n === 0) return // wait for a valid digit
+    n = Math.min(15, n)
+    commitScore(rows[rowIdx].id, hole, n)
+    // advance once the entry can't grow into a bigger score (2 digits, or a
+    // single 2–9 which can't be the start of a 10–15)
+    if (digits.length === 2 || n >= 2) focusNext(rowIdx, hole)
+  }
+
   return (
     <table className="scorecard">
       <thead>
@@ -715,7 +765,7 @@ function HoleTable({
           <td>{sum(holes.map((h) => round.holePars[h]))}</td>
           {showTotal && <td>{sum(round.holePars)}</td>}
         </tr>
-        {rows.map((m) => {
+        {rows.map((m, rowIdx) => {
           const scores = round.scores[m.id] ?? Array(18).fill(null)
           const stats = round.stats?.[m.id] ?? []
           const nineTotal = sum(holes.map((h) => scores[h]))
@@ -727,15 +777,34 @@ function HoleTable({
               </td>
               {holes.map((h) => (
                 <td key={h} className={cellClass(scores[h], round.holePars[h])}>
-                  <button
-                    className="score-cell"
-                    onClick={() => onCellTap(m.id, h)}
-                  >
-                    {scores[h] ?? ''}
-                    {stats[h]?.putts != null && (
-                      <span className="putt-dot" aria-hidden="true" />
-                    )}
-                  </button>
+                  {mode === 'quick' ? (
+                    <input
+                      id={`qs-${rowIdx}-${h}`}
+                      className="score-input"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={2}
+                      value={scores[h] ?? ''}
+                      onFocus={(e) => e.currentTarget.select()}
+                      onChange={(e) => handleInput(rowIdx, h, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          focusNext(rowIdx, h)
+                        }
+                      }}
+                    />
+                  ) : (
+                    <button
+                      className="score-cell"
+                      onClick={() => onCellTap(m.id, h)}
+                    >
+                      {scores[h] ?? ''}
+                      {stats[h]?.putts != null && (
+                        <span className="putt-dot" aria-hidden="true" />
+                      )}
+                    </button>
+                  )}
                 </td>
               ))}
               <td className="total-cell">{nineTotal || ''}</td>
