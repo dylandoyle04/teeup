@@ -78,10 +78,27 @@ export default function Booking() {
           🏠 Find Airbnbs ↗
         </a>
       </div>
-      <p className="hint" style={{ margin: '2px 4px 0' }}>
-        Searches {trip.destination || 'the destination'} — use the drive-time
-        check below to see how close a place is to your courses.
+      <p className="hint" style={{ margin: '2px 4px 6px' }}>
+        Searches {trip.destination || 'the destination'} — or find hotels right
+        next to a specific course:
       </p>
+      {teeLinks.length > 0 && (
+        <div className="near-row">
+          {teeLinks.map((c) => (
+            <a
+              key={c.name}
+              className="course-link"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `hotels near ${c.name}, ${trip.destination || ''}`,
+              )}`}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              🏨 {c.name} ↗
+            </a>
+          ))}
+        </div>
+      )}
 
       <div className="section-title">Travel</div>
       <div className="book-row">
@@ -133,7 +150,7 @@ export default function Booking() {
           <input
             value={hotel}
             onChange={(e) => setHotel(e.target.value)}
-            placeholder="e.g. Marriott Grande Ocean, Hilton Head"
+            placeholder="Type your hotel or resort name"
           />
         </div>
         {teeLinks.length === 0 ? (

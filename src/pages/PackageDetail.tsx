@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
-import { getRestaurants, mapsLink } from '../restaurants'
+import { getRestaurants, reserveLink, mapsLink } from '../restaurants'
 import { money } from '../components/ui'
 import Carousel from '../components/Carousel'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
@@ -133,14 +133,7 @@ export default function PackageDetail() {
             </p>
             <div className="dining-grid">
               {restaurants.map((r) => (
-                <a
-                  className="dining-card"
-                  key={r.name}
-                  href={mapsLink(r, pkg.destination)}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  data-reveal
-                >
+                <div className="dining-card" key={r.name} data-reveal>
                   <div className="dining-top">
                     <h3 className="dining-name">{r.name}</h3>
                     <span className="dining-rating">★ {r.rating}</span>
@@ -153,8 +146,25 @@ export default function PackageDetail() {
                     <span>{r.area}</span>
                   </div>
                   <p className="dining-note">{r.note}</p>
-                  <span className="dining-map">View on map ↗</span>
-                </a>
+                  <div className="dining-links">
+                    <a
+                      className="course-link gn"
+                      href={reserveLink(r, pkg.destination)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Reserve on OpenTable ↗
+                    </a>
+                    <a
+                      className="course-link"
+                      href={mapsLink(r, pkg.destination)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Map ↗
+                    </a>
+                  </div>
+                </div>
               ))}
             </div>
           </>

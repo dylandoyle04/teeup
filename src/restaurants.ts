@@ -55,7 +55,15 @@ const RESTAURANTS: Record<string, Restaurant[]> = {
   ],
 }
 
-/** Build a Google Maps search link for a restaurant. */
+/** OpenTable reservation search for a restaurant (falls back to results for
+ *  the name + city if the exact spot isn't bookable on OpenTable). */
+export function reserveLink(r: Restaurant, destination: string): string {
+  const city = destination.split(',')[0]
+  const q = `${r.name} ${city}`
+  return `https://www.opentable.com/s?term=${encodeURIComponent(q)}`
+}
+
+/** Google Maps search link for a restaurant (secondary, for directions). */
 export function mapsLink(r: Restaurant, destination: string): string {
   const city = destination.split(',')[0]
   const q = `${r.name} ${r.area} ${city}`
