@@ -28,7 +28,7 @@ export default function Explore() {
         </p>
       </div>
 
-      <h2 className="section-title" data-reveal>
+      <h2 className="section-title explore-h2" data-reveal>
         Our Preplanned Trips
       </h2>
       <div className="pkg-grid">
@@ -53,7 +53,7 @@ export default function Explore() {
         ))}
       </div>
 
-      <h2 className="section-title" data-reveal>
+      <h2 className="section-title explore-h2" data-reveal>
         Or start from scratch
       </h2>
       <button
@@ -77,7 +77,7 @@ export default function Explore() {
 
       {trips.length > 0 && (
         <>
-          <h2 className="section-title" data-reveal>
+          <h2 className="section-title explore-h2" data-reveal>
             Your Trips
           </h2>
           <div className="pkg-grid">
