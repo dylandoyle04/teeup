@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
+import { getRestaurants, reserveLink, mapsLink } from '../restaurants'
 
 export default function Booking() {
   const { tripId = '' } = useParams()
@@ -22,6 +23,7 @@ export default function Booking() {
 
   const dest = encodeURIComponent(trip.destination || '')
   const pkg = trip.sourcePackageId ? getPackage(trip.sourcePackageId) : undefined
+  const restaurants = getRestaurants(trip.destination)
 
   // tee-time links: prefer the package's per-course GolfNow/website links,
   // otherwise fall back to a GolfNow search for each course on the trip.
@@ -142,6 +144,52 @@ export default function Booking() {
           ))
         )}
       </div>
+
+      {restaurants.length > 0 && (
+        <>
+          <div className="section-title">Where to eat</div>
+          <p className="hint" style={{ margin: '-4px 4px 8px' }}>
+            Highly-rated spots near the courses — a nice night out or a casual
+            post-round bite.
+          </p>
+          <div className="dining-grid">
+            {restaurants.map((r) => (
+              <div className="dining-card" key={r.name}>
+                <div className="dining-top">
+                  <h3 className="dining-name">{r.name}</h3>
+                  <span className="dining-rating">★ {r.rating}</span>
+                </div>
+                <div className="dining-sub">
+                  <span className="dining-price">{r.price}</span>
+                  <span className="dining-dot">·</span>
+                  <span>{r.cuisine}</span>
+                  <span className="dining-dot">·</span>
+                  <span>{r.area}</span>
+                </div>
+                <p className="dining-note">{r.note}</p>
+                <div className="dining-links">
+                  <a
+                    className="course-link gn"
+                    href={reserveLink(r, trip.destination)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Reserve on OpenTable ↗
+                  </a>
+                  <a
+                    className="course-link"
+                    href={mapsLink(r, trip.destination)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Map ↗
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="section-title">Drive times</div>
       <div className="card">

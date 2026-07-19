@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
-import { getRestaurants, reserveLink, mapsLink } from '../restaurants'
 import { money } from '../components/ui'
 import Carousel from '../components/Carousel'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
@@ -50,8 +49,6 @@ export default function PackageDetail() {
     const id = createTripFromPackage(pkg!)
     navigate(`/trip/${id}/book`)
   }
-
-  const restaurants = getRestaurants(pkg.destination)
 
   return (
     <div className="pkg" ref={root}>
@@ -123,52 +120,6 @@ export default function PackageDetail() {
             </div>
           ))}
         </div>
-
-        {restaurants.length > 0 && (
-          <>
-            <div className="section-title">Where to Eat</div>
-            <p className="hint" style={{ marginTop: -6, marginBottom: 4 }}>
-              Highly-rated spots near the courses — from a nice night out to a
-              casual post-round bite.
-            </p>
-            <div className="dining-grid">
-              {restaurants.map((r) => (
-                <div className="dining-card" key={r.name} data-reveal>
-                  <div className="dining-top">
-                    <h3 className="dining-name">{r.name}</h3>
-                    <span className="dining-rating">★ {r.rating}</span>
-                  </div>
-                  <div className="dining-sub">
-                    <span className="dining-price">{r.price}</span>
-                    <span className="dining-dot">·</span>
-                    <span>{r.cuisine}</span>
-                    <span className="dining-dot">·</span>
-                    <span>{r.area}</span>
-                  </div>
-                  <p className="dining-note">{r.note}</p>
-                  <div className="dining-links">
-                    <a
-                      className="course-link gn"
-                      href={reserveLink(r, pkg.destination)}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Reserve on OpenTable ↗
-                    </a>
-                    <a
-                      className="course-link"
-                      href={mapsLink(r, pkg.destination)}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Map ↗
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
 
         <button
           className="btn ghost"

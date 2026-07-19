@@ -306,7 +306,7 @@ const COURSES: Record<string, PackageCourse> = {
   ),
 }
 
-export const PACKAGES: TripPackage[] = [
+const PACKAGES_RAW: TripPackage[] = [
   {
     id: "hhi-luxury",
     destination: "Hilton Head Island, SC",
@@ -546,6 +546,21 @@ export const PACKAGES: TripPackage[] = [
     ],
   },
 ]
+
+// Show destinations most-popular first; stable sort keeps Luxury before Value.
+const DEST_ORDER = [
+  'Scottsdale, AZ',
+  'Myrtle Beach, SC',
+  'Hilton Head Island, SC',
+  'Las Vegas, NV',
+  'San Diego, CA',
+  'Boyne, MI',
+  'Orlando, FL',
+]
+
+export const PACKAGES: TripPackage[] = [...PACKAGES_RAW].sort(
+  (a, b) => DEST_ORDER.indexOf(a.destination) - DEST_ORDER.indexOf(b.destination),
+)
 
 export function getPackage(id: string): TripPackage | undefined {
   return PACKAGES.find((p) => p.id === id)
