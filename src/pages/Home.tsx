@@ -148,9 +148,11 @@ export default function Home() {
         </button>
       </div>
 
-      <Link className="hero-legal" to="/legal">
-        Privacy &amp; Terms
-      </Link>
+      {!showIntro && (
+        <Link className="hero-legal" to="/legal">
+          Privacy &amp; Terms
+        </Link>
+      )}
 
       {showIntro && (
         <div

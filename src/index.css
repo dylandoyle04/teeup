@@ -770,6 +770,22 @@ a {
   letter-spacing: 0.4px;
   color: rgba(255, 255, 255, 0.68);
   text-decoration: none;
+  animation: heroLegalIn 0.5s ease both;
+}
+
+@keyframes heroLegalIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-legal {
+    animation: none;
+  }
 }
 
 .hero-legal:hover {
