@@ -24,8 +24,11 @@ const EXPEDIA_HOTELS: Record<string, string> = {
 /** Vrbo rental-search affiliate links, keyed by package `destination`. */
 const VRBO_RENTALS: Record<string, string> = {}
 
+/** Flight-search affiliate links per destination (optional). */
+const EXPEDIA_FLIGHTS: Record<string, string> = {}
+
 /** Single affiliate links that aren't destination specific. */
-const EXPEDIA_FLIGHTS = ''
+const EXPEDIA_FLIGHTS_ANY = ''
 const EXPEDIA_CARS = ''
 
 const enc = (s: string) => encodeURIComponent(s || '')
@@ -46,7 +49,8 @@ export function rentalsLink(destination: string): string {
 
 export function flightsLink(destination: string): string {
   return (
-    EXPEDIA_FLIGHTS ||
+    EXPEDIA_FLIGHTS[destination] ||
+    EXPEDIA_FLIGHTS_ANY ||
     `https://www.expedia.com/Flights-Search?leg1=to:${enc(destination)}`
   )
 }
