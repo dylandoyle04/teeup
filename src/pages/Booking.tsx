@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
 import { getRestaurants, reserveLink, mapsLink } from '../restaurants'
+import { hotelsLink, rentalsLink, flightsLink, carsLink } from '../affiliates'
 
 export default function Booking() {
   const { tripId = '' } = useParams()
@@ -21,7 +22,6 @@ export default function Booking() {
     )
   }
 
-  const dest = encodeURIComponent(trip.destination || '')
   const pkg = trip.sourcePackageId ? getPackage(trip.sourcePackageId) : undefined
   const restaurants = getRestaurants(trip.destination)
 
@@ -65,7 +65,7 @@ export default function Booking() {
       <div className="book-row">
         <a
           className="book-link"
-          href={`https://www.expedia.com/Hotel-Search?destination=${dest}`}
+          href={hotelsLink(trip.destination)}
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -73,7 +73,7 @@ export default function Booking() {
         </a>
         <a
           className="book-link"
-          href={`https://www.vrbo.com/search?q=${dest}`}
+          href={rentalsLink(trip.destination)}
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -106,7 +106,7 @@ export default function Booking() {
       <div className="book-row">
         <a
           className="book-link"
-          href={`https://www.expedia.com/Flights-Search?leg1=to:${dest}`}
+          href={flightsLink(trip.destination)}
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -114,7 +114,7 @@ export default function Booking() {
         </a>
         <a
           className="book-link"
-          href={`https://www.expedia.com/Carrentals`}
+          href={carsLink()}
           target="_blank"
           rel="noreferrer noopener"
         >
