@@ -28,7 +28,7 @@ const VRBO_RENTALS: Record<string, string> = {}
 const EXPEDIA_FLIGHTS: Record<string, string> = {}
 
 /** Single affiliate links that aren't destination specific. */
-const EXPEDIA_FLIGHTS_ANY = ''
+const EXPEDIA_FLIGHTS_ANY = 'https://expedia.com/affiliates/flights.u8Gakul'
 const EXPEDIA_CARS = ''
 
 const enc = (s: string) => encodeURIComponent(s || '')
