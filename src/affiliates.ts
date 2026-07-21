@@ -10,7 +10,9 @@
 
 /** Expedia hotel-search affiliate links, keyed by package `destination`. */
 const EXPEDIA_HOTELS: Record<string, string> = {
-  // 'Scottsdale, AZ': 'https://www.expedia.com/affiliates/....',
+  'Scottsdale, AZ':
+    'https://expedia.com/affiliates/hotel-search-scottsdale.LAfpyLU',
+  // paste the generated hotel-search link for each destination below
   // 'Myrtle Beach, SC': '',
   // 'Hilton Head Island, SC': '',
   // 'Las Vegas, NV': '',
