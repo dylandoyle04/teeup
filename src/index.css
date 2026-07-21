@@ -118,6 +118,55 @@ a {
   justify-self: end;
 }
 
+/* On phones there isn't room for brand + menu on one line, so stack them.
+   (grid-column/justify-self above are inert once this switches to flex.) */
+@media (max-width: 760px) {
+  .nav-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .navbar .brand {
+    font-size: 21px;
+  }
+
+  .nav-inner .top-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .nav-inner .top-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-tabs a {
+    padding: 10px 13px;
+  }
+
+  /* keep the sticky bar short; the trip name is shown on the page itself */
+  .nav-trip {
+    display: none;
+  }
+
+  /* iOS zooms the page in when a focused field is under 16px, which is
+     jarring mid-round; 16px keeps entry steady now that pinch-zoom is on */
+  input,
+  select,
+  textarea,
+  .score-input {
+    font-size: 16px;
+  }
+
+  .score-input {
+    padding: 11px 2px;
+  }
+}
+
 .navbar .brand {
   font-size: 24px;
   font-weight: 800;
