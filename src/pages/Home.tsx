@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 
 // plays on each full page load, but not on client-side nav back to Home
@@ -147,6 +147,10 @@ export default function Home() {
           Plan your trip
         </button>
       </div>
+
+      <Link className="hero-legal" to="/legal">
+        Privacy &amp; Terms
+      </Link>
 
       {showIntro && (
         <div

@@ -9,6 +9,7 @@ import TripSetup from './pages/TripSetup'
 import Booking from './pages/Booking'
 import Scorecard from './pages/Scorecard'
 import Bets from './pages/Bets'
+import Legal from './pages/Legal'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/explore" element={<Explore />} />
         <Route path="/new" element={<NewTrip />} />
         <Route path="/package/:packageId" element={<PackageDetail />} />
+        <Route path="/legal" element={<Legal />} />
         <Route path="/trip/:tripId" element={<Navigate to="setup" replace />} />
         <Route path="/trip/:tripId/setup" element={<TripSetup />} />
         <Route path="/trip/:tripId/book" element={<Booking />} />

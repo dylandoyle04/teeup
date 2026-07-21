@@ -5,7 +5,8 @@
       "Read(//tmp/**)",
       "WebSearch",
       "Bash(pkill -f \"remote-debugging-port=94\")",
-      "Bash(node /tmp/cap_final.mjs)"
+      "Bash(node /tmp/cap_final.mjs)",
+      "Bash(node /tmp/cap_legal.mjs)"
     ]
   }
 }

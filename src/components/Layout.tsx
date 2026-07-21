@@ -71,7 +71,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="footer-links">
               <Link to="/explore">Explore trips</Link>
               <Link to="/new">Create a trip</Link>
+              <Link to="/legal">Privacy &amp; Terms</Link>
             </div>
+            <p className="footer-disclosure">
+              Some links on this site are affiliate links — if you book through
+              them we may earn a commission, at no extra cost to you.{' '}
+              <Link to="/legal">Learn more</Link>.
+            </p>
             <p className="footer-copy">© 2026 Flagstick Finder</p>
           </div>
         </footer>
