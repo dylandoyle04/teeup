@@ -31,7 +31,7 @@ export default function Legal() {
           partners' own listings.
         </p>
         <p className="hint" style={{ marginBottom: 0 }}>
-          Partners currently include GolfNow, Expedia, OpenTable, and Airbnb.
+          Partners currently include GolfNow, Expedia, Vrbo, and OpenTable.
           This list may change over time.
         </p>
       </div>
@@ -79,7 +79,7 @@ export default function Legal() {
           </li>
           <li>
             <strong>Partner links.</strong> When you follow a link to GolfNow,
-            Expedia, OpenTable, Airbnb, or Google Maps, you leave this site.
+            Expedia, Vrbo, OpenTable, or Google Maps, you leave this site.
             Those companies set their own cookies and follow their own privacy
             policies, which govern anything you do there.
           </li>

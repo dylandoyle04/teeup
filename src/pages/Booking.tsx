@@ -73,11 +73,11 @@ export default function Booking() {
         </a>
         <a
           className="book-link"
-          href={`https://www.airbnb.com/s/${dest}/homes`}
+          href={`https://www.vrbo.com/search?q=${dest}`}
           target="_blank"
           rel="noreferrer noopener"
         >
-          🏠 Find Airbnbs ↗
+          🏠 Find rentals on Vrbo ↗
         </a>
       </div>
       <p className="hint" style={{ margin: '2px 4px 6px' }}>
@@ -194,7 +194,7 @@ export default function Booking() {
       <div className="section-title">Drive times</div>
       <div className="card">
         <div className="field" style={{ marginBottom: 10 }}>
-          <label>Your hotel or Airbnb</label>
+          <label>Your hotel or rental</label>
           <input
             value={hotel}
             onChange={(e) => setHotel(e.target.value)}
