@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const UPDATED = 'July 21, 2026'
-const CONTACT = 'hello@flagstickfinder.com'
+const CONTACT = 'Flagstickfinder@outlook.com'
 
 export default function Legal() {
   return (
@@ -141,10 +141,14 @@ export default function Legal() {
           inaccurate information.
         </p>
 
-        <h3 className="legal-h3">Contact</h3>
+        <h3 className="legal-h3">Contact &amp; customer support</h3>
         <p style={{ marginBottom: 0 }}>
-          Questions about any of the above? Email{' '}
-          <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.
+          Need help with a trip, hit a bug, or have a question about anything
+          above? Reach out any time at{' '}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and we'll get back to you.
+          For issues with a booking you made on a partner site — a tee time,
+          hotel, flight, or reservation — contact that company directly, since
+          they hold the booking.
         </p>
       </div>
 

@@ -72,6 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/explore">Explore trips</Link>
               <Link to="/new">Create a trip</Link>
               <Link to="/legal">Privacy &amp; Terms</Link>
+              <a href="mailto:Flagstickfinder@outlook.com">Contact support</a>
             </div>
             <p className="footer-disclosure">
               Some links on this site are affiliate links — if you book through
