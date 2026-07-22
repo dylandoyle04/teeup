@@ -47,6 +47,30 @@ const RESTAURANTS: Record<string, Restaurant[]> = {
     { name: "Culinary Dropout", cuisine: "New American gastropub", price: "$$", rating: "4.4", note: "Fun, lively spot; famous soft pretzels and 36-hour braised ribs.", area: "North Scottsdale" },
     { name: "Postino", cuisine: "Wine cafe & bruschetta", price: "$$", rating: "4.4", note: "Great-value bruschetta boards and a killer wine happy hour.", area: "Kierland" },
   ],
+  "Palm Springs, CA": [
+    { name: "Morgan's in the Desert", cuisine: "Contemporary American", price: "$$$$", rating: "4.5", note: "Produce-driven seasonal plates and prime steaks at La Quinta Resort.", area: "La Quinta" },
+    { name: "Arnold Palmer's Restaurant", cuisine: "Steakhouse", price: "$$$", rating: "4.4", note: "Prime steaks and famous meatloaf on the mountain-view patio.", area: "La Quinta" },
+    { name: "Bar Issi", cuisine: "Italian", price: "$$$", rating: "4.5", note: "Wood-fired pizzas, housemade pasta, and caviar service.", area: "Palm Springs" },
+    { name: "Adobe Grill", cuisine: "Mexican", price: "$$", rating: "4.3", note: "Tableside guacamole and Oaxacan mole with margaritas.", area: "La Quinta" },
+  ],
+  "Naples, FL": [
+    { name: "Sails Restaurant", cuisine: "Seafood & steak", price: "$$$$", rating: "4.6", note: "Elegant fine dining with a raw bar in downtown Naples.", area: "Naples" },
+    { name: "The Turtle Club", cuisine: "Seafood", price: "$$$", rating: "4.5", note: "Beachfront dining with Gulf sunsets and fresh catch.", area: "Naples" },
+    { name: "Campiello", cuisine: "Italian", price: "$$$", rating: "4.5", note: "Lively Fifth Avenue trattoria with wood-fired dishes.", area: "Naples" },
+    { name: "Pinchers", cuisine: "Casual seafood", price: "$$", rating: "4.3", note: "Laid-back local favorite for crab, shrimp, and cold beer.", area: "Fort Myers" },
+  ],
+  "Pinehurst, NC": [
+    { name: "Ashten's", cuisine: "Farm-to-table American", price: "$$$", rating: "4.6", note: "Elegant Southern Pines room with local ingredients and a cozy pub.", area: "Southern Pines" },
+    { name: "Southern Prime Steakhouse", cuisine: "Steakhouse", price: "$$$$", rating: "4.7", note: "Relaxed, upscale steaks with polished service in Southern Pines.", area: "Southern Pines" },
+    { name: "Villaggio Ristorante", cuisine: "Italian", price: "$$$", rating: "4.5", note: "House-made pastas inside Pinehurst's historic Magnolia Inn.", area: "Pinehurst" },
+    { name: "Drum & Quill Public House", cuisine: "Gastropub", price: "$$", rating: "4.5", note: "Cozy Old Town pub with modern fare and live music.", area: "Pinehurst" },
+  ],
+  "Charleston, SC": [
+    { name: "FIG", cuisine: "Southern / seasonal", price: "$$$", rating: "4.7", note: "James Beard-winning farm-to-table cornerstone of downtown dining.", area: "Downtown Charleston" },
+    { name: "Halls Chophouse", cuisine: "Steakhouse", price: "$$$$", rating: "4.8", note: "Charleston's signature upscale steak and martini destination.", area: "Downtown Charleston" },
+    { name: "Leon's Oyster Shop", cuisine: "Seafood / fried chicken", price: "$$", rating: "4.6", note: "Casual former garage famous for oysters and fried chicken.", area: "Downtown Charleston" },
+    { name: "Rodney Scott's BBQ", cuisine: "Barbecue", price: "$$", rating: "4.6", note: "Whole-hog pitmaster and James Beard winner, deliciously casual.", area: "Downtown Charleston" },
+  ],
   "Myrtle Beach, SC": [
     { name: "Bistro 217", cuisine: "New American / seafood", price: "$$$", rating: "4.7", note: "Pawleys favorite near Caledonia; go for the fresh seafood and desserts.", area: "Pawleys Island" },
     { name: "Hook & Barrel", cuisine: "Modern Lowcountry seafood", price: "$$$", rating: "4.7", note: "Sleek seafood standout; order the bourbon bacon and she-crab soup.", area: "Myrtle Beach" },
