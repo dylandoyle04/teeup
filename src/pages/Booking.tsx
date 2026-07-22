@@ -114,7 +114,7 @@ export default function Booking() {
         </a>
         <a
           className="book-link"
-          href={carsLink()}
+          href={carsLink(trip.destination)}
           target="_blank"
           rel="noreferrer noopener"
         >
