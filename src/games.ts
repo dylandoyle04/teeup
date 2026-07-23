@@ -4,13 +4,14 @@ export const GAMES = [
   'Stroke Play',
   'Stableford',
   'Skins',
+  'Best Ball',
   'High-Low',
   'Scramble',
   'Wolf',
 ] as const
 export type Game = (typeof GAMES)[number]
 
-export const TEAM_GAMES: Game[] = ['High-Low', 'Scramble']
+export const TEAM_GAMES: Game[] = ['Best Ball', 'High-Low', 'Scramble']
 export const isTeamGame = (g: string) => TEAM_GAMES.includes(g as Game)
 
 export function sum(arr: (number | null)[]): number {
@@ -121,6 +122,42 @@ export function computeHighLow(round: Round) {
     holes.push({ hole: i + 1, low, high })
   })
   return { A, B, aPts, bPts, holes }
+}
+
+// ---------- Best Ball (Four-Ball) ----------
+// Each player plays their own ball; the team score on a hole is its best
+// (lowest) individual score. Scored as match play (holes up) plus stroke total.
+export function computeBestBall(round: Round) {
+  const [A, B] = round.teams ?? []
+  if (!A || !B) return null
+  const teamBest = (memberIds: ID[], hole: number) => {
+    const vals = memberIds
+      .map((id) => round.scores[id]?.[hole] ?? null)
+      .filter((v): v is number => v != null)
+    return vals.length ? Math.min(...vals) : null
+  }
+  let aHoles = 0
+  let bHoles = 0
+  let aTotal = 0
+  let bTotal = 0
+  let thru = 0
+  const holes: { hole: number; a: number | null; b: number | null; win: 'A' | 'B' | '½' }[] = []
+  round.holePars.forEach((_, i) => {
+    const a = teamBest(A.memberIds, i)
+    const b = teamBest(B.memberIds, i)
+    if (a == null || b == null) {
+      holes.push({ hole: i + 1, a, b, win: '½' })
+      return
+    }
+    thru++
+    aTotal += a
+    bTotal += b
+    const win = a < b ? 'A' : b < a ? 'B' : '½'
+    if (win === 'A') aHoles++
+    else if (win === 'B') bHoles++
+    holes.push({ hole: i + 1, a, b, win })
+  })
+  return { A, B, aHoles, bHoles, aTotal, bTotal, thru, holes }
 }
 
 // ---------- Wolf ----------

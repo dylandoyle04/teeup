@@ -7,6 +7,7 @@ import HoleEntry from '../components/HoleEntry'
 import { yardsForCourseName } from '../coursePars'
 import {
   GAMES,
+  computeBestBall,
   computeHighLow,
   computeSkins,
   computeStableford,
@@ -415,6 +416,46 @@ function Results({
 }) {
   const memberIds = members.map((m) => m.id)
   const byId = new Map(members.map((m) => [m.id, m]))
+
+  // Best Ball (Four-Ball)
+  if (round.game === 'Best Ball') {
+    const bb = computeBestBall(round)
+    if (!bb)
+      return (
+        <div className="card">
+          <p className="muted" style={{ margin: 0 }}>
+            Set up two teams to start Best Ball scoring.
+          </p>
+        </div>
+      )
+    const leader = bb.aHoles === bb.bHoles ? null : bb.aHoles > bb.bHoles ? 'A' : 'B'
+    return (
+      <div className="card">
+        <div className="hl-score">
+          <div className={`hl-team ${leader === 'A' ? 'win' : ''}`}>
+            <div className="hl-name">{bb.A.name}</div>
+            <div className="hl-pts">{bb.aHoles}</div>
+            <div className="hl-name" style={{ opacity: 0.7, fontWeight: 600 }}>
+              {bb.aTotal || '–'}
+            </div>
+          </div>
+          <span className="hl-vs">holes{' '}up</span>
+          <div className={`hl-team ${leader === 'B' ? 'win' : ''}`}>
+            <div className="hl-name">{bb.B.name}</div>
+            <div className="hl-pts">{bb.bHoles}</div>
+            <div className="hl-name" style={{ opacity: 0.7, fontWeight: 600 }}>
+              {bb.bTotal || '–'}
+            </div>
+          </div>
+        </div>
+        <p className="hint" style={{ marginTop: 10, textAlign: 'center' }}>
+          Each hole goes to the team with the better (lower) single score. Big
+          number = holes won; small number = team's best-ball total (thru{' '}
+          {bb.thru}).
+        </p>
+      </div>
+    )
+  }
 
   // High-Low
   if (round.game === 'High-Low') {
