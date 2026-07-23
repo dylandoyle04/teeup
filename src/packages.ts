@@ -242,7 +242,7 @@ const PHOTO_COUNTS: Record<string, number> = {
   'tpc-champions': 13,
   kierland: 11,
   mcdowell: 14,
-  'tpc-myrtle': 14,
+  'tpc-myrtle': 13,
   caledonia: 4,
   'barefoot-dye': 2,
   'kings-north': 12,
