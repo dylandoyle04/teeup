@@ -755,6 +755,204 @@ a {
   margin-top: 26px;
 }
 
+/* ---------- Ryder Cup ---------- */
+.ryder-board {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 10px;
+  margin: 6px 0 2px;
+}
+
+.ryder-side {
+  border-radius: 16px;
+  padding: 16px 12px;
+  text-align: center;
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.ryder-side.a {
+  background: linear-gradient(160deg, #1d5fb0, #14477f);
+}
+
+.ryder-side.b {
+  background: linear-gradient(160deg, #c6952a, #9c7414);
+}
+
+.ryder-side:not(.lead) {
+  opacity: 0.82;
+}
+
+.ryder-side-name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  opacity: 0.95;
+  line-height: 1.15;
+}
+
+.ryder-side-pts {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 6px;
+}
+
+.ryder-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 78px;
+}
+
+.ryder-status {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--green-800, #17472f);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.ryder-status.win {
+  color: var(--gold-dark);
+}
+
+.ryder-thru {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ryder-names {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.ryder-name-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ryder-name-input.a {
+  border-left: 4px solid #1d5fb0;
+}
+
+.ryder-name-input.b {
+  border-left: 4px solid #c6952a;
+}
+
+.ryder-vs-sm {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.ryder-toggle button.on.a {
+  background: #1d5fb0;
+  color: #fff;
+}
+
+.ryder-toggle button.on.b {
+  background: #c6952a;
+  color: #fff;
+}
+
+.ryder-format {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ryder-format:last-of-type {
+  border-bottom: none;
+}
+
+.ryder-format-badge {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--green-700);
+  background: var(--green-100);
+  padding: 4px 9px;
+  border-radius: 999px;
+  margin-top: 2px;
+}
+
+.ryder-format-name {
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.ryder-format-tag {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.ryder-format-how {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.ryder-session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ryder-session:last-child {
+  border-bottom: none;
+}
+
+.ryder-session-day {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--green-700);
+  min-width: 40px;
+}
+
+.ryder-session-mid {
+  flex: 1;
+  min-width: 0;
+}
+
+.ryder-session-course {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ryder-session-fmt {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ryder-session-result {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--green-900);
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;

@@ -112,6 +112,7 @@ interface State {
     },
   ) => void
   deleteRound: (tripId: ID, roundId: ID) => void
+  setRyderCup: (tripId: ID, ryderCup: Trip['ryderCup']) => void
 
   // bets
   addBet: (
@@ -447,6 +448,11 @@ export const useStore = create<State>()(
             ...t,
             rounds: t.rounds.filter((r) => r.id !== roundId),
           })),
+        }),
+
+      setRyderCup: (tripId, ryderCup) =>
+        set({
+          trips: patchTrip(get().trips, tripId, (t) => ({ ...t, ryderCup })),
         }),
 
       addBet: (tripId, bet) => {

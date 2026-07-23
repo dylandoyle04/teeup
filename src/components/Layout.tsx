@@ -6,6 +6,7 @@ function TripTabs({ tripId }: { tripId: string }) {
     { to: `/trip/${tripId}/setup`, label: 'Trip' },
     { to: `/trip/${tripId}/book`, label: 'Book' },
     { to: `/trip/${tripId}/score`, label: 'Scorecard' },
+    { to: `/trip/${tripId}/ryder`, label: 'Ryder Cup' },
     { to: `/trip/${tripId}/bets`, label: 'Bets' },
   ]
   return (

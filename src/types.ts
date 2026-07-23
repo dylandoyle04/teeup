@@ -1,3 +1,5 @@
+import type { RyderCup } from './ryder'
+
 export type ID = string
 
 export type HotelTier = 'budget' | 'midrange' | 'luxury'
@@ -117,5 +119,7 @@ export interface Trip {
   votes: VoteMap
   rounds: Round[]
   bets: Bet[]
+  /** optional trip-long Ryder Cup competition (two teams across the rounds) */
+  ryderCup?: RyderCup
   createdAt: number
 }

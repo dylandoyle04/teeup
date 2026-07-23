@@ -8,6 +8,7 @@ import PackageDetail from './pages/PackageDetail'
 import TripSetup from './pages/TripSetup'
 import Booking from './pages/Booking'
 import Scorecard from './pages/Scorecard'
+import RyderCup from './pages/RyderCup'
 import Bets from './pages/Bets'
 import Legal from './pages/Legal'
 
@@ -29,6 +30,7 @@ export default function App() {
           element={<Navigate to="../score" replace />}
         />
         <Route path="/trip/:tripId/score" element={<Scorecard />} />
+        <Route path="/trip/:tripId/ryder" element={<RyderCup />} />
         <Route path="/trip/:tripId/bets" element={<Bets />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
