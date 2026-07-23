@@ -34,8 +34,11 @@ export function formatForIndex(i: number) {
 
 export interface SessionResult {
   round: Round
+  /** true unless the round was toggled off */
+  counts: boolean
+  /** 0-based position among counting rounds (only meaningful when counts) */
   index: number
-  format: (typeof RYDER_FORMATS)[number]
+  format: (typeof RYDER_FORMATS)[number] | null
   aHoles: number
   bHoles: number
   thru: number
@@ -50,8 +53,15 @@ function sideMembers(rc: RyderCup, side: Side): ID[] {
   return Object.keys(rc.teamOf).filter((id) => rc.teamOf[id] === side)
 }
 
+/** A round counts toward the cup unless explicitly switched off. */
+export function roundCounts(round: Round): boolean {
+  return round.ryder !== false
+}
+
 // Best-ball match play for one round using the trip-wide Ryder teams.
+// `index` is the counting-session position (for Day/format); -1 if it doesn't count.
 function sessionResult(rc: RyderCup, round: Round, index: number): SessionResult {
+  const counts = index >= 0
   const a = sideMembers(rc, 'A')
   const b = sideMembers(rc, 'B')
   const best = (ids: ID[], hole: number) => {
@@ -71,24 +81,34 @@ function sessionResult(rc: RyderCup, round: Round, index: number): SessionResult
     if (av < bv) aHoles++
     else if (bv < av) bHoles++
   })
-  const format = formatForIndex(index)
   let winner: Side | 'tie' | null = null
   let aPts = 0
   let bPts = 0
   if (thru > 0) {
-    if (aHoles > bHoles) {
-      winner = 'A'
-      aPts = 1
-    } else if (bHoles > aHoles) {
-      winner = 'B'
-      bPts = 1
-    } else {
-      winner = 'tie'
+    if (aHoles > bHoles) winner = 'A'
+    else if (bHoles > aHoles) winner = 'B'
+    else winner = 'tie'
+  }
+  if (counts && winner) {
+    if (winner === 'A') aPts = 1
+    else if (winner === 'B') bPts = 1
+    else {
       aPts = 0.5
       bPts = 0.5
     }
   }
-  return { round, index, format, aHoles, bHoles, thru, winner, aPts, bPts }
+  return {
+    round,
+    counts,
+    index: counts ? index : -1,
+    format: counts ? formatForIndex(index) : null,
+    aHoles,
+    bHoles,
+    thru,
+    winner,
+    aPts,
+    bPts,
+  }
 }
 
 export interface RyderStandings {
@@ -105,12 +125,16 @@ export interface RyderStandings {
 export function computeRyder(trip: Trip): RyderStandings | null {
   const rc = trip.ryderCup
   if (!rc) return null
-  const sessions = trip.rounds.map((r, i) => sessionResult(rc, r, i))
-  const aPoints = sessions.reduce((s, x) => s + x.aPts, 0)
-  const bPoints = sessions.reduce((s, x) => s + x.bPts, 0)
-  const total = trip.rounds.length
+  let counter = 0
+  const sessions = trip.rounds.map((r) =>
+    sessionResult(rc, r, roundCounts(r) ? counter++ : -1),
+  )
+  const counting = sessions.filter((s) => s.counts)
+  const aPoints = counting.reduce((s, x) => s + x.aPts, 0)
+  const bPoints = counting.reduce((s, x) => s + x.bPts, 0)
+  const total = counting.length
   const clinch = total > 0 ? total / 2 + 0.5 : 0
-  const played = sessions.filter((s) => s.winner != null).length
+  const played = counting.filter((s) => s.winner != null).length
   let decided: Side | 'tie' | null = null
   if (total > 0) {
     if (aPoints >= clinch) decided = 'A'

@@ -83,6 +83,8 @@ export interface Round {
   teams: Team[]
   /** per-hole wolf decision (Wolf only); index = hole 0..17 */
   wolf: (WolfPick | null)[]
+  /** false = excluded from the Ryder Cup tally (counts by default) */
+  ryder?: boolean
 }
 
 export interface Bet {

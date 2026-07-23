@@ -953,6 +953,44 @@ a {
   color: var(--green-900);
 }
 
+.ryder-session.off .ryder-session-course,
+.ryder-session.off .ryder-session-fmt {
+  opacity: 0.5;
+}
+
+.ryder-count-toggle {
+  flex-shrink: 0;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  border: none;
+  background: #cdd5cf;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ryder-count-toggle.on {
+  background: var(--tee-green, #3a9d5d);
+}
+
+.ryder-count-toggle .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.ryder-count-toggle.on .knob {
+  transform: translateX(16px);
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;

@@ -160,6 +160,7 @@ export default function RyderCup() {
 }
 
 function RyderScoreboard({ trip }: { trip: NonNullable<ReturnType<typeof useStore.getState>['trips'][number]> }) {
+  const setRoundRyder = useStore((st) => st.setRoundRyder)
   const s = computeRyder(trip)!
   const rc = trip.ryderCup!
   const aLead = s.aPoints > s.bPoints
@@ -198,27 +199,50 @@ function RyderScoreboard({ trip }: { trip: NonNullable<ReturnType<typeof useStor
       {s.sessions.length > 0 && (
         <div className="card" style={{ marginTop: 12 }}>
           {s.sessions.map((ses) => (
-            <div className="ryder-session" key={ses.round.id}>
-              <span className="ryder-session-day">Day {ses.index + 1}</span>
+            <div
+              className={`ryder-session ${ses.counts ? '' : 'off'}`}
+              key={ses.round.id}
+            >
+              <span className="ryder-session-day">
+                {ses.counts ? `Day ${ses.index + 1}` : '—'}
+              </span>
               <div className="ryder-session-mid">
                 <div className="ryder-session-course">{ses.round.courseName}</div>
                 <div className="ryder-session-fmt">
-                  {ses.format.name} · {ses.format.tag}
+                  {ses.counts && ses.format
+                    ? `${ses.format.name} · ${ses.format.tag}`
+                    : 'Not counting'}
                 </div>
               </div>
-              <span className="ryder-session-result">
-                {ses.winner == null ? (
-                  <span className="muted">not started</span>
-                ) : ses.winner === 'tie' ? (
-                  `Halved ${ses.aHoles}–${ses.bHoles}`
-                ) : ses.winner === 'A' ? (
-                  `${rc.teamAName} ${ses.aHoles}–${ses.bHoles}`
-                ) : (
-                  `${rc.teamBName} ${ses.bHoles}–${ses.aHoles}`
-                )}
-              </span>
+              {ses.counts ? (
+                <span className="ryder-session-result">
+                  {ses.winner == null ? (
+                    <span className="muted">not started</span>
+                  ) : ses.winner === 'tie' ? (
+                    `Halved ${ses.aHoles}–${ses.bHoles}`
+                  ) : ses.winner === 'A' ? (
+                    `${rc.teamAName} ${ses.aHoles}–${ses.bHoles}`
+                  ) : (
+                    `${rc.teamBName} ${ses.bHoles}–${ses.aHoles}`
+                  )}
+                </span>
+              ) : (
+                <span className="ryder-session-result muted">off</span>
+              )}
+              <button
+                className={`ryder-count-toggle ${ses.counts ? 'on' : ''}`}
+                onClick={() => setRoundRyder(trip.id, ses.round.id, !ses.counts)}
+                aria-pressed={ses.counts}
+                title={ses.counts ? 'Counts toward the cup' : 'Not counting'}
+              >
+                <span className="knob" />
+              </button>
             </div>
           ))}
+          <p className="hint" style={{ margin: '8px 4px 0' }}>
+            Toggle a round off to keep it casual — only counting rounds award
+            Ryder Cup points.
+          </p>
         </div>
       )}
     </>
