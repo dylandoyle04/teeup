@@ -97,6 +97,27 @@ const MULTI_COURSES: Record<string, string[]> = {
     'We-Ko-Pa — Saguaro',
     'We-Ko-Pa — Cholla',
   ],
+  // 27-hole facilities: an 18 is any two of the three nines.
+  'Kierland Golf Club': [
+    'Kierland — Acacia / Ironwood',
+    'Kierland — Ironwood / Mesquite',
+    'Kierland — Mesquite / Acacia',
+  ],
+  'Arrowhead Country Club': [
+    'Arrowhead — Cypress / Lakes',
+    'Arrowhead — Lakes / Waterway',
+    'Arrowhead — Waterway / Cypress',
+  ],
+  'Steele Canyon Golf Club': [
+    'Steele Canyon — Canyon / Meadow',
+    'Steele Canyon — Meadow / Ranch',
+    'Steele Canyon — Ranch / Canyon',
+  ],
+  'Boulder Creek Golf Club': [
+    'Boulder Creek — Desert Hawk / Coyote Run',
+    'Boulder Creek — Coyote Run / Eldorado Valley',
+    'Boulder Creek — Eldorado Valley / Desert Hawk',
+  ],
 }
 
 /** Expand a package course name into the individual 18s a group can play. */
