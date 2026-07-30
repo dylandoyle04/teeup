@@ -32,6 +32,22 @@ export function formatForIndex(i: number) {
   return RYDER_FORMATS[i % RYDER_FORMATS.length]
 }
 
+/** Split an ordered list into pairs [a,b]; a trailing solo is its own group. */
+export function chunkPairs<T>(arr: T[]): T[][] {
+  const out: T[][] = []
+  for (let i = 0; i < arr.length; i += 2) out.push(arr.slice(i, i + 2))
+  return out
+}
+
+/** First hole (0-based) with no score entered by anyone; 18 = round complete. */
+export function nextHole(round: Round): number {
+  for (let i = 0; i < round.holePars.length; i++) {
+    const anyScore = Object.values(round.scores).some((s) => s?.[i] != null)
+    if (!anyScore) return i
+  }
+  return round.holePars.length
+}
+
 export interface SessionResult {
   round: Round
   /** true unless the round was toggled off */

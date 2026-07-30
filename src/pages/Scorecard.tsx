@@ -4,7 +4,7 @@ import { useStore } from '../store'
 import type { Member, Round, WolfMode } from '../types'
 import { Avatar } from '../components/ui'
 import HoleEntry from '../components/HoleEntry'
-import { yardsForCourseName } from '../coursePars'
+import { yardsForCourseName, coursePlayOptions } from '../coursePars'
 import {
   GAMES,
   computeBestBall,
@@ -60,7 +60,9 @@ export default function Scorecard() {
   const rounds = trip.rounds
   const active =
     rounds.find((r) => r.id === activeRoundId) ?? rounds[rounds.length - 1]
-  const courseSuggestions = trip.courses.map((c) => c.name)
+  const courseSuggestions = trip.courses.flatMap((c) =>
+    coursePlayOptions(c.name),
+  )
 
   function createRound() {
     addRound(tripId, courseName, date, game)

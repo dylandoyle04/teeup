@@ -1,7 +1,14 @@
 import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { Avatar } from '../components/ui'
-import { computeRyder, RYDER_FORMATS, type Side } from '../ryder'
+import type { Member } from '../types'
+import {
+  computeRyder,
+  chunkPairs,
+  nextHole,
+  type SessionResult,
+  type Side,
+} from '../ryder'
 
 export default function RyderCup() {
   const { tripId = '' } = useParams()
@@ -131,24 +138,9 @@ export default function RyderCup() {
             )}
           </div>
 
-          <div className="section-title">How to play each day</div>
-          <div className="card">
-            {RYDER_FORMATS.map((f, i) => (
-              <div className="ryder-format" key={f.name}>
-                <span className="ryder-format-badge">Day {i + 1}</span>
-                <div>
-                  <div className="ryder-format-name">
-                    {f.name} <span className="ryder-format-tag">· {f.tag}</span>
-                  </div>
-                  <div className="ryder-format-how">{f.how}</div>
-                </div>
-              </div>
-            ))}
-            <p className="hint" style={{ margin: '8px 4px 0' }}>
-              Formats repeat if you play more than three rounds. Enter scores on
-              the Scorecard as usual — points here are tallied from each round.
-            </p>
-          </div>
+          {aCount > 0 && bCount > 0 && (
+            <PlayingOrder trip={trip} members={members} />
+          )}
 
           <button className="btn ghost" style={{ marginTop: 16 }} onClick={endCup}>
             End Ryder Cup
@@ -246,5 +238,137 @@ function RyderScoreboard({ trip }: { trip: NonNullable<ReturnType<typeof useStor
         </div>
       )}
     </>
+  )
+}
+
+function PlayingOrder({
+  trip,
+  members,
+}: {
+  trip: NonNullable<ReturnType<typeof useStore.getState>['trips'][number]>
+  members: Member[]
+}) {
+  const s = computeRyder(trip)
+  const rc = trip.ryderCup
+  if (!s || !rc) return null
+  const counting = s.sessions.filter((x) => x.counts)
+  if (counting.length === 0) return null
+
+  const sideA = members.filter((m) => rc.teamOf[m.id] === 'A')
+  const sideB = members.filter((m) => rc.teamOf[m.id] === 'B')
+
+  return (
+    <>
+      <div className="section-title">Playing order</div>
+      {counting.map((ses) => (
+        <SessionPlay
+          key={ses.round.id}
+          session={ses}
+          rc={rc}
+          sideA={sideA}
+          sideB={sideB}
+        />
+      ))}
+      <p className="hint" style={{ margin: '2px 4px 0' }}>
+        Pairs are made from your team order — reshuffle a side above to change
+        them. Enter scores on the Scorecard; points here update automatically.
+      </p>
+    </>
+  )
+}
+
+function SessionPlay({
+  session,
+  rc,
+  sideA,
+  sideB,
+}: {
+  session: SessionResult
+  rc: NonNullable<ReturnType<typeof useStore.getState>['trips'][number]>['ryderCup']
+  sideA: Member[]
+  sideB: Member[]
+}) {
+  if (!rc || !session.format) return null
+  const f = session.format
+  const nh = nextHole(session.round)
+  const complete = nh >= session.round.holePars.length
+  const holeNum = nh + 1
+
+  return (
+    <div className="card ryder-play">
+      <div className="ryder-play-head">
+        <span className="ryder-format-badge">Day {session.index + 1}</span>
+        <div>
+          <div className="ryder-format-name">
+            {f.name} <span className="ryder-format-tag">· {f.tag}</span>
+          </div>
+          <div className="ryder-format-how">{f.how}</div>
+        </div>
+      </div>
+
+      {f.name === 'Singles' ? (
+        <div className="ryder-matchups">
+          {sideA.map((a, i) => {
+            const b = sideB[i]
+            return (
+              <div className="ryder-matchup" key={a.id}>
+                <span className="mu-a">{a.name}</span>
+                <span className="mu-vs">vs</span>
+                <span className="mu-b">{b ? b.name : '—'}</span>
+              </div>
+            )
+          })}
+          {sideB.length > sideA.length &&
+            sideB.slice(sideA.length).map((b) => (
+              <div className="ryder-matchup" key={b.id}>
+                <span className="mu-a">—</span>
+                <span className="mu-vs">vs</span>
+                <span className="mu-b">{b.name}</span>
+              </div>
+            ))}
+        </div>
+      ) : (
+        // Fourball & Foursomes: show each team's pairs
+        <div className="ryder-pairs">
+          {[
+            { name: rc.teamAName, side: 'a', pairs: chunkPairs(sideA) },
+            { name: rc.teamBName, side: 'b', pairs: chunkPairs(sideB) },
+          ].map((team) => (
+            <div className="ryder-team-pairs" key={team.side}>
+              <div className={`ryder-team-label ${team.side}`}>{team.name}</div>
+              {team.pairs.map((pair, pi) => (
+                <div className="ryder-pair" key={pi}>
+                  <span className="ryder-pair-names">
+                    {pair.map((m) => m.name).join(' & ')}
+                  </span>
+                  {f.name === 'Foursomes' && pair.length === 2 && (
+                    <span className="ryder-pair-tee">
+                      {complete ? (
+                        'round complete'
+                      ) : (
+                        <>
+                          next tee:{' '}
+                          <strong>
+                            {(holeNum % 2 === 1 ? pair[0] : pair[1]).name}
+                          </strong>{' '}
+                          · hole {holeNum}
+                        </>
+                      )}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {f.name === 'Foursomes' && (
+        <p className="hint" style={{ margin: '6px 4px 0' }}>
+          Partners share one ball and alternate every shot; the listed player
+          tees this hole, then you switch off.
+        </p>
+      )}
+    </div>
   )
 }

@@ -15,8 +15,12 @@ const ARROWHEAD = [4, 5, 3, 4, 4, 3, 4, 5, 4, 4, 4, 5, 4, 3, 4, 4, 3, 5] // 72 (
 const WEKOPA = [4, 4, 4, 5, 3, 4, 4, 5, 3, 4, 3, 4, 4, 5, 3, 4, 4, 4] // 71 (Saguaro)
 const DYE = [4, 4, 3, 4, 5, 3, 4, 5, 4, 4, 4, 5, 4, 4, 3, 5, 3, 4] // 72
 
+// We-Ko-Pa Cholla — par 72 (Scott Miller design; Saguaro is the WEKOPA data above)
+const WEKOPA_CHOLLA = [4, 5, 4, 3, 4, 4, 3, 5, 4, 4, 3, 4, 5, 4, 4, 3, 4, 5] // 72
+
 export const COURSE_PARS: Record<string, number[]> = {
   wekopa: WEKOPA,
+  'wekopa-cholla': WEKOPA_CHOLLA,
   'troon-north': TROON,
   'tpc-stadium': P71,
   'tpc-champions': P71,
@@ -67,6 +71,7 @@ export const REAL_PAR_SLUGS = new Set([
 
 function slugForName(name: string): string | null {
   const n = name.toLowerCase()
+  if (n.includes('cholla')) return 'wekopa-cholla'
   if (n.includes('we-ko-pa') || n.includes('wekopa') || n.includes('we ko pa'))
     return 'wekopa'
   if (n.includes('troon')) return 'troon-north'
@@ -83,6 +88,20 @@ function slugForName(name: string): string | null {
   if (n.includes('arrowhead')) return 'arrowhead'
   if (n.includes('indigo')) return 'indigo-creek'
   return null
+}
+
+// Courses that are actually multiple 18s under one package entry. When
+// picking a course for a round, players choose which one they're playing.
+const MULTI_COURSES: Record<string, string[]> = {
+  'We-Ko-Pa (Saguaro & Cholla)': [
+    'We-Ko-Pa — Saguaro',
+    'We-Ko-Pa — Cholla',
+  ],
+}
+
+/** Expand a package course name into the individual 18s a group can play. */
+export function coursePlayOptions(name: string): string[] {
+  return MULTI_COURSES[name] ?? [name]
 }
 
 export function parsForCourseName(name: string): number[] | null {

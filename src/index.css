@@ -991,6 +991,104 @@ a {
   transform: translateX(16px);
 }
 
+/* playing order / pairings */
+.ryder-play {
+  padding: 14px 16px;
+}
+
+.ryder-play-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+}
+
+.ryder-pairs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .ryder-pairs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ryder-team-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid;
+}
+
+.ryder-team-label.a {
+  color: #1d5fb0;
+  border-color: #1d5fb0;
+}
+
+.ryder-team-label.b {
+  color: #9c7414;
+  border-color: #c6952a;
+}
+
+.ryder-pair {
+  padding: 6px 0;
+}
+
+.ryder-pair-names {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--green-900);
+  display: block;
+}
+
+.ryder-pair-tee {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ryder-pair-tee strong {
+  color: var(--green-800, #17472f);
+}
+
+.ryder-matchups {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ryder-matchup {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--green-50, #f2f7f3);
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ryder-matchup .mu-a {
+  text-align: right;
+  color: #1d5fb0;
+}
+
+.ryder-matchup .mu-b {
+  color: #9c7414;
+}
+
+.ryder-matchup .mu-vs {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;
