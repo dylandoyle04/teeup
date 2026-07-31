@@ -9,3 +9,7 @@ dist-ssr
 # source docs (not part of the app)
 *.docx
 ~$*
+
+# local env (secrets)
+.env.local
+.env
