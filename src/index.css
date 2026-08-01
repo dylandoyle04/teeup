@@ -1089,6 +1089,13 @@ a {
   color: var(--muted);
 }
 
+/* ---------- Auth ---------- */
+.auth-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding-top: 12px;
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;

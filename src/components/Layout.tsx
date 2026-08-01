@@ -1,5 +1,7 @@
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useStore } from '../store'
+import { hasBackend } from '../supabase'
+import { useAuth } from '../auth'
 
 function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
@@ -22,6 +24,11 @@ function TripTabs({ tripId }: { tripId: string }) {
       ))}
     </nav>
   )
+}
+
+function AccountLink() {
+  const { user } = useAuth()
+  return <Link to="/signin">{user ? 'Account' : 'Sign in'}</Link>
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -72,6 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="footer-links">
               <Link to="/explore">Explore trips</Link>
               <Link to="/new">Create a trip</Link>
+              {hasBackend && <AccountLink />}
               <Link to="/legal">Privacy &amp; Terms</Link>
               <a href="mailto:Flagstickfinder@outlook.com">Contact support</a>
             </div>

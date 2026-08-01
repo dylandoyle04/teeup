@@ -8,7 +8,8 @@
       "Bash(node /tmp/cap_final.mjs)",
       "Bash(node /tmp/cap_legal.mjs)",
       "Bash(npm run *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(curl -s --max-time 20 -X POST https://wgzntovaggovrrmwqgsb.supabase.co/auth/v1/otp -H 'apikey: sb_publishable_UhoKfvEAmHeA0-mzvgBehg_qGzMPZx0' -H 'Content-Type: application/json' -d '{\"email\":\"test@example.com\",\"create_user\":true}' -w '\\\\nHTTP %{http_code}\\\\n')"
     ]
   }
 }

@@ -11,6 +11,7 @@ import Scorecard from './pages/Scorecard'
 import RyderCup from './pages/RyderCup'
 import Bets from './pages/Bets'
 import Legal from './pages/Legal'
+import SignIn from './pages/SignIn'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/new" element={<NewTrip />} />
         <Route path="/package/:packageId" element={<PackageDetail />} />
         <Route path="/legal" element={<Legal />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/trip/:tripId" element={<Navigate to="setup" replace />} />
         <Route path="/trip/:tripId/setup" element={<TripSetup />} />
         <Route path="/trip/:tripId/book" element={<Booking />} />
