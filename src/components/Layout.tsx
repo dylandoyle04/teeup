@@ -31,6 +31,11 @@ function AccountLink() {
   return <Link to="/signin">{user ? 'Account' : 'Sign in'}</Link>
 }
 
+function NavAccountLabel() {
+  const { user } = useAuth()
+  return <>{user ? 'Account' : 'Sign in'}</>
+}
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
@@ -56,6 +61,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 >
                   Explore
                 </NavLink>
+                {hasBackend && (
+                  <NavLink
+                    to="/signin"
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                  >
+                    <NavAccountLabel />
+                  </NavLink>
+                )}
               </nav>
             )}
             {trip && <span className="nav-trip">{trip.name}</span>}
