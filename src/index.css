@@ -1096,6 +1096,17 @@ a {
   padding-top: 12px;
 }
 
+.linklike {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--green-700);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;

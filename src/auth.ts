@@ -45,6 +45,20 @@ export async function sendMagicLink(email: string): Promise<{ error: string | nu
   return { error: error?.message ?? null }
 }
 
+/** Verify the 6-digit code from the email (works in any browser — no redirect). */
+export async function verifyCode(
+  email: string,
+  token: string,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: 'Sign-in is not available yet.' }
+  const { error } = await supabase.auth.verifyOtp({
+    email: email.trim(),
+    token: token.trim(),
+    type: 'email',
+  })
+  return { error: error?.message ?? null }
+}
+
 export async function signOut(): Promise<void> {
   await supabase?.auth.signOut()
 }
