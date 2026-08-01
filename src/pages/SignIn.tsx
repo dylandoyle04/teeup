@@ -68,7 +68,7 @@ export default function SignIn() {
 
   async function submitCode(e: React.FormEvent) {
     e.preventDefault()
-    if (code.trim().length < 6 || busy) return
+    if (code.trim().length < 6 || busy) return // codes are 6–10 digits
     setBusy(true)
     setError(null)
     const { error } = await verifyCode(email, code)
@@ -92,17 +92,17 @@ export default function SignIn() {
             📧
           </div>
           <p style={{ margin: '4px 0 14px', textAlign: 'center' }}>
-            We emailed <strong>{email}</strong> a 6-digit code. Enter it below.
+            We emailed <strong>{email}</strong> a sign-in code. Enter it below.
           </p>
           <div className="field">
-            <label>6-digit code</label>
+            <label>Sign-in code</label>
             <input
               inputMode="numeric"
               autoComplete="one-time-code"
-              maxLength={6}
+              maxLength={10}
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-              placeholder="123456"
+              placeholder="Enter the code"
               autoFocus
               style={{ letterSpacing: '4px', fontSize: '18px', textAlign: 'center' }}
             />
