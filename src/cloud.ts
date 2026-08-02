@@ -1,4 +1,6 @@
 import { supabase } from './supabase'
+import { parsForCourseName } from './coursePars'
+import { STANDARD_HOLE_PARS } from './seed'
 
 // --- Cloud (shared) trips: create, list, join, live roster ---
 
@@ -105,4 +107,82 @@ export async function listMembers(tripId: string): Promise<SharedMember[]> {
     .order('created_at', { ascending: true })
   if (error) return []
   return (data ?? []).map(mapMember)
+}
+
+// --- Rounds & live scoring ---
+
+export interface SharedRound {
+  id: string
+  tripId: string
+  courseName: string
+  holePars: number[]
+  createdAt: string
+}
+
+function mapRound(r: Record<string, unknown>): SharedRound {
+  return {
+    id: r.id as string,
+    tripId: r.trip_id as string,
+    courseName: (r.course_name as string) ?? 'Round',
+    holePars: (r.hole_pars as number[]) ?? [...STANDARD_HOLE_PARS],
+    createdAt: r.created_at as string,
+  }
+}
+
+export async function addRound(
+  tripId: string,
+  courseName: string,
+): Promise<SharedRound> {
+  if (!supabase) throw new Error('Not signed in')
+  const pars = parsForCourseName(courseName) ?? [...STANDARD_HOLE_PARS]
+  const { data, error } = await supabase
+    .from('rounds')
+    .insert({ trip_id: tripId, course_name: courseName.trim() || 'Round', hole_pars: pars })
+    .select()
+    .single()
+  if (error) throw error
+  return mapRound(data)
+}
+
+export async function listRounds(tripId: string): Promise<SharedRound[]> {
+  if (!supabase) return []
+  const { data } = await supabase
+    .from('rounds')
+    .select('*')
+    .eq('trip_id', tripId)
+    .order('created_at', { ascending: true })
+  return (data ?? []).map(mapRound)
+}
+
+export async function getRound(roundId: string): Promise<SharedRound | null> {
+  if (!supabase) return null
+  const { data } = await supabase.from('rounds').select('*').eq('id', roundId).maybeSingle()
+  return data ? mapRound(data) : null
+}
+
+/** member_id -> 18 strokes (null = not entered) */
+export type ScoreMap = Record<string, (number | null)[]>
+
+export async function getRoundScores(roundId: string): Promise<ScoreMap> {
+  if (!supabase) return {}
+  const { data } = await supabase
+    .from('round_scores')
+    .select('member_id, strokes')
+    .eq('round_id', roundId)
+  const map: ScoreMap = {}
+  for (const row of data ?? []) {
+    map[row.member_id as string] = (row.strokes as (number | null)[]) ?? Array(18).fill(null)
+  }
+  return map
+}
+
+export async function saveMemberScores(
+  roundId: string,
+  memberId: string,
+  strokes: (number | null)[],
+): Promise<void> {
+  if (!supabase) return
+  await supabase
+    .from('round_scores')
+    .upsert({ round_id: roundId, member_id: memberId, strokes }, { onConflict: 'round_id,member_id' })
 }
