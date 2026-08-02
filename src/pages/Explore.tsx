@@ -1,9 +1,54 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { PACKAGES } from '../packages'
 import { AvatarStack, fmtDateRange, money } from '../components/ui'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
+import { hasBackend } from '../supabase'
+import { useAuth } from '../auth'
+import { listMyTrips, type SharedTrip } from '../cloud'
+
+function SharedTripsSection() {
+  const { ready, user } = useAuth()
+  const [trips, setTrips] = useState<SharedTrip[]>([])
+  useEffect(() => {
+    if (user) listMyTrips().then(setTrips)
+    else setTrips([])
+  }, [user])
+
+  if (!hasBackend || !ready) return null
+
+  return (
+    <>
+      <h2 className="section-title explore-h2">Shared Trips</h2>
+      {!user ? (
+        <div className="card" style={{ textAlign: 'center' }}>
+          <p style={{ marginTop: 4 }}>
+            Sign in to create a trip your friends can join and score together.
+          </p>
+          <Link to="/signin" className="btn full gold" style={{ marginTop: 6 }}>
+            Sign in
+          </Link>
+        </div>
+      ) : (
+        <>
+          {trips.map((t) => (
+            <Link className="card shared-row" to={`/shared/${t.id}`} key={t.id}>
+              <div>
+                <div className="shared-row-name">{t.name}</div>
+                {t.destination && <div className="shared-row-dest">{t.destination}</div>}
+              </div>
+              <span className="shared-row-go">›</span>
+            </Link>
+          ))}
+          <Link to="/shared/new" className="btn full gold" style={{ marginTop: trips.length ? 6 : 0 }}>
+            + New shared trip
+          </Link>
+        </>
+      )}
+    </>
+  )
+}
 
 export default function Explore() {
   const trips = useStore((s) => s.trips)
@@ -27,6 +72,8 @@ export default function Explore() {
           keep score.
         </p>
       </div>
+
+      <SharedTripsSection />
 
       <h2 className="section-title explore-h2" data-reveal>
         Our Preplanned Trips

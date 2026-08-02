@@ -1107,6 +1107,55 @@ a {
   cursor: pointer;
 }
 
+.invite-field {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--ink);
+  background: #f6f8f5;
+}
+
+.shared-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.shared-row-name {
+  font-weight: 700;
+  color: var(--green-900);
+  font-size: 16px;
+}
+
+.shared-row-dest {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.shared-row-go {
+  font-size: 26px;
+  color: var(--green-300, #9fc4ac);
+  line-height: 1;
+}
+
+.dot-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
 /* ---------- Legal page ---------- */
 .legal {
   max-width: 760px;

@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { hasBackend } from '../supabase'
 import { useAuth, sendMagicLink, verifyCode, signOut } from '../auth'
 
 export default function SignIn() {
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const next = params.get('next') || '/explore'
   const { ready, user } = useAuth()
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
@@ -74,7 +76,7 @@ export default function SignIn() {
     const { error } = await verifyCode(email, code)
     setBusy(false)
     if (error) setError(error)
-    else navigate('/explore') // onAuthStateChange sets the session
+    else navigate(next) // onAuthStateChange sets the session
   }
 
   return (

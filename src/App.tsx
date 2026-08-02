@@ -12,6 +12,9 @@ import RyderCup from './pages/RyderCup'
 import Bets from './pages/Bets'
 import Legal from './pages/Legal'
 import SignIn from './pages/SignIn'
+import SharedTrip from './pages/SharedTrip'
+import NewSharedTrip from './pages/NewSharedTrip'
+import JoinTrip from './pages/JoinTrip'
 
 export default function App() {
   return (
@@ -24,6 +27,9 @@ export default function App() {
         <Route path="/package/:packageId" element={<PackageDetail />} />
         <Route path="/legal" element={<Legal />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/shared/new" element={<NewSharedTrip />} />
+        <Route path="/shared/:id" element={<SharedTrip />} />
+        <Route path="/join/:code" element={<JoinTrip />} />
         <Route path="/trip/:tripId" element={<Navigate to="setup" replace />} />
         <Route path="/trip/:tripId/setup" element={<TripSetup />} />
         <Route path="/trip/:tripId/book" element={<Booking />} />
