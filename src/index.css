@@ -368,10 +368,14 @@ a {
 }
 
 .ball-divider .line {
-  height: 2px;
+  height: 1.5px;
   flex: 1;
-  background: rgba(255, 255, 255, 0.7);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0), rgba(212, 175, 55, 0.85));
   border-radius: 2px;
+}
+
+.ball-divider .line:last-child {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.85), rgba(212, 175, 55, 0));
 }
 
 .ball-divider .ball {
@@ -1406,14 +1410,20 @@ a {
 
 /* ---------- Buttons ---------- */
 .btn {
-  border: none;
-  border-radius: 12px;
-  padding: 13px 16px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  padding: 13px 18px;
   font-weight: 700;
   font-size: 15px;
-  background: var(--green-600);
+  letter-spacing: 0.2px;
+  background: var(--green-700);
   color: #fff;
-  transition: transform 0.06s ease, background 0.15s ease;
+  box-shadow: 0 1px 2px rgba(11, 61, 44, 0.14);
+  transition: transform 0.06s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  box-shadow: 0 3px 10px rgba(11, 61, 44, 0.16);
 }
 
 .btn:active {
@@ -1422,6 +1432,7 @@ a {
 
 .btn:disabled {
   opacity: 0.5;
+  box-shadow: none;
 }
 
 .btn.full {
@@ -1431,12 +1442,24 @@ a {
 .btn.gold {
   background: var(--gold);
   color: var(--green-900);
+  border-color: var(--gold-dark);
+  box-shadow: 0 1px 2px rgba(120, 92, 12, 0.25);
+}
+
+.btn.gold:hover {
+  box-shadow: 0 4px 14px rgba(180, 148, 31, 0.32);
 }
 
 .btn.ghost {
   background: transparent;
   color: var(--green-700);
-  border: 1.5px solid var(--green-600);
+  border: 1.5px solid var(--line);
+  box-shadow: none;
+}
+
+.btn.ghost:hover {
+  border-color: var(--green-600);
+  box-shadow: none;
 }
 
 .btn.subtle {
