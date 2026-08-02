@@ -116,6 +116,9 @@ export interface SharedRound {
   tripId: string
   courseName: string
   holePars: number[]
+  game: string
+  teams: unknown[]
+  wolf: unknown[]
   createdAt: string
 }
 
@@ -125,6 +128,9 @@ function mapRound(r: Record<string, unknown>): SharedRound {
     tripId: r.trip_id as string,
     courseName: (r.course_name as string) ?? 'Round',
     holePars: (r.hole_pars as number[]) ?? [...STANDARD_HOLE_PARS],
+    game: (r.game as string) || 'Stroke Play',
+    teams: (r.teams as unknown[]) ?? [],
+    wolf: (r.wolf as unknown[]) ?? [],
     createdAt: r.created_at as string,
   }
 }
@@ -137,11 +143,31 @@ export async function addRound(
   const pars = parsForCourseName(courseName) ?? [...STANDARD_HOLE_PARS]
   const { data, error } = await supabase
     .from('rounds')
-    .insert({ trip_id: tripId, course_name: courseName.trim() || 'Round', hole_pars: pars })
+    .insert({
+      trip_id: tripId,
+      course_name: courseName.trim() || 'Round',
+      hole_pars: pars,
+      game: 'Stroke Play',
+    })
     .select()
     .single()
   if (error) throw error
   return mapRound(data)
+}
+
+export async function saveRoundGame(roundId: string, game: string): Promise<void> {
+  if (!supabase) return
+  await supabase.from('rounds').update({ game }).eq('id', roundId)
+}
+
+export async function saveRoundTeams(roundId: string, teams: unknown[]): Promise<void> {
+  if (!supabase) return
+  await supabase.from('rounds').update({ teams }).eq('id', roundId)
+}
+
+export async function saveRoundWolf(roundId: string, wolf: unknown[]): Promise<void> {
+  if (!supabase) return
+  await supabase.from('rounds').update({ wolf }).eq('id', roundId)
 }
 
 export async function listRounds(tripId: string): Promise<SharedRound[]> {
