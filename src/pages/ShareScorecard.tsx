@@ -195,10 +195,18 @@ export default function ShareScorecard() {
         <p className="page-sub">Par {totalPar} · live scorecard</p>
       </div>
 
+      <Link className="card shared-row" to={`/shared/${id}/ryder`}>
+        <div>
+          <div className="shared-row-name">🏆 Ryder Cup</div>
+          <div className="shared-row-dest">Teams &amp; live points across the trip</div>
+        </div>
+        <span className="shared-row-go">›</span>
+      </Link>
+
       <div className="field" style={{ marginBottom: 12 }}>
         <label>Game</label>
         <select value={game} onChange={(e) => changeGame(e.target.value)}>
-          {GAMES.map((g) => (
+          {(GAMES.includes(game as (typeof GAMES)[number]) ? GAMES : [game, ...GAMES]).map((g) => (
             <option key={g}>{g}</option>
           ))}
         </select>
