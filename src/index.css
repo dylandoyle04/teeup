@@ -96,9 +96,9 @@ a {
 }
 
 .nav-inner {
-  max-width: 1040px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 14px clamp(18px, 4vw, 60px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
@@ -225,9 +225,9 @@ a {
 }
 
 .container {
-  max-width: 1040px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 28px 24px 80px;
+  padding: 28px clamp(18px, 4vw, 60px) 90px;
 }
 
 .page-head {
@@ -2359,9 +2359,9 @@ table.scorecard .total-cell {
 }
 
 .footer-inner {
-  max-width: 1040px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 30px 24px 36px;
+  padding: 30px clamp(18px, 4vw, 60px) 36px;
   text-align: center;
 }
 
