@@ -148,6 +148,15 @@ export default function SharedTrip() {
         </button>
       </div>
 
+      <div className="section-title">Ryder Cup</div>
+      <Link className="card shared-row" to={`/shared/${id}/ryder`}>
+        <div>
+          <div className="shared-row-name">🏆 Ryder Cup</div>
+          <div className="shared-row-dest">Two teams, live points across the trip</div>
+        </div>
+        <span className="shared-row-go">›</span>
+      </Link>
+
       <div className="section-title">
         Players <span className="muted">({members.length})</span>
       </div>

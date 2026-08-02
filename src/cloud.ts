@@ -186,3 +186,49 @@ export async function saveMemberScores(
     .from('round_scores')
     .upsert({ round_id: roundId, member_id: memberId, strokes }, { onConflict: 'round_id,member_id' })
 }
+
+// --- Ryder Cup (shared) ---
+
+export interface SharedRyder {
+  teamAName: string
+  teamBName: string
+  teamOf: Record<string, 'A' | 'B'>
+}
+
+export async function getRyderCup(tripId: string): Promise<SharedRyder | null> {
+  if (!supabase) return null
+  const { data } = await supabase
+    .from('ryder_cup')
+    .select('*')
+    .eq('trip_id', tripId)
+    .maybeSingle()
+  if (!data) return null
+  return {
+    teamAName: (data.team_a_name as string) ?? 'Team USA',
+    teamBName: (data.team_b_name as string) ?? 'Team Europe',
+    teamOf: (data.team_of as Record<string, 'A' | 'B'>) ?? {},
+  }
+}
+
+export async function saveRyderCup(tripId: string, r: SharedRyder): Promise<void> {
+  if (!supabase) return
+  await supabase.from('ryder_cup').upsert(
+    {
+      trip_id: tripId,
+      team_a_name: r.teamAName,
+      team_b_name: r.teamBName,
+      team_of: r.teamOf,
+    },
+    { onConflict: 'trip_id' },
+  )
+}
+
+/** All rounds of a trip with their score maps — for computing Ryder standings. */
+export async function getRoundsWithScores(
+  tripId: string,
+): Promise<{ round: SharedRound; scores: ScoreMap }[]> {
+  const rounds = await listRounds(tripId)
+  const out: { round: SharedRound; scores: ScoreMap }[] = []
+  for (const r of rounds) out.push({ round: r, scores: await getRoundScores(r.id) })
+  return out
+}
