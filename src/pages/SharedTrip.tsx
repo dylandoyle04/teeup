@@ -7,6 +7,8 @@ import {
   listMembers,
   listRounds,
   addRound,
+  deleteSharedTrip,
+  leaveTrip,
   inviteUrl,
   type SharedTrip as Trip,
   type SharedMember,
@@ -44,6 +46,19 @@ export default function SharedTrip() {
       alive = false
     }
   }, [id])
+
+  const isOrganizer = !!(trip && user && trip.organizerId === user.id)
+
+  async function removeTrip() {
+    if (isOrganizer) {
+      if (!window.confirm(`Delete "${trip!.name}" for everyone? This can't be undone.`)) return
+      await deleteSharedTrip(id)
+    } else {
+      if (!window.confirm(`Leave "${trip!.name}"? You'll need a new invite to rejoin.`)) return
+      await leaveTrip(id)
+    }
+    navigate('/explore')
+  }
 
   async function newRound() {
     if (addingRound) return
@@ -175,9 +190,14 @@ export default function SharedTrip() {
         )}
       </div>
 
-      <Link to="/explore" className="btn ghost" style={{ marginTop: 16 }}>
-        ← Back to trips
-      </Link>
+      <div className="row between" style={{ marginTop: 16, gap: 10 }}>
+        <Link to="/explore" className="btn ghost">
+          ← Back to trips
+        </Link>
+        <button className="btn danger" onClick={removeTrip}>
+          {isOrganizer ? 'Delete trip' : 'Leave trip'}
+        </button>
+      </div>
     </>
   )
 }

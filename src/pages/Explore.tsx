@@ -87,6 +87,7 @@ export default function Explore() {
             data-reveal
           >
             <img className="slide-bg" src={p.image} alt={p.destination} />
+            <span className="slide-flag" aria-hidden="true" />
             <span className={`slide-tier ${p.tier}`}>{p.tierLabel}</span>
             <div className="slide-body">
               <div className="slide-loc">{p.region}</div>

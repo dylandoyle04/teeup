@@ -71,6 +71,24 @@ export async function createSharedTrip(
   return mapTrip(data)
 }
 
+/** Organizer only — deletes the trip and all its rounds/scores (cascade). */
+export async function deleteSharedTrip(tripId: string): Promise<void> {
+  if (!supabase) return
+  const { error } = await supabase.from('trips').delete().eq('id', tripId)
+  if (error) throw error
+}
+
+/** Non-organizer — removes yourself from the trip. */
+export async function leaveTrip(tripId: string): Promise<void> {
+  if (!supabase) return
+  const { data } = await supabase.auth.getUser()
+  await supabase
+    .from('trip_members')
+    .delete()
+    .eq('trip_id', tripId)
+    .eq('user_id', data.user?.id ?? '')
+}
+
 export async function listMyTrips(): Promise<SharedTrip[]> {
   if (!supabase) return []
   const { data, error } = await supabase
