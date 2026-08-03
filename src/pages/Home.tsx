@@ -27,75 +27,104 @@ export default function Home() {
     : `${import.meta.env.BASE_URL}hero.jpg?v=wekopa`
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const revealRest = (t: gsap.core.Timeline, pos: string | number) => {
-        t.to('.logo-let', { autoAlpha: 1, duration: 0.5, stagger: 0.05 }, pos)
-          .from(
-            '.ball-divider',
-            { scaleX: 0, autoAlpha: 0, duration: 0.55, transformOrigin: 'center', ease: 'power3.out' },
-            '>-0.1',
-          )
-          .from('.hero-tag', { y: 20, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: 'power3.out' }, '-=0.25')
-          .from('.hero-cta', { y: 18, autoAlpha: 0, duration: 0.6, ease: 'power3.out' }, '-=0.25')
-      }
+    const ctx = gsap.context(() => {}, root)
+    let cancelled = false
 
+    const revealRest = (t: gsap.core.Timeline, pos: string | number) => {
+      t.to('.logo-let', { autoAlpha: 1, duration: 0.5, stagger: 0.05 }, pos)
+        .from(
+          '.ball-divider',
+          { scaleX: 0, autoAlpha: 0, duration: 0.55, transformOrigin: 'center', ease: 'power3.out' },
+          '>-0.1',
+        )
+        .from('.hero-tag', { y: 20, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: 'power3.out' }, '-=0.25')
+        .from('.hero-cta', { y: 18, autoAlpha: 0, duration: 0.6, ease: 'power3.out' }, '-=0.25')
+    }
+
+    ctx.add(() => {
       gsap.fromTo('.hero-photo', { scale: 1.02 }, { scale: 1.12, duration: 18, ease: 'none' })
+    })
 
-      if (!showIntro || reduceMotion() || !root.current || !oRef.current) {
+    const intro = showIntro && !reduceMotion() && root.current && oRef.current
+
+    if (!intro) {
+      ctx.add(() => {
         gsap.set(['.logo-let', '.logo-tittle'], { autoAlpha: 1 })
-        const t = gsap.timeline()
-        revealRest(t, 0)
-        return
+        revealRest(gsap.timeline(), 0)
+      })
+      return () => {
+        cancelled = true
+        ctx.revert()
       }
+    }
 
-      // hide the letters; keep the cup (i-dot) visible as the putt target
+    // hide the letters immediately (no flash) while we wait for fonts to settle
+    ctx.add(() => {
       gsap.set('.logo-let', { autoAlpha: 0 })
       gsap.set('.logo-tittle', { autoAlpha: 1 })
       gsap.set('.hero-content', { autoAlpha: 1 })
+      gsap.set('.putt-ball', { autoAlpha: 0 })
+    })
 
-      const hero = root.current.getBoundingClientRect()
-      const cup = oRef.current.getBoundingClientRect()
-      const cx = cup.left - hero.left + cup.width / 2
-      const cy = cup.top - hero.top + cup.height / 2
-      const cupSize = Math.max(8, cup.width)
-      const ballSize = Math.max(9, cupSize * 0.78)
+    // measure the cup ONLY after fonts have loaded — otherwise the logo
+    // reflows afterward and the ball lands where the cup used to be.
+    const start = () => {
+      if (cancelled || !root.current || !oRef.current) return
+      ctx.add(() => {
+        const hero = root.current!.getBoundingClientRect()
+        const cup = oRef.current!.getBoundingClientRect()
+        const cx = cup.left - hero.left + cup.width / 2
+        const cy = cup.top - hero.top + cup.height / 2
+        const cupSize = Math.max(8, cup.width)
+        const ballSize = Math.max(9, cupSize * 0.78)
 
-      const ball = '.putt-ball'
-      gsap.set(ball, {
-        width: ballSize,
-        height: ballSize,
-        x: 36,
-        y: cy - ballSize / 2,
-        scale: 1,
-        rotation: 0,
-        autoAlpha: 1,
-        transformOrigin: 'center center',
+        const ball = '.putt-ball'
+        gsap.set(ball, {
+          width: ballSize,
+          height: ballSize,
+          x: 36,
+          y: cy - ballSize / 2,
+          scale: 1,
+          rotation: 0,
+          autoAlpha: 1,
+          transformOrigin: 'center center',
+        })
+
+        const t = gsap.timeline({
+          onComplete: () => {
+            introPlayed = true
+            setShowIntro(false)
+          },
+        })
+        tl.current = t
+        // roll to the cup's exact centre, then sink in
+        t.to(ball, { x: cx - ballSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
+          .to(ball, { rotation: 900, duration: 1.4, ease: 'power2.out' }, 0)
+          .addLabel('drop')
+          .to(ball, { scale: 0.14, autoAlpha: 0, duration: 0.42, ease: 'power2.in' }, 'drop')
+          .fromTo(
+            '.o-ring',
+            { scale: 0.6, opacity: 0.9 },
+            { scale: 2.4, opacity: 0, duration: 0.65, ease: 'power2.out' },
+            'drop+=0.1',
+          )
+          .addLabel('reveal', 'drop+=0.22')
+          .to('.intro', { autoAlpha: 0, duration: 0.4 }, 'reveal')
+        revealRest(t, 'reveal')
       })
+    }
 
-      const t = gsap.timeline({
-        onComplete: () => {
-          introPlayed = true
-          setShowIntro(false)
-        },
-      })
-      tl.current = t
-      // roll across to the lip of the cup...
-      t.to(ball, { x: cx - ballSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
-        .to(ball, { rotation: 900, duration: 1.4, ease: 'power2.out' }, 0)
-        // ...then drop into the hole: sink + fade with a rim pulse
-        .addLabel('drop')
-        .to(ball, { scale: 0.14, autoAlpha: 0, duration: 0.42, ease: 'power2.in' }, 'drop')
-        .fromTo(
-          '.o-ring',
-          { scale: 0.6, opacity: 0.9 },
-          { scale: 2.4, opacity: 0, duration: 0.65, ease: 'power2.out' },
-          'drop+=0.1',
-        )
-        .addLabel('reveal', 'drop+=0.22')
-        .to('.intro', { autoAlpha: 0, duration: 0.4 }, 'reveal')
-      revealRest(t, 'reveal')
-    }, root)
-    return () => ctx.revert()
+    const fonts = (document as Document & { fonts?: FontFaceSet }).fonts
+    if (fonts && fonts.status !== 'loaded') {
+      fonts.ready.then(() => requestAnimationFrame(start))
+    } else {
+      requestAnimationFrame(start)
+    }
+
+    return () => {
+      cancelled = true
+      ctx.revert()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
