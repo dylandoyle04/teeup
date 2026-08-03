@@ -496,13 +496,14 @@ a {
   flex: 0 0 auto;
   width: 232px;
   height: 304px;
-  border-radius: 18px;
   overflow: hidden;
   scroll-snap-align: start;
-  box-shadow: 0 6px 18px rgba(11, 61, 44, 0.18);
   text-decoration: none;
   color: #fff;
   transition: transform 0.1s ease;
+  /* waving-flag silhouette */
+  clip-path: url(#flag-wave);
+  filter: drop-shadow(0 6px 16px rgba(11, 61, 44, 0.22));
 }
 
 .slide-card:active {
@@ -520,8 +521,8 @@ a {
 /* tier badge styled as a little flag/pennant tag (notched tail on the right) */
 .slide-tier {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 26px;
+  right: 14px;
   z-index: 3;
   font-size: 10px;
   font-weight: 800;
@@ -546,11 +547,11 @@ a {
 /* decorative golf flag (stick + pennant) top-left of each card */
 .slide-flag {
   position: absolute;
-  top: 14px;
-  left: 16px;
+  top: 28px;
+  left: 18px;
   z-index: 2;
   width: 2px;
-  height: 42px;
+  height: 40px;
   background: #fff;
   border-radius: 1px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
@@ -613,7 +614,7 @@ a {
   right: 0;
   bottom: 0;
   z-index: 2;
-  padding: 16px;
+  padding: 16px 18px 26px;
   color: #fff;
   text-align: center;
 }

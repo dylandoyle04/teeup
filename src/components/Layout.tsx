@@ -45,6 +45,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app">
+      {/* waving-flag clip used to shape the trip cards */}
+      <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
+        <defs>
+          <clipPath id="flag-wave" clipPathUnits="objectBoundingBox">
+            <path
+              d="M0,0.05
+                 C0.25,-0.01 0.25,0.11 0.5,0.05
+                 C0.75,-0.01 0.75,0.11 1,0.05
+                 L1,0.95
+                 C0.75,1.01 0.75,0.89 0.5,0.95
+                 C0.25,1.01 0.25,0.89 0,0.95
+                 Z"
+            />
+          </clipPath>
+        </defs>
+      </svg>
       {!isHome && (
         <header className="navbar">
           <div className="nav-inner">
@@ -61,6 +77,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 >
                   Explore
                 </NavLink>
+                {hasBackend && (
+                  <NavLink
+                    to="/trips"
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                  >
+                    My Trips
+                  </NavLink>
+                )}
                 {hasBackend && (
                   <NavLink
                     to="/signin"
