@@ -2382,7 +2382,7 @@ table.scorecard .total-cell {
 /* package / trip cards as a responsive grid */
 .pkg-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   /* break out of the container so the flag cards run edge to edge */
   width: 100vw;
@@ -2394,7 +2394,7 @@ table.scorecard .total-cell {
 .pkg-grid .slide-card {
   width: auto;
   flex: 0 1 auto;
-  height: 214px;
+  height: 250px;
 }
 
 .pkg-grid .trip-card {
