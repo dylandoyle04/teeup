@@ -80,6 +80,53 @@ a {
   color: var(--green-600);
 }
 
+/* ---------- Expedia affiliate badge ---------- */
+.expedia-badge {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.expedia-badge img {
+  display: block;
+  height: auto;
+}
+
+/* nav: sits in the left column, opposite the menu links */
+.nav-expedia {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.nav-expedia img {
+  max-height: 26px;
+  width: auto;
+}
+
+/* home hero: small, bottom-left */
+.hero-expedia {
+  position: absolute;
+  bottom: 14px;
+  left: 18px;
+  z-index: 3;
+  opacity: 0.92;
+}
+
+.hero-expedia img {
+  max-height: 30px;
+  width: auto;
+}
+
+@media (max-width: 760px) {
+  .nav-expedia {
+    grid-column: auto;
+  }
+  .nav-expedia img {
+    max-height: 22px;
+  }
+}
+
 /* ---------- App shell ---------- */
 .app {
   width: 100%;

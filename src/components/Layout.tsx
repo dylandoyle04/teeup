@@ -2,6 +2,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useStore } from '../store'
 import { hasBackend } from '../supabase'
 import { useAuth } from '../auth'
+import ExpediaBadge from './ExpediaBadge'
 
 function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
@@ -64,6 +65,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {!isHome && (
         <header className="navbar">
           <div className="nav-inner">
+            {!tripId && <ExpediaBadge className="nav-expedia" />}
             <Link to="/" className="brand">
               Flagstick<span className="mark"> Finder</span>
             </Link>

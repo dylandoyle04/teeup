@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
+import ExpediaBadge from '../components/ExpediaBadge'
 
 // plays on each full page load, but not on client-side nav back to Home
 let introPlayed = false
@@ -178,9 +179,12 @@ export default function Home() {
       </div>
 
       {!showIntro && (
-        <Link className="hero-legal" to="/legal">
-          Privacy &amp; Terms
-        </Link>
+        <>
+          <ExpediaBadge className="hero-expedia" />
+          <Link className="hero-legal" to="/legal">
+            Privacy &amp; Terms
+          </Link>
+        </>
       )}
 
       {showIntro && (

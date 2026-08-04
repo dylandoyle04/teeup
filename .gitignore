@@ -13,3 +13,6 @@ dist-ssr
 # local env (secrets)
 .env.local
 .env
+
+# local outreach list (contacts) — keep out of the public repo
+docs/course-outreach.csv
