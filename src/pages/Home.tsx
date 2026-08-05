@@ -254,6 +254,11 @@ export default function Home() {
             <h3>Score</h3>
             <p>Keep score live together — a shared scorecard, side games, and a trip-long Ryder Cup.</p>
           </div>
+          <div className="step">
+            <span className="step-n">4</span>
+            <h3>Eat &amp; more</h3>
+            <p>Restaurant picks near every course, drive times, and everything else the trip needs.</p>
+          </div>
         </div>
       </section>
 
@@ -279,6 +284,20 @@ export default function Home() {
           <Link to="/explore" className="btn ghost">
             See all trips →
           </Link>
+        </div>
+      </section>
+
+      <section className="home-section">
+        <div className="referral-note">
+          <span className="referral-badge">Same price, always</span>
+          <h2 className="referral-title">Booking here keeps it free</h2>
+          <p>
+            Book your hotels, flights, rental cars, and tee times right from
+            Flagstick Finder — it costs you <strong>exactly the same</strong> as
+            going direct. When you do, we earn a small referral that keeps the
+            app free and growing. You find your trip; you help us keep building
+            it. Deal?
+          </p>
         </div>
       </section>
 
