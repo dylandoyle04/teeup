@@ -204,6 +204,8 @@ a {
 
 /* ---------- Home: below-the-hero landing content ---------- */
 .home-more {
+  position: relative;
+  z-index: 2; /* scrolls up over the fixed hero photo */
   background: var(--cream);
 }
 
@@ -485,6 +487,7 @@ a {
 /* ---------- Home hero (TeeUp-style) ---------- */
 .hero {
   position: relative;
+  z-index: 2;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -492,7 +495,6 @@ a {
   align-items: center;
   text-align: center;
   padding: 56px 26px 64px;
-  overflow: hidden;
 }
 
 .hero-scene {
@@ -503,10 +505,11 @@ a {
   z-index: 0;
 }
 
+/* fixed to the viewport so it stays put while the text/content scroll up over it */
 .hero-photo {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -514,9 +517,9 @@ a {
 }
 
 .hero-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 2;
+  z-index: 0;
   background:
     /* edge vignette so text pops on bright photos */
     radial-gradient(
