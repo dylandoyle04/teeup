@@ -87,45 +87,33 @@ a {
   line-height: 0;
 }
 
-.expedia-badge img {
-  display: block;
-  height: auto;
-}
-
-.expedia-chip {
+/* subtle, in-vibe affiliate mark — light text for the dark nav/hero */
+.expedia-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
-  color: var(--green-900);
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 5px 11px;
   white-space: nowrap;
-  box-shadow: var(--shadow);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.expedia-badge img.expedia-logo {
+  display: block;
+  height: 13px;
+  width: auto;
 }
 
 .expedia-chip-word {
-  color: #1668e3; /* Expedia-style blue for the wordmark */
+  color: rgba(255, 255, 255, 0.82);
   font-weight: 800;
+  letter-spacing: 0.6px;
 }
 
-/* on the dark hero, invert the chip for contrast */
-.hero-expedia .expedia-chip {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #fff;
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-  box-shadow: none;
-}
-
-.hero-expedia .expedia-chip-word {
-  color: #cfe0ff;
+.expedia-chip-affix {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* nav: sits in the left column, opposite the menu links */

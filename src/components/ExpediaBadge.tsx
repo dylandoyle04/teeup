@@ -1,32 +1,23 @@
 import { useState } from 'react'
 
-// Shows the OFFICIAL Expedia badge from public/expedia-badge.png if present.
-// Until an approved asset is added, it falls back to a compliant text chip
-// ("Expedia Affiliate") — accurate to the real relationship, no logo/permission
-// needed and no "partner" claim.
-const STOREFRONT = 'https://expedia.com/shop/flagstickfinder'
-
+// Static "[Expedia logo] Affiliate" mark (not a link). The logo comes from
+// public/expedia-logo.png (a small light/white PNG works best on the dark nav
+// & hero). Falls back to the word "Expedia" until the file is added.
 export default function ExpediaBadge({ className = '' }: { className?: string }) {
-  const [mode, setMode] = useState<'img' | 'text'>('img')
+  const [logo, setLogo] = useState(true)
   return (
-    <a
-      className={`expedia-badge ${className}`}
-      href={STOREFRONT}
-      target="_blank"
-      rel="noreferrer noopener"
-      aria-label="Book travel on Expedia (Expedia affiliate)"
-    >
-      {mode === 'img' ? (
+    <span className={`expedia-badge ${className}`} aria-label="Expedia affiliate">
+      {logo ? (
         <img
-          src={`${import.meta.env.BASE_URL}expedia-badge.png`}
-          alt="Book travel on Expedia"
-          onError={() => setMode('text')}
+          className="expedia-logo"
+          src={`${import.meta.env.BASE_URL}expedia-logo.png`}
+          alt="Expedia"
+          onError={() => setLogo(false)}
         />
       ) : (
-        <span className="expedia-chip">
-          <span className="expedia-chip-word">Expedia</span> Affiliate
-        </span>
+        <span className="expedia-chip-word">Expedia</span>
       )}
-    </a>
+      <span className="expedia-chip-affix">Affiliate</span>
+    </span>
   )
 }
