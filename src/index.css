@@ -92,6 +92,42 @@ a {
   height: auto;
 }
 
+.expedia-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--green-900);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 11px;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+}
+
+.expedia-chip-word {
+  color: #1668e3; /* Expedia-style blue for the wordmark */
+  font-weight: 800;
+}
+
+/* on the dark hero, invert the chip for contrast */
+.hero-expedia .expedia-chip {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  box-shadow: none;
+}
+
+.hero-expedia .expedia-chip-word {
+  color: #cfe0ff;
+}
+
 /* nav: sits in the left column, opposite the menu links */
 .nav-expedia {
   grid-column: 1;
