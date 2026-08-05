@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 import ExpediaBadge from '../components/ExpediaBadge'
+import { hasBackend } from '../supabase'
 
 // plays on each full page load, but not on client-side nav back to Home
 let introPlayed = false
@@ -167,10 +168,12 @@ export default function Home() {
           <span className="line" />
         </div>
 
-        <p className="hero-tag">Find your courses, hotels, and travel needs.</p>
-        <p className="hero-tag">
-          Book the trip, invite friends, and keep score with the in-game
-          scorecard all the way through.
+        <p className="hero-tag hero-tag-lead">
+          Book the trip. Invite the crew. Keep score.
+        </p>
+        <p className="hero-tag hero-tag-sub">
+          Courses, hotels &amp; travel — with a live shared scorecard, side
+          games, and a trip-long Ryder Cup.
         </p>
 
         <button className="hero-cta" onClick={() => navigate('/explore')}>
@@ -180,7 +183,14 @@ export default function Home() {
 
       {!showIntro && (
         <>
-          <ExpediaBadge className="hero-expedia" />
+          <header className="hero-topbar">
+            <ExpediaBadge />
+            <nav className="hero-topbar-nav">
+              <Link to="/explore">Explore</Link>
+              {hasBackend && <Link to="/trips">My Trips</Link>}
+              {hasBackend && <Link to="/signin">Sign in</Link>}
+            </nav>
+          </header>
           <Link className="hero-legal" to="/legal">
             Privacy &amp; Terms
           </Link>

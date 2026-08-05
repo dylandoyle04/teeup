@@ -7,6 +7,7 @@
   --gold-dark: #b8941f;
   --tee-green: #8bc34a;
   --tee-green-dark: #6fa83a;
+  --brand-accent: #4e9e35; /* deeper, less-neon green for the wordmark */
   --slate: #20323b;
   --cream: #f7f5ee;
   --paper: #ffffff;
@@ -129,17 +130,39 @@ a {
 }
 
 /* home hero: small, bottom-left */
-.hero-expedia {
+/* minimal transparent top bar on the home hero */
+.hero-topbar {
   position: absolute;
-  bottom: 14px;
-  left: 18px;
-  z-index: 3;
-  opacity: 0.92;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px clamp(16px, 4vw, 44px);
+  animation: heroLegalIn 0.6s ease both;
 }
 
-.hero-expedia img {
-  max-height: 30px;
-  width: auto;
+.hero-topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 30px);
+}
+
+.hero-topbar-nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+  transition: color 0.15s ease;
+}
+
+.hero-topbar-nav a:hover {
+  color: #fff;
 }
 
 @media (max-width: 760px) {
@@ -251,7 +274,7 @@ a {
 }
 
 .navbar .brand .mark {
-  color: var(--tee-green);
+  color: var(--brand-accent);
 }
 
 .top-tabs {
@@ -379,7 +402,7 @@ a {
 }
 
 .hero-logo .accent {
-  color: var(--tee-green);
+  color: var(--brand-accent);
 }
 
 /* the dotless "i" in Finder; the putt ball settles in as its dot */
@@ -469,6 +492,26 @@ a {
   margin: 12px auto;
   max-width: 540px;
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.62), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.hero-tag-lead {
+  font-size: clamp(25px, 3.1vw, 36px);
+  font-weight: 600;
+  margin: 14px auto 6px;
+  max-width: 760px;
+}
+
+/* muted sans subline under the serif lead — classic premium pairing */
+.hero-tag-sub {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(14px, 1.75vw, 17px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 480px;
+  margin: 0 auto;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
 }
 
 .hero-cta {
@@ -2580,7 +2623,7 @@ table.scorecard .total-cell {
 }
 
 .footer-brand .mark {
-  color: var(--tee-green);
+  color: var(--brand-accent);
 }
 
 .footer-tag {
