@@ -3,6 +3,26 @@ import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 import ExpediaBadge from '../components/ExpediaBadge'
 import { hasBackend } from '../supabase'
+import { PACKAGES } from '../packages'
+import { money } from '../components/ui'
+
+// one package per destination, top 4 by popularity order
+const FEATURED = (() => {
+  const seen = new Set<string>()
+  const out: typeof PACKAGES = []
+  for (const p of PACKAGES) {
+    if (!seen.has(p.destination)) {
+      seen.add(p.destination)
+      out.push(p)
+    }
+    if (out.length === 4) break
+  }
+  return out
+})()
+
+function scrollToMore() {
+  document.getElementById('home-more')?.scrollIntoView({ behavior: 'smooth' })
+}
 
 // plays on each full page load, but not on client-side nav back to Home
 let introPlayed = false
@@ -131,6 +151,7 @@ export default function Home() {
   }, [])
 
   return (
+    <>
     <section className="hero" ref={root}>
       <img
         className="hero-photo"
@@ -182,6 +203,13 @@ export default function Home() {
       </div>
 
       {!showIntro && (
+        <button className="scroll-cue" onClick={scrollToMore} aria-label="See how it works">
+          <span>How it works</span>
+          <span className="chev" aria-hidden="true">⌄</span>
+        </button>
+      )}
+
+      {!showIntro && (
         <>
           <header className="hero-topbar">
             <ExpediaBadge />
@@ -191,9 +219,6 @@ export default function Home() {
               {hasBackend && <Link to="/signin">Sign in</Link>}
             </nav>
           </header>
-          <Link className="hero-legal" to="/legal">
-            Privacy &amp; Terms
-          </Link>
         </>
       )}
 
@@ -209,5 +234,66 @@ export default function Home() {
         </div>
       )}
     </section>
+
+    <div id="home-more" className="home-more">
+      <section className="home-section">
+        <h2 className="section-title explore-h2">How it works</h2>
+        <div className="steps">
+          <div className="step">
+            <span className="step-n">1</span>
+            <h3>Plan</h3>
+            <p>Pick a curated destination package or build your own — courses, hotels, flights, drive times, and dining.</p>
+          </div>
+          <div className="step">
+            <span className="step-n">2</span>
+            <h3>Invite</h3>
+            <p>Share one link. Friends sign in and join the trip — everyone on the same page.</p>
+          </div>
+          <div className="step">
+            <span className="step-n">3</span>
+            <h3>Score</h3>
+            <p>Keep score live together — a shared scorecard, side games, and a trip-long Ryder Cup.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section">
+        <h2 className="section-title explore-h2">Featured trips</h2>
+        <div className="pkg-grid">
+          {FEATURED.map((p) => (
+            <Link className="slide-card" key={p.id} to={`/package/${p.id}`}>
+              <img className="slide-bg" src={p.image} alt={p.destination} />
+              <span className="slide-flag" aria-hidden="true" />
+              <span className={`slide-tier ${p.tier}`}>{p.tierLabel}</span>
+              <div className="slide-body">
+                <div className="slide-loc">{p.region}</div>
+                <h3 className="slide-title">{p.destination.split(',')[0]}</h3>
+                <p className="slide-tag">
+                  {p.courses.length} courses · {money(p.budgetMin)}–{money(p.budgetMax)}/pp
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 8 }}>
+          <Link to="/explore" className="btn ghost">
+            See all trips →
+          </Link>
+        </div>
+      </section>
+
+      <section className="home-cta-band">
+        <p className="home-stat">11 destinations · 70+ courses · one live scorecard</p>
+        <h2 className="home-cta-title">Ready to plan the trip?</h2>
+        <Link to="/explore" className="btn gold home-cta-btn">
+          Plan your trip →
+        </Link>
+        <div className="home-foot">
+          <Link to="/legal">Privacy &amp; Terms</Link>
+          <a href="mailto:Flagstickfinder@outlook.com">Contact</a>
+        </div>
+      </section>
+    </div>
+    </>
   )
 }
