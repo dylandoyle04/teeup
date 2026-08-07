@@ -3,7 +3,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
 import { getRestaurants, reserveLink, mapsLink } from '../restaurants'
-import { hotelsLink, rentalsLink, flightsLink, carsLink } from '../affiliates'
+import {
+  hotelsLink,
+  rentalsLink,
+  flightsLink,
+  carsLink,
+  featuredStay,
+  moreCourses,
+  golfNowAreaLink,
+} from '../affiliates'
 
 export default function Booking() {
   const { tripId = '' } = useParams()
@@ -24,6 +32,9 @@ export default function Booking() {
 
   const pkg = trip.sourcePackageId ? getPackage(trip.sourcePackageId) : undefined
   const restaurants = getRestaurants(trip.destination)
+  const stay = featuredStay(trip.destination)
+  const more = moreCourses(trip.destination)
+  const area = trip.destination ? trip.destination.split(',')[0] : 'the area'
 
   // tee-time links: prefer the package's per-course GolfNow/website links,
   // otherwise fall back to a GolfNow search for each course on the trip.
@@ -102,6 +113,23 @@ export default function Booking() {
         </div>
       )}
 
+      {stay && (
+        <div className="card stay-card" style={{ marginTop: 10 }}>
+          <div className="stay-body">
+            <p className="stay-name">🏡 A place for the whole crew</p>
+            <p className="stay-desc">{stay.desc}</p>
+            <a
+              className="course-link gn"
+              href={stay.url}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              View on Vrbo ↗
+            </a>
+          </div>
+        </div>
+      )}
+
       <div className="section-title">Travel</div>
       <div className="book-row">
         <a
@@ -144,6 +172,41 @@ export default function Booking() {
           ))
         )}
       </div>
+
+      {more.length > 0 && (
+        <>
+          <p className="hint" style={{ margin: '10px 4px 6px' }}>
+            Can't get a time? More courses to play in {area}:
+          </p>
+          <div className="card">
+            {more.map((c) => (
+              <div className="book-course" key={c.name}>
+                <span className="book-course-name">⛳ {c.name}</span>
+                <a
+                  className={`course-link ${c.golfNow ? 'gn' : ''}`}
+                  href={
+                    c.golfNow ??
+                    c.website ??
+                    golfNowAreaLink(`${c.name}, ${trip.destination}`)
+                  }
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {c.golfNow ? 'GolfNow ↗' : 'Website ↗'}
+                </a>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      <a
+        className="book-more"
+        href={golfNowAreaLink(trip.destination)}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        Can't find a tee time? Browse every course in {area} on GolfNow ↗
+      </a>
 
       {restaurants.length > 0 && (
         <>

@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabase'
 import { useAuth } from '../auth'
+import { getPackage } from '../packages'
 import {
   getSharedTrip,
   listMembers,
   listRounds,
   addRound,
+  getOrCreateRound,
   deleteSharedTrip,
   leaveTrip,
   inviteUrl,
@@ -14,7 +16,6 @@ import {
   type SharedMember,
   type SharedRound,
 } from '../cloud'
-import { useNavigate } from 'react-router-dom'
 
 export default function SharedTrip() {
   const { id = '' } = useParams()
@@ -26,6 +27,7 @@ export default function SharedTrip() {
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
   const [addingRound, setAddingRound] = useState(false)
+  const [opening, setOpening] = useState<string | null>(null)
 
   const reloadMembers = useCallback(() => {
     listMembers(id).then(setMembers)
@@ -48,6 +50,8 @@ export default function SharedTrip() {
   }, [id])
 
   const isOrganizer = !!(trip && user && trip.organizerId === user.id)
+  const pkg = trip?.sourcePackageId ? getPackage(trip.sourcePackageId) : undefined
+  const roundByCourse = new Map(rounds.map((r) => [r.courseName, r]))
 
   async function removeTrip() {
     if (isOrganizer) {
@@ -58,6 +62,18 @@ export default function SharedTrip() {
       await leaveTrip(id)
     }
     navigate('/explore')
+  }
+
+  // Tap a course → open (or start) its live scorecard, where you pick the game.
+  async function openCourse(courseName: string) {
+    if (opening) return
+    setOpening(courseName)
+    try {
+      const r = await getOrCreateRound(id, courseName)
+      navigate(`/shared/${id}/round/${r.id}`)
+    } catch {
+      setOpening(null)
+    }
   }
 
   async function newRound() {
@@ -126,11 +142,22 @@ export default function SharedTrip() {
     }
   }
 
+  // Extra rounds that aren't one of the package courses (custom / manually added)
+  const extraRounds = pkg
+    ? rounds.filter((r) => !pkg.courses.some((c) => c.name === r.courseName))
+    : rounds
+
   return (
     <>
-      <div className="page-head">
-        <h1 className="page-title">{trip.name}</h1>
-        {trip.destination && <p className="page-sub">{trip.destination}</p>}
+      <div className="trip-hero" style={pkg ? { backgroundImage: `url(${pkg.image})` } : undefined}>
+        <div className="trip-hero-body">
+          {trip.destination && <span className="trip-hero-loc">{trip.destination}</span>}
+          <h1 className="trip-hero-title">{trip.name}</h1>
+          <span className="trip-hero-meta">
+            {members.length} {members.length === 1 ? 'player' : 'players'}
+            {pkg ? ` · ${pkg.courses.length} courses` : ''}
+          </span>
+        </div>
       </div>
 
       <div className="section-title">Invite your group</div>
@@ -144,24 +171,85 @@ export default function SharedTrip() {
         </button>
       </div>
 
-      <div className="section-title">Rounds</div>
-      <div className="card">
-        {rounds.map((r) => (
-          <Link className="shared-row" to={`/shared/${id}/round/${r.id}`} key={r.id}>
-            <div>
-              <div className="shared-row-name">{r.courseName}</div>
-              <div className="shared-row-dest">Live scorecard · par {r.holePars.reduce((a, b) => a + b, 0)}</div>
+      {pkg ? (
+        <>
+          <div className="section-title">Courses</div>
+          <p className="hint" style={{ margin: '-4px 4px 10px' }}>
+            Tap a course to open its live scorecard and pick how you're playing.
+          </p>
+          <div className="trip-course-grid">
+            {pkg.courses.map((c) => {
+              const started = roundByCourse.get(c.name)
+              const par = started?.holePars.reduce((a, b) => a + b, 0)
+              return (
+                <button
+                  className="trip-course"
+                  key={c.slug}
+                  onClick={() => openCourse(c.name)}
+                  disabled={!!opening}
+                >
+                  <span
+                    className="trip-course-thumb"
+                    style={{ backgroundImage: `url(${c.images[0]})` }}
+                    aria-hidden="true"
+                  />
+                  <span className="trip-course-body">
+                    <span className="trip-course-name">{c.name}</span>
+                    <span className="trip-course-meta">
+                      {started ? `In progress · par ${par}` : 'Tap to start scoring'}
+                    </span>
+                  </span>
+                  <span className={`trip-course-go ${started ? 'live' : ''}`}>
+                    {opening === c.name ? '…' : started ? 'Score' : 'Start'}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+          {extraRounds.length > 0 && (
+            <div className="card" style={{ marginTop: 12 }}>
+              {extraRounds.map((r) => (
+                <Link className="shared-row" to={`/shared/${id}/round/${r.id}`} key={r.id}>
+                  <div>
+                    <div className="shared-row-name">{r.courseName}</div>
+                    <div className="shared-row-dest">Live scorecard · par {r.holePars.reduce((a, b) => a + b, 0)}</div>
+                  </div>
+                  <span className="shared-row-go">›</span>
+                </Link>
+              ))}
             </div>
-            <span className="shared-row-go">›</span>
-          </Link>
-        ))}
-        {rounds.length === 0 && (
-          <p className="muted" style={{ margin: '0 0 10px' }}>No rounds yet.</p>
-        )}
-        <button className="btn full gold" onClick={newRound} disabled={addingRound}>
-          {addingRound ? 'Adding…' : '+ Add a round'}
-        </button>
-      </div>
+          )}
+          <button
+            className="btn ghost full"
+            style={{ marginTop: 10 }}
+            onClick={newRound}
+            disabled={addingRound}
+          >
+            {addingRound ? 'Adding…' : '+ Add another course'}
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="section-title">Rounds</div>
+          <div className="card">
+            {rounds.map((r) => (
+              <Link className="shared-row" to={`/shared/${id}/round/${r.id}`} key={r.id}>
+                <div>
+                  <div className="shared-row-name">{r.courseName}</div>
+                  <div className="shared-row-dest">Live scorecard · par {r.holePars.reduce((a, b) => a + b, 0)}</div>
+                </div>
+                <span className="shared-row-go">›</span>
+              </Link>
+            ))}
+            {rounds.length === 0 && (
+              <p className="muted" style={{ margin: '0 0 10px' }}>No rounds yet.</p>
+            )}
+            <button className="btn full gold" onClick={newRound} disabled={addingRound}>
+              {addingRound ? 'Adding…' : '+ Add a round'}
+            </button>
+          </div>
+        </>
+      )}
 
       <div className="section-title">Ryder Cup</div>
       <Link className="card shared-row" to={`/shared/${id}/ryder`}>

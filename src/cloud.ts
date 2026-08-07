@@ -8,6 +8,7 @@ export interface SharedTrip {
   id: string
   name: string
   destination: string | null
+  sourcePackageId: string | null
   inviteCode: string
   organizerId: string
   createdAt: string
@@ -25,6 +26,7 @@ function mapTrip(r: Record<string, unknown>): SharedTrip {
     id: r.id as string,
     name: r.name as string,
     destination: (r.destination as string) ?? null,
+    sourcePackageId: (r.source_package_id as string) ?? null,
     inviteCode: r.invite_code as string,
     organizerId: r.organizer_id as string,
     createdAt: r.created_at as string,
@@ -57,6 +59,42 @@ export async function createSharedTrip(
   const { data, error } = await supabase
     .from('trips')
     .insert({ name: name.trim() || 'Golf Trip', destination: destination.trim() || null })
+    .select()
+    .single()
+  if (error) throw error
+
+  const displayName = (user.email?.split('@')[0] || 'Organizer').slice(0, 40)
+  await supabase.from('trip_members').insert({
+    trip_id: data.id,
+    user_id: user.id,
+    name: displayName,
+    is_organizer: true,
+  })
+  return mapTrip(data)
+}
+
+/**
+ * Create a shared trip from one of our curated packages. The package id is
+ * stored so the trip page can show that package's courses to everyone who
+ * joins — tap a course to open its live scorecard.
+ */
+export async function createSharedTripFromPackage(
+  packageId: string,
+  destination: string,
+  title: string,
+): Promise<SharedTrip> {
+  if (!supabase) throw new Error('Not signed in')
+  const { data: userRes } = await supabase.auth.getUser()
+  const user = userRes.user
+  if (!user) throw new Error('Not signed in')
+
+  const { data, error } = await supabase
+    .from('trips')
+    .insert({
+      name: title.trim() || 'Golf Trip',
+      destination: destination.trim() || null,
+      source_package_id: packageId,
+    })
     .select()
     .single()
   if (error) throw error
@@ -171,6 +209,28 @@ export async function addRound(
     .single()
   if (error) throw error
   return mapRound(data)
+}
+
+/**
+ * Return the existing round for this course on the trip, or create one.
+ * Lets a course tile on the trip page open straight into its live scorecard
+ * without piling up duplicate rounds for the same course.
+ */
+export async function getOrCreateRound(
+  tripId: string,
+  courseName: string,
+): Promise<SharedRound> {
+  if (!supabase) throw new Error('Not signed in')
+  const name = courseName.trim() || 'Round'
+  const { data } = await supabase
+    .from('rounds')
+    .select('*')
+    .eq('trip_id', tripId)
+    .eq('course_name', name)
+    .order('created_at', { ascending: true })
+    .limit(1)
+  if (data && data[0]) return mapRound(data[0])
+  return addRound(tripId, name)
 }
 
 export async function saveRoundGame(roundId: string, game: string): Promise<void> {

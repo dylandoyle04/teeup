@@ -34,6 +34,53 @@ const VRBO_RENTALS: Record<string, string> = {
   'Orlando, FL': 'https://vrbo.com/affiliate/smTqrsr',
 }
 
+// One hand-picked Vrbo property per destination — a place a group of golfers
+// could actually book. `url` is the direct listing; swap in your Vrbo affiliate
+// deeplink for that property once you generate it in the dashboard.
+export interface FeaturedStay {
+  url: string
+  desc: string
+}
+const VRBO_PROPERTY: Record<string, FeaturedStay> = {
+  'Las Vegas, NV': {
+    url: 'https://www.vrbo.com/1104017',
+    desc: '4BR lakeside home with private pool & game room — sleeps a big group, NW Las Vegas near the Angel Park golf area.',
+  },
+  'Orlando, FL': {
+    url: 'https://www.vrbo.com/1298609',
+    desc: '5BR luxury home with private pool & spa on Reunion Resort golf course, ~6 miles from Disney.',
+  },
+  'Palm Springs, CA': {
+    url: 'https://www.vrbo.com/1896831',
+    desc: 'Remodeled 4BR home on the PGA West course in La Quinta — private pool and a golf cart.',
+  },
+}
+
+// Extra public courses in each area you can also book tee times for, beyond the
+// ones already in the package.
+export interface AreaCourse {
+  name: string
+  golfNow?: string
+  website?: string
+}
+const MORE_COURSES: Record<string, AreaCourse[]> = {
+  'Las Vegas, NV': [
+    { name: 'Reflection Bay (Lake Las Vegas)', golfNow: 'https://www.golfnow.com/tee-times/facility/881-reflection-bay-golf-club/search', website: 'https://www.reflectionbaygolf.com/' },
+    { name: 'Wildhorse Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1111-wildhorse-golf-course/search', website: 'https://www.golfwildhorse.com/' },
+    { name: 'Las Vegas Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1293-las-vegas-golf-club/search' },
+  ],
+  'Orlando, FL': [
+    { name: "Falcon's Fire (Kissimmee)", golfNow: 'https://www.golfnow.com/tee-times/facility/4673-falcons-fire-golf-club/search', website: 'https://www.falconsfire.com/' },
+    { name: 'Celebration Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1806-celebration-golf-club/search', website: 'https://www.celebrationgolf.com/' },
+    { name: 'Mystic Dunes', golfNow: 'https://www.golfnow.com/tee-times/facility/466-mystic-dunes-golf-club/search' },
+  ],
+  'Palm Springs, CA': [
+    { name: 'Classic Club (Palm Desert)', golfNow: 'https://www.golfnow.com/tee-times/facility/1662-classic-club-golf/search', website: 'https://www.classicclubgolf.com/' },
+    { name: 'JW Marriott Desert Springs — Palm', golfNow: 'https://www.golfnow.com/tee-times/facility/6429-jw-marriott-desert-springs-palm-course/search' },
+    { name: 'JW Marriott Desert Springs — Valley', golfNow: 'https://www.golfnow.com/tee-times/facility/209-jw-marriott-desert-springs-valley-course/search' },
+  ],
+}
+
 const EXPEDIA_CARS: Record<string, string> = {
   'Scottsdale, AZ': 'https://expedia.com/affiliate/dkU2U4z',
   'Myrtle Beach, SC': 'https://expedia.com/affiliate/n8ivdtO',
@@ -79,4 +126,19 @@ export function flightsLink(destination: string): string {
     EXPEDIA_FLIGHTS[destination] ||
     `https://www.expedia.com/Flights-Search?leg1=to:${enc(destination)}`
   )
+}
+
+/** A hand-picked Vrbo property for this destination, if we have one. */
+export function featuredStay(destination: string): FeaturedStay | undefined {
+  return VRBO_PROPERTY[destination]
+}
+
+/** Extra area courses you can also book tee times for. */
+export function moreCourses(destination: string): AreaCourse[] {
+  return MORE_COURSES[destination] ?? []
+}
+
+/** Generic GolfNow area search — the "look for more places here" fallback. */
+export function golfNowAreaLink(destination: string): string {
+  return `https://www.golfnow.com/tee-times/search?q=${enc(destination)}`
 }
