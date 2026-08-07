@@ -54,6 +54,32 @@ const VRBO_PROPERTY: Record<string, FeaturedStay> = {
     url: 'https://www.vrbo.com/1896831',
     desc: 'Remodeled 4BR home on the PGA West course in La Quinta — private pool and a golf cart.',
   },
+  'San Diego, CA': {
+    url: 'https://www.vrbo.com/3722865',
+    desc: '6BR/5.5BA ~7,000 sq ft resort home in El Cajon (near Steele Canyon & Singing Hills) — sleeps 16, pool, hot tub, indoor golf simulator.',
+  },
+  'Pinehurst, NC': {
+    url: 'https://www.vrbo.com/2877139',
+    desc: 'Spacious 4BR house in Southern Pines, minutes from Pinehurst golf — fire pit + games, fits 4–8.',
+  },
+  'Charleston, SC': {
+    url: 'https://www.vrbo.com/4047704',
+    desc: '4BR/4.5BA in Wild Dunes Resort on Isle of Palms — sleeps 10, walkable to the beach with resort golf access.',
+  },
+  'Boyne, MI': {
+    url: 'https://www.vrbo.com/3687215',
+    desc: '4BR/3BA house in Harbor Springs — sleeps up to 8, right in the Boyne golf country.',
+  },
+  'Myrtle Beach, SC': {
+    url: 'https://www.vrbo.com/1105242',
+    desc: '4BR oceanfront rental in North Myrtle Beach — sleeps 10, indoor pool & hot tub, close to the North Myrtle courses.',
+  },
+  'Hilton Head Island, SC': {
+    url: 'https://www.vrbo.com/3928911',
+    desc: '4BR/4.5BA Palmetto Dunes home with private pool — sleeps 8, within a mile of the Robert Trent Jones & Fazio courses.',
+  },
+  // Scottsdale intentionally omitted — the researched listing URL looked
+  // malformed and couldn't be verified. Add a confirmed property here.
 }
 
 // Extra public courses in each area you can also book tee times for, beyond the
@@ -78,6 +104,41 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
     { name: 'Classic Club (Palm Desert)', golfNow: 'https://www.golfnow.com/tee-times/facility/1662-classic-club-golf/search', website: 'https://www.classicclubgolf.com/' },
     { name: 'JW Marriott Desert Springs — Palm', golfNow: 'https://www.golfnow.com/tee-times/facility/6429-jw-marriott-desert-springs-palm-course/search' },
     { name: 'JW Marriott Desert Springs — Valley', golfNow: 'https://www.golfnow.com/tee-times/facility/209-jw-marriott-desert-springs-valley-course/search' },
+  ],
+  'San Diego, CA': [
+    { name: 'Coronado Municipal', golfNow: 'https://www.golfnow.com/tee-times/facility/10985-coronado-municipal-golf-course-ca/search', website: 'https://www.golfcoronado.com/' },
+    { name: 'Riverwalk Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/171-riverwalk-golf-club/search', website: 'https://riverwalkgc.com/' },
+    { name: 'The Crossings at Carlsbad', golfNow: 'https://www.golfnow.com/tee-times/facility/4184-crossings-at-carlsbad/search', website: 'https://www.thecrossingsatcarlsbad.com/' },
+  ],
+  'Pinehurst, NC': [
+    { name: 'Southern Pines Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/3847-southern-pines-golf-club/search', website: 'https://southernpinesgolfclub.com/golf/' },
+    { name: 'Hyland Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/4504-hyland-golf-club/search' },
+    { name: 'Pine Needles Lodge & Golf Club', website: 'https://www.pineneedles-midpines.com/' },
+  ],
+  'Charleston, SC': [
+    { name: 'Charleston National (Mount Pleasant)', golfNow: 'https://www.golfnow.com/tee-times/facility/7077-charleston-national/search', website: 'https://www.charlestonnationalgolf.com/' },
+    { name: 'Dunes West (Mount Pleasant)', website: 'https://www.duneswestgolfclub.com/' },
+    { name: 'Shadowmoss Plantation (West Ashley)', golfNow: 'https://www.golfnow.com/tee-times/facility/8383-shadowmoss-plantation/search', website: 'https://www.shadowmossgolf.com/' },
+  ],
+  'Boyne, MI': [
+    { name: 'Little Traverse Bay (Harbor Springs)', golfNow: 'https://www.golfnow.com/tee-times/facility/6299-little-traverse-bay/search', website: 'https://www.golfmichigan.net/ltbaygolf/' },
+    { name: 'Hidden River (Brutus)', golfNow: 'https://www.golfnow.com/tee-times/facility/3306-hidden-river-golf-casting/search', website: 'https://hiddenriver.com/' },
+    { name: 'Belvedere Golf Club (Charlevoix)', website: 'https://belvederegolfclub.com/' },
+  ],
+  'Scottsdale, AZ': [
+    { name: 'Grayhawk (Talon)', golfNow: 'https://www.golfnow.com/tee-times/facility/3050-grayhawk-golf-club-talon-course/search', website: 'https://grayhawkgolf.com/' },
+    { name: 'Talking Stick (North)', golfNow: 'https://www.golfnow.com/tee-times/facility/12968-talking-stick-golf-club-oodham-north/search', website: 'https://www.talkingstickresort.com/amenities/golf/' },
+    { name: 'The Boulders', golfNow: 'https://www.golfnow.com/tee-times/facility/7-the-boulders-golf-club/search', website: 'https://www.bouldersclub.com/' },
+  ],
+  'Myrtle Beach, SC': [
+    { name: 'Tidewater Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5389-tidewater-golf-club/search', website: 'https://tidewatergolf.com/' },
+    { name: 'Grande Dunes Resort', golfNow: 'https://www.golfnow.com/tee-times/facility/5394-grande-dunes-resort-course/search', website: 'https://myrtlebeachgolf.com/golf-course/grande-dunes-resort-club/' },
+    { name: 'True Blue Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5416-true-blue-plantation/search', website: 'https://truebluemyrtlebeach.com/' },
+  ],
+  'Hilton Head Island, SC': [
+    { name: 'Palmetto Dunes — Robert Trent Jones', golfNow: 'https://www.golfnow.com/tee-times/facility/17988-palmetto-dunes-resort-robert-trent-jones-course/search', website: 'https://www.palmettodunes.com/golf/robert-trent-jones-course' },
+    { name: 'Palmetto Dunes — George Fazio', golfNow: 'https://www.golfnow.com/tee-times/facility/17987-palmetto-dunes-resort-fazio-course/search', website: 'https://www.palmettodunes.com/golf/george-fazio-course' },
+    { name: "Port Royal — Robber's Row", golfNow: 'https://www.golfnow.com/tee-times/facility/13548-port-royal-robbers-row/search', website: 'https://hiltonheadgolf.net/book-tee-times' },
   ],
 }
 
