@@ -73,51 +73,14 @@ export default function Booking() {
       </div>
 
       <div className="section-title">Stay</div>
-      <div className="book-row">
-        <a
-          className="book-link"
-          href={hotelsLink(trip.destination)}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          🏨 Find hotels on Expedia ↗
-        </a>
-        <a
-          className="book-link"
-          href={rentalsLink(trip.destination)}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          🏠 Find rentals on Vrbo ↗
-        </a>
-      </div>
-      <p className="hint" style={{ margin: '2px 4px 6px' }}>
-        Searches {trip.destination || 'the destination'} — or find hotels right
-        next to a specific course:
-      </p>
-      {teeLinks.length > 0 && (
-        <div className="near-row">
-          {teeLinks.map((c) => (
-            <a
-              key={c.name}
-              className="course-link"
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                `hotels near ${c.name}, ${trip.destination || ''}`,
-              )}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              🏨 {c.name} ↗
-            </a>
-          ))}
-        </div>
-      )}
-
       {stay && (
-        <div className="card stay-card" style={{ marginTop: 10 }}>
+        <div className="card stay-card">
           <div className="stay-body">
-            <p className="stay-name">🏡 A place for the whole crew</p>
-            <p className="stay-desc">{stay.desc}</p>
+            <p className="stay-name">🏡 Our pick — one place for the whole crew</p>
+            <p className="stay-desc">
+              {stay.desc} Central to the trip's courses, so everyone stays under
+              one roof.
+            </p>
             <a
               className="course-link gn"
               href={stay.url}
@@ -129,6 +92,27 @@ export default function Booking() {
           </div>
         </div>
       )}
+      <div className="book-row" style={{ marginTop: stay ? 10 : 0 }}>
+        <a
+          className="book-link"
+          href={rentalsLink(trip.destination)}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          🏠 More rentals on Vrbo ↗
+        </a>
+        <a
+          className="book-link"
+          href={hotelsLink(trip.destination)}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          🏨 Hotels on Expedia ↗
+        </a>
+      </div>
+      <p className="hint" style={{ margin: '2px 4px 6px' }}>
+        Searches {trip.destination || 'the destination'} for more places to stay.
+      </p>
 
       <div className="section-title">Travel</div>
       <div className="book-row">
