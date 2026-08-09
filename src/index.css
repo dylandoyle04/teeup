@@ -3401,11 +3401,69 @@ table.scorecard .yard-row .name-cell {
 }
 .book-more:hover { text-decoration: underline; }
 .stay-card {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  padding: 12px;
+  display: block;
+  text-decoration: none;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
-.stay-body { flex: 1; min-width: 0; }
-.stay-name { font-weight: 700; color: var(--ink); margin: 0 0 3px; }
-.stay-desc { font-size: 13px; color: var(--muted, #6b6f68); margin: 0 0 8px; }
+.stay-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(11, 61, 44, 0.14);
+  border-color: var(--gold-line);
+}
+.stay-photo {
+  position: relative;
+  height: 190px;
+  background: linear-gradient(135deg, #0b3d2c 0%, #12513a 100%);
+}
+.stay-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.stay-photo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 54px;
+}
+.stay-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #3a2e07;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.stay-body { padding: 14px 16px 16px; }
+.stay-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.stay-desc { font-size: 13px; color: var(--muted, #6b6f68); margin: 0 0 12px; line-height: 1.5; }
+.stay-cta {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #3a2e07;
+}
