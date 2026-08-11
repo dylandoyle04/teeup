@@ -146,11 +146,6 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
     { name: 'Palmetto Dunes — George Fazio', golfNow: 'https://www.golfnow.com/tee-times/facility/17987-palmetto-dunes-resort-fazio-course/search', website: 'https://www.palmettodunes.com/golf/george-fazio-course' },
     { name: "Port Royal — Robber's Row", golfNow: 'https://www.golfnow.com/tee-times/facility/13548-port-royal-robbers-row/search', website: 'https://hiltonheadgolf.net/book-tee-times' },
   ],
-  'Scottsdale, AZ': [
-    { name: 'Grayhawk (Talon)', golfNow: 'https://www.golfnow.com/tee-times/facility/3050-grayhawk-golf-club-talon-course/search', website: 'https://grayhawkgolf.com/' },
-    { name: 'Talking Stick (Piipaash/South)', golfNow: 'https://www.golfnow.com/tee-times/facility/814-talking-stick-golf-club-piipaash-south/search', website: 'https://talkingstickgolfclub.com/' },
-    { name: 'The Boulders (North & South)', website: 'https://www.theboulders.com/' },
-  ],
   'Naples, FL': [
     { name: 'Hibiscus Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5132-hibiscus-golf-club/search' },
     { name: 'Naples Grande Golf Club', website: 'https://www.naplesgrandegolf.com/' },
