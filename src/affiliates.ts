@@ -78,8 +78,14 @@ const VRBO_PROPERTY: Record<string, FeaturedStay> = {
     url: 'https://www.vrbo.com/3928911',
     desc: '4BR/4.5BA Palmetto Dunes home with private pool — sleeps 8, within a mile of the Robert Trent Jones & Fazio courses.',
   },
-  // Scottsdale intentionally omitted — the researched listing URL looked
-  // malformed and couldn't be verified. Add a confirmed property here.
+  'Scottsdale, AZ': {
+    url: 'https://www.vrbo.com/1272118',
+    desc: 'Upscale North Scottsdale home — 5BR (sleeps 8+), heated pool, hot tub, and a putting green. Built for a golf group.',
+  },
+  'Naples, FL': {
+    url: 'https://www.vrbo.com/1660370',
+    desc: 'Central Naples 4BR/3BA pool home — sleeps 8, private pool + hot tub, about a mile from Naples Grande.',
+  },
 }
 
 // Extra public courses in each area you can also book tee times for, beyond the
@@ -139,6 +145,15 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
     { name: 'Palmetto Dunes — Robert Trent Jones', golfNow: 'https://www.golfnow.com/tee-times/facility/17988-palmetto-dunes-resort-robert-trent-jones-course/search', website: 'https://www.palmettodunes.com/golf/robert-trent-jones-course' },
     { name: 'Palmetto Dunes — George Fazio', golfNow: 'https://www.golfnow.com/tee-times/facility/17987-palmetto-dunes-resort-fazio-course/search', website: 'https://www.palmettodunes.com/golf/george-fazio-course' },
     { name: "Port Royal — Robber's Row", golfNow: 'https://www.golfnow.com/tee-times/facility/13548-port-royal-robbers-row/search', website: 'https://hiltonheadgolf.net/book-tee-times' },
+  ],
+  'Scottsdale, AZ': [
+    { name: 'Grayhawk (Talon)', golfNow: 'https://www.golfnow.com/tee-times/facility/3050-grayhawk-golf-club-talon-course/search', website: 'https://grayhawkgolf.com/' },
+    { name: 'Talking Stick (Piipaash/South)', golfNow: 'https://www.golfnow.com/tee-times/facility/814-talking-stick-golf-club-piipaash-south/search', website: 'https://talkingstickgolfclub.com/' },
+    { name: 'The Boulders (North & South)', website: 'https://www.theboulders.com/' },
+  ],
+  'Naples, FL': [
+    { name: 'Hibiscus Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5132-hibiscus-golf-club/search' },
+    { name: 'Naples Grande Golf Club', website: 'https://www.naplesgrandegolf.com/' },
   ],
 }
 

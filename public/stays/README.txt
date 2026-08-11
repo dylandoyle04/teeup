@@ -17,8 +17,6 @@ Filenames (one per destination that has a featured Vrbo property):
   boyne.jpg
   myrtle-beach.jpg
   hilton-head-island.jpg
-
-Not yet assigned a property (add the property first, then the photo):
   scottsdale.jpg
   naples.jpg
 
