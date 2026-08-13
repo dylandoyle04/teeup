@@ -31,59 +31,56 @@ const VRBO_RENTALS: Record<string, string> = {
   'Las Vegas, NV': 'https://vrbo.com/affiliate/nVqlVrU',
   'San Diego, CA': 'https://vrbo.com/affiliate/IiEZsBJ',
   'Boyne, MI': 'https://vrbo.com/affiliate/Jm6cE2Y',
-  'Orlando, FL': 'https://vrbo.com/affiliate/smTqrsr',
+  // Orlando & Charleston affiliate links are area-wide (no single property),
+  // so they live here on the general search button rather than as a featured stay.
+  'Orlando, FL': 'https://vrbo.com/affiliate/kxESf7V',
+  'Charleston, SC': 'https://vrbo.com/affiliate/pqmWsFK',
 }
 
 // One hand-picked Vrbo property per destination — a place a group of golfers
-// could actually book. `url` is the direct listing; swap in your Vrbo affiliate
-// deeplink for that property once you generate it in the dashboard.
+// could actually book. `url` is the property-specific Vrbo affiliate deeplink.
+// Photo lives at public/stays/<area-slug>.jpg. Orlando & Charleston are NOT
+// here — their affiliate links are area-wide (no single property), so they
+// power the general "More rentals" button via VRBO_RENTALS instead.
 export interface FeaturedStay {
   url: string
   desc: string
 }
 const VRBO_PROPERTY: Record<string, FeaturedStay> = {
   'Las Vegas, NV': {
-    url: 'https://www.vrbo.com/1104017',
+    url: 'https://vrbo.com/affiliate/aQ09rzi',
     desc: '4BR lakeside home with private pool & game room — sleeps a big group, NW Las Vegas near the Angel Park golf area.',
   },
-  'Orlando, FL': {
-    url: 'https://www.vrbo.com/1298609',
-    desc: '5BR luxury home with private pool & spa on Reunion Resort golf course, ~6 miles from Disney.',
-  },
   'Palm Springs, CA': {
-    url: 'https://www.vrbo.com/1896831',
+    url: 'https://vrbo.com/affiliate/7uuPGJp',
     desc: 'Remodeled 4BR home on the PGA West course in La Quinta — private pool and a golf cart.',
   },
   'San Diego, CA': {
-    url: 'https://www.vrbo.com/3722865',
+    url: 'https://vrbo.com/affiliate/wr5iy6x',
     desc: '6BR/5.5BA ~7,000 sq ft resort home in El Cajon (near Steele Canyon & Singing Hills) — sleeps 16, pool, hot tub, indoor golf simulator.',
   },
   'Pinehurst, NC': {
-    url: 'https://www.vrbo.com/2877139',
+    url: 'https://vrbo.com/affiliate/fktysh0',
     desc: 'Spacious 4BR house in Southern Pines, minutes from Pinehurst golf — fire pit + games, fits 4–8.',
   },
-  'Charleston, SC': {
-    url: 'https://www.vrbo.com/4047704',
-    desc: '4BR/4.5BA in Wild Dunes Resort on Isle of Palms — sleeps 10, walkable to the beach with resort golf access.',
-  },
   'Boyne, MI': {
-    url: 'https://www.vrbo.com/3687215',
+    url: 'https://vrbo.com/affiliate/lvnRjgB',
     desc: '4BR/3BA house in Harbor Springs — sleeps up to 8, right in the Boyne golf country.',
   },
   'Myrtle Beach, SC': {
-    url: 'https://www.vrbo.com/1105242',
+    url: 'https://vrbo.com/affiliate/zx7VwtK',
     desc: '4BR oceanfront rental in North Myrtle Beach — sleeps 10, indoor pool & hot tub, close to the North Myrtle courses.',
   },
   'Hilton Head Island, SC': {
-    url: 'https://www.vrbo.com/3928911',
+    url: 'https://vrbo.com/affiliate/0dgr51t',
     desc: '4BR/4.5BA Palmetto Dunes home with private pool — sleeps 8, within a mile of the Robert Trent Jones & Fazio courses.',
   },
   'Scottsdale, AZ': {
-    url: 'https://www.vrbo.com/1272118',
+    url: 'https://vrbo.com/affiliate/R8yQFqk',
     desc: 'Upscale North Scottsdale home — 5BR (sleeps 8+), heated pool, hot tub, and a putting green. Built for a golf group.',
   },
   'Naples, FL': {
-    url: 'https://www.vrbo.com/1660370',
+    url: 'https://vrbo.com/affiliate/lA8GnAI',
     desc: 'Central Naples 4BR/3BA pool home — sleeps 8, private pool + hot tub, about a mile from Naples Grande.',
   },
 }
