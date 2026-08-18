@@ -114,6 +114,9 @@ export interface Trip {
   organizerId: ID
   /** package this trip was started from (for booking links); undefined for custom trips */
   sourcePackageId?: string
+  /** once shared for live scoring: the cloud trip id + invite code (reused, not recreated) */
+  sharedId?: string
+  sharedCode?: string
   memberIds: ID[]
   courses: CourseOption[]
   hotels: HotelOption[]

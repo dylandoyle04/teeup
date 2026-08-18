@@ -3,6 +3,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import type { HotelTier } from '../types'
 import { Avatar, Toggle, fmtDateRange, money } from '../components/ui'
+import { hasBackend } from '../supabase'
+import { useAuth } from '../auth'
+import { getPackage } from '../packages'
+import {
+  createSharedTrip,
+  createSharedTripFromPackage,
+  inviteUrl,
+} from '../cloud'
 
 const TIERS: { value: HotelTier; label: string }[] = [
   { value: 'budget', label: 'Budget' },
@@ -21,8 +29,44 @@ export default function TripSetup() {
   const updateTrip = useStore((s) => s.updateTrip)
   const deleteTrip = useStore((s) => s.deleteTrip)
 
+  const { user } = useAuth()
   const [newName, setNewName] = useState('')
   const [editing, setEditing] = useState(false)
+  const [shareBusy, setShareBusy] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [shareCode, setShareCode] = useState<string | undefined>(
+    trip?.sharedCode,
+  )
+
+  async function share() {
+    if (shareBusy || !trip) return
+    setShareBusy(true)
+    try {
+      const pkg = trip.sourcePackageId
+        ? getPackage(trip.sourcePackageId)
+        : undefined
+      const st = pkg
+        ? await createSharedTripFromPackage(pkg.id, pkg.destination, trip.name)
+        : await createSharedTrip(trip.name, trip.destination)
+      updateTrip(tripId, { sharedId: st.id, sharedCode: st.inviteCode })
+      setShareCode(st.inviteCode)
+    } catch {
+      /* leave the button so they can retry */
+    } finally {
+      setShareBusy(false)
+    }
+  }
+
+  async function copyLink() {
+    if (!shareCode) return
+    try {
+      await navigator.clipboard.writeText(inviteUrl(shareCode))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      /* clipboard blocked — field is selectable */
+    }
+  }
 
   if (!trip) {
     return (
@@ -242,9 +286,59 @@ export default function TripSetup() {
           </button>
         </div>
         <p className="hint" style={{ marginTop: 8 }}>
-          You book the trip; invite friends to join the scorecard once you're
-          there.
+          Add names to keep score on this phone — or share the trip link below so
+          friends join and score from their own.
         </p>
+
+        {hasBackend && (
+          <div
+            style={{
+              marginTop: 14,
+              borderTop: '1px solid var(--line)',
+              paddingTop: 14,
+            }}
+          >
+            <strong style={{ display: 'block', marginBottom: 6 }}>
+              🔗 Share the trip link
+            </strong>
+            {!user ? (
+              <p className="hint" style={{ margin: 0 }}>
+                <Link
+                  to={`/signin?next=${encodeURIComponent(
+                    `/trip/${tripId}/setup`,
+                  )}`}
+                >
+                  Sign in
+                </Link>{' '}
+                to get a link friends can open to join the live scorecard.
+              </p>
+            ) : shareCode ? (
+              <>
+                <input
+                  className="invite-field"
+                  value={inviteUrl(shareCode)}
+                  readOnly
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <button
+                  className="btn full gold"
+                  style={{ marginTop: 10 }}
+                  onClick={copyLink}
+                >
+                  {copied ? 'Copied ✓' : 'Copy invite link'}
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn full gold"
+                onClick={share}
+                disabled={shareBusy}
+              >
+                {shareBusy ? 'Creating link…' : 'Create a shareable link'}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <Link
