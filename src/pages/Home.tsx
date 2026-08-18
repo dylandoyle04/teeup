@@ -2,9 +2,9 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 import ExpediaBadge from '../components/ExpediaBadge'
+import PackageCard from '../components/PackageCard'
 import { hasBackend } from '../supabase'
 import { PACKAGES } from '../packages'
-import { money } from '../components/ui'
 
 // one package per destination, top 4 by popularity order
 const FEATURED = (() => {
@@ -266,18 +266,7 @@ export default function Home() {
         <h2 className="section-title explore-h2">Featured trips</h2>
         <div className="pkg-grid">
           {FEATURED.map((p) => (
-            <Link className="slide-card" key={p.id} to={`/package/${p.id}`}>
-              <img className="slide-bg" src={p.image} alt={p.destination} />
-              <span className="slide-flag" aria-hidden="true" />
-              <span className={`slide-tier ${p.tier}`}>{p.tierLabel}</span>
-              <div className="slide-body">
-                <div className="slide-loc">{p.region}</div>
-                <h3 className="slide-title">{p.destination.split(',')[0]}</h3>
-                <p className="slide-tag">
-                  {p.courses.length} courses · {money(p.budgetMin)}–{money(p.budgetMax)}/pp
-                </p>
-              </div>
-            </Link>
+            <PackageCard key={p.id} pkg={p} />
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: 8 }}>

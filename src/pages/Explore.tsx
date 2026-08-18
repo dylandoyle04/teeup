@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { PACKAGES } from '../packages'
 import { AvatarStack, fmtDateRange, money } from '../components/ui'
+import PackageCard from '../components/PackageCard'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
 
 export default function Explore() {
@@ -33,24 +34,7 @@ export default function Explore() {
       </h2>
       <div className="pkg-grid">
         {PACKAGES.map((p) => (
-          <Link
-            className="slide-card"
-            key={p.id}
-            to={`/package/${p.id}`}
-            data-reveal
-          >
-            <img className="slide-bg" src={p.image} alt={p.destination} />
-            <span className="slide-flag" aria-hidden="true" />
-            <span className={`slide-tier ${p.tier}`}>{p.tierLabel}</span>
-            <div className="slide-body">
-              <div className="slide-loc">{p.region}</div>
-              <h3 className="slide-title">{p.destination.split(',')[0]}</h3>
-              <p className="slide-tag">
-                {p.courses.length} courses · {money(p.budgetMin)}–
-                {money(p.budgetMax)}/pp
-              </p>
-            </div>
-          </Link>
+          <PackageCard key={p.id} pkg={p} reveal />
         ))}
       </div>
 
