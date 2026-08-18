@@ -201,6 +201,38 @@ export function featuredStay(destination: string): FeaturedStay | undefined {
   return VRBO_PROPERTY[destination]
 }
 
+// Number of gallery photos per destination in public/stays/<slug>-N.jpg.
+const STAY_PHOTO_COUNT: Record<string, number> = {
+  'Scottsdale, AZ': 6,
+  'Myrtle Beach, SC': 5,
+  'Hilton Head Island, SC': 6,
+  'Las Vegas, NV': 6,
+  'San Diego, CA': 7,
+  'Boyne, MI': 6,
+  'Pinehurst, NC': 6,
+  'Palm Springs, CA': 6,
+  'Naples, FL': 6,
+}
+
+function staySlug(destination: string): string {
+  return destination
+    .split(',')[0]
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+/** Ordered gallery photo URLs for a destination's featured stay (hero first). */
+export function stayPhotos(destination: string): string[] {
+  const n = STAY_PHOTO_COUNT[destination]
+  if (!n) return []
+  const slug = staySlug(destination)
+  return Array.from(
+    { length: n },
+    (_, i) => `${import.meta.env.BASE_URL}stays/${slug}-${i + 1}.jpg`,
+  )
+}
+
 /** Extra area courses you can also book tee times for. */
 export function moreCourses(destination: string): AreaCourse[] {
   return MORE_COURSES[destination] ?? []

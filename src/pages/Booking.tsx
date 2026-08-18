@@ -9,16 +9,17 @@ import {
   flightsLink,
   carsLink,
   featuredStay,
+  stayPhotos,
   moreCourses,
   golfNowAreaLink,
 } from '../affiliates'
+import StayGallery from '../components/StayGallery'
 
 export default function Booking() {
   const { tripId = '' } = useParams()
   const navigate = useNavigate()
   const trip = useStore((s) => s.getTrip(tripId))
   const [hotel, setHotel] = useState('')
-  const [stayImgOk, setStayImgOk] = useState(true)
 
   if (!trip) {
     return (
@@ -36,10 +37,10 @@ export default function Booking() {
   const stay = featuredStay(trip.destination)
   const more = moreCourses(trip.destination)
   const area = trip.destination ? trip.destination.split(',')[0] : 'the area'
-  // Property photo lives at public/stays/<area-slug>.jpg (drop one in per
-  // destination). Falls back to the trip's golf photo until it's added.
-  const staySlug = area.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-  const stayPhoto = stayImgOk ? `${import.meta.env.BASE_URL}stays/${staySlug}.jpg` : pkg?.image
+  // Gallery photos for the featured stay (public/stays/<slug>-N.jpg), hero
+  // first. Falls back to the trip's golf photo if we have no stay photos.
+  const photos = stayPhotos(trip.destination)
+  const gallery = photos.length ? photos : pkg?.image ? [pkg.image] : []
 
   // tee-time links: prefer the package's per-course GolfNow/website links,
   // otherwise fall back to a GolfNow search for each course on the trip.
@@ -78,34 +79,25 @@ export default function Booking() {
       </div>
 
       <div className="section-title">Stay</div>
-      {stay && (
-        <a
-          className="stay-card"
-          href={stay.url}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <div className="stay-photo">
-            {stayPhoto ? (
-              <img
-                src={stayPhoto}
-                alt=""
-                onError={() => setStayImgOk(false)}
-              />
-            ) : (
-              <span className="stay-photo-fallback" aria-hidden="true">🏡</span>
-            )}
-            <span className="stay-badge">Our pick</span>
-          </div>
+      {stay && gallery.length > 0 && (
+        <div className="stay-card">
+          <StayGallery photos={gallery} />
           <div className="stay-body">
             <p className="stay-name">One place for the whole crew</p>
             <p className="stay-desc">
               {stay.desc} Central to the trip's courses, so everyone stays under
               one roof.
             </p>
-            <span className="stay-cta">View on Vrbo ↗</span>
+            <a
+              className="stay-cta"
+              href={stay.url}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              View on Vrbo ↗
+            </a>
           </div>
-        </a>
+        </div>
       )}
       <div className="book-row" style={{ marginTop: stay ? 10 : 0 }}>
         <a
