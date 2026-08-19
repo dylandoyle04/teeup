@@ -27,6 +27,21 @@ function TripTabs({ tripId }: { tripId: string }) {
   )
 }
 
+function SharedTripTabs({ id }: { id: string }) {
+  const { pathname } = useLocation()
+  const onRyder = pathname.endsWith('/ryder')
+  return (
+    <nav className="top-tabs" aria-label="Trip sections">
+      <NavLink to={`/shared/${id}`} className={!onRyder ? 'active' : ''}>
+        Scorecard
+      </NavLink>
+      <NavLink to={`/shared/${id}/ryder`} className={onRyder ? 'active' : ''}>
+        Ryder Cup
+      </NavLink>
+    </nav>
+  )
+}
+
 function AccountLink() {
   const { user } = useAuth()
   return <Link to="/signin">{user ? 'Account' : 'Sign in'}</Link>
@@ -42,6 +57,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isHome = pathname === '/'
   // Layout sits above <Routes>, so derive the trip id from the path directly.
   const tripId = pathname.match(/^\/trip\/([^/]+)/)?.[1]
+  const sharedMatch = pathname.match(/^\/shared\/([^/]+)/)?.[1]
+  const sharedId = sharedMatch && sharedMatch !== 'new' ? sharedMatch : undefined
   const trip = useStore((s) => (tripId ? s.getTrip(tripId) : undefined))
 
   return (
@@ -65,12 +82,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {!isHome && (
         <header className="navbar">
           <div className="nav-inner">
-            {!tripId && <ExpediaBadge className="nav-expedia" />}
+            {!tripId && !sharedId && <ExpediaBadge className="nav-expedia" />}
             <Link to="/" className="brand">
               Flagstick<span className="mark"> Finder</span>
             </Link>
             {tripId ? (
               <TripTabs tripId={tripId} />
+            ) : sharedId ? (
+              <SharedTripTabs id={sharedId} />
             ) : (
               <nav className="top-tabs">
                 <NavLink
