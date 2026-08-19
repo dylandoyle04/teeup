@@ -3423,6 +3423,7 @@ table.scorecard .yard-row .name-cell {
 }
 .stay-gallery {
   display: flex;
+  gap: 4px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -3431,15 +3432,23 @@ table.scorecard .yard-row .name-cell {
 .stay-gallery::-webkit-scrollbar {
   display: none;
 }
+/* two photos at a time on wider screens → each renders smaller & sharper */
 .stay-slide {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 220px;
+  flex: 0 0 calc(50% - 2px);
+  width: calc(50% - 2px);
+  height: 210px;
   object-fit: cover;
   object-position: center;
-  scroll-snap-align: center;
+  scroll-snap-align: start;
   display: block;
   user-select: none;
+}
+@media (max-width: 560px) {
+  /* one at a time on narrow phones so they aren't tiny */
+  .stay-slide {
+    flex-basis: 100%;
+    width: 100%;
+  }
 }
 .stay-nav {
   position: absolute;
