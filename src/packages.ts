@@ -1,4 +1,5 @@
 import type { HotelTier } from './types'
+import { ASSET_BASE } from './platform'
 
 export interface PackageCourse {
   name: string
@@ -252,7 +253,7 @@ const PHOTO_COUNTS: Record<string, number> = {
   'indigo-creek': 6,
 }
 
-const BASE = import.meta.env.BASE_URL
+const BASE = ASSET_BASE
 const imgs = (slug: string): string[] =>
   Array.from(
     { length: PHOTO_COUNTS[slug] ?? 0 },

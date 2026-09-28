@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { appLink } from './platform'
 import { parsForCourseName } from './coursePars'
 import { STANDARD_HOLE_PARS } from './seed'
 
@@ -44,7 +45,7 @@ function mapMember(r: Record<string, unknown>): SharedMember {
 
 /** The shareable invite link for a trip. */
 export function inviteUrl(code: string): string {
-  return `${window.location.origin}${window.location.pathname}#/join/${code}`
+  return appLink(`/join/${code}`)
 }
 
 export async function createSharedTrip(

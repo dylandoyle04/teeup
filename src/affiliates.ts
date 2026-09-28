@@ -1,3 +1,4 @@
+import { ASSET_BASE } from './platform'
 // Affiliate links.
 //
 // Expedia's creator program issues a *generated* short link per target page
@@ -229,7 +230,7 @@ export function stayPhotos(destination: string): string[] {
   const slug = staySlug(destination)
   return Array.from(
     { length: n },
-    (_, i) => `${import.meta.env.BASE_URL}stays/${slug}-${i + 1}.jpg`,
+    (_, i) => `${ASSET_BASE}stays/${slug}-${i + 1}.jpg`,
   )
 }
 

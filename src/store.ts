@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { persistStorage } from './platform'
 import type {
   Bet,
   CourseOption,
@@ -504,6 +505,7 @@ export const useStore = create<State>()(
     }),
     {
       name: 'birdie-trips-v1',
+      storage: persistStorage,
       version: 4,
       migrate: (persisted, version) => {
         const state = persisted as { trips?: unknown[] } | undefined
