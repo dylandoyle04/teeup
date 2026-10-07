@@ -7,6 +7,7 @@ import { PACKAGES } from '@shared/packages'
 import PackageCard from '@/components/PackageCard'
 import { Button, Card, SectionTitle, Serif, T } from '@/components/ui'
 import { openLink } from '@/lib/links'
+import { useLightStatusBar } from '@/lib/useLightStatusBar'
 import { ASSET_BASE } from '@/platform'
 import { colors, fonts } from '@/theme'
 
@@ -34,6 +35,7 @@ const STEPS = [
 export default function Home() {
   const { height, width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  useLightStatusBar()
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.cream }} contentContainerStyle={{ paddingBottom: 40 }}>

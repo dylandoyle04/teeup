@@ -1,6 +1,6 @@
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Link } from 'expo-router'
+import { router } from 'expo-router'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import type { TripPackage } from '@shared/packages'
 import { money } from '@/components/ui'
@@ -8,9 +8,10 @@ import { colors, fonts, shadow } from '@/theme'
 
 export default function PackageCard({ pkg, width }: { pkg: TripPackage; width?: number }) {
   return (
-    <Link href={{ pathname: '/package/[id]', params: { id: pkg.id } }} asChild>
-      <Pressable
+    <Pressable
+        onPress={() => router.push({ pathname: '/package/[id]', params: { id: pkg.id } })}
         style={({ pressed }) => [st.card, width ? { width } : null, pressed && { transform: [{ scale: 0.98 }] }]}
+        accessibilityRole="button"
         accessibilityLabel={`${pkg.destination}, ${pkg.tierLabel}`}
       >
         <Image source={pkg.image} style={StyleSheet.absoluteFill} contentFit="cover" transition={250} cachePolicy="memory-disk" />
@@ -28,8 +29,7 @@ export default function PackageCard({ pkg, width }: { pkg: TripPackage; width?: 
             {pkg.courses.length} courses · {money(pkg.budgetMin)}–{money(pkg.budgetMax)}/pp
           </Text>
         </View>
-      </Pressable>
-    </Link>
+    </Pressable>
   )
 }
 

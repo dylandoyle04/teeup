@@ -2,6 +2,7 @@ import { Slot, router, useGlobalSearchParams, usePathname } from 'expo-router'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useStore } from '@shared/store'
+import { useLightStatusBar } from '@/lib/useLightStatusBar'
 import { colors, fonts } from '@/theme'
 
 const TABS = [
@@ -17,6 +18,7 @@ export default function TripLayout() {
   const pathname = usePathname()
   const trip = useStore((s) => s.getTrip(tripId))
   const insets = useSafeAreaInsets()
+  useLightStatusBar()
   const active = pathname.split('/').pop()
 
   return (

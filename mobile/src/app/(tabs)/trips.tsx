@@ -1,4 +1,4 @@
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { Pressable, StyleSheet, View } from 'react-native'
 import { useStore } from '@shared/store'
 import Screen from '@/components/Screen'
@@ -25,8 +25,12 @@ export default function Trips() {
           {sorted.map((trip) => {
             const members = tripMembers(trip.id)
             return (
-              <Link key={trip.id} href={{ pathname: '/trip/[tripId]/setup', params: { tripId: trip.id } }} asChild>
-                <Pressable style={({ pressed }) => [pressed && { opacity: 0.85 }]}>
+              <Pressable
+                key={trip.id}
+                onPress={() => router.push({ pathname: '/trip/[tripId]/setup', params: { tripId: trip.id } })}
+                style={({ pressed }) => [pressed && { opacity: 0.85 }]}
+                accessibilityRole="button"
+              >
                   <Card style={{ padding: 0, overflow: 'hidden' }}>
                     <View style={st.banner}>
                       <Serif style={{ color: '#fff', fontSize: 24 }}>{trip.name}</Serif>
@@ -46,8 +50,7 @@ export default function Trips() {
                       </Pill>
                     </View>
                   </Card>
-                </Pressable>
-              </Link>
+              </Pressable>
             )
           })}
           <Button title="+ New trip" variant="ghost" onPress={() => router.push('/new')} style={{ marginTop: 8 }} />

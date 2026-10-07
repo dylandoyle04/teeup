@@ -7,6 +7,7 @@ import { useStore } from '@shared/store'
 import Carousel from '@/components/Carousel'
 import { Button, Card, Hint, SectionTitle, Serif, T, money } from '@/components/ui'
 import { openLink } from '@/lib/links'
+import { useLightStatusBar } from '@/lib/useLightStatusBar'
 import { colors, fonts } from '@/theme'
 
 export default function PackageDetail() {
@@ -14,6 +15,7 @@ export default function PackageDetail() {
   const pkg = getPackage(id)
   const createTripFromPackage = useStore((s) => s.createTripFromPackage)
   const { height, width } = useWindowDimensions()
+  useLightStatusBar()
 
   if (!pkg) {
     return (
