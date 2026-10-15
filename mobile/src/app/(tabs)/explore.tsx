@@ -2,6 +2,7 @@ import { router } from 'expo-router'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { PACKAGES } from '@shared/packages'
 import PackageCard from '@/components/PackageCard'
+import RyderPromo from '@/components/RyderPromo'
 import Screen from '@/components/Screen'
 import { PageTitle, SectionTitle, Serif, T } from '@/components/ui'
 import { colors, fonts, shadow } from '@/theme'
@@ -13,7 +14,9 @@ export default function Explore() {
         Plan your golf trip
       </PageTitle>
 
-      <SectionTitle style={{ marginTop: 4 }}>Our preplanned trips</SectionTitle>
+      <RyderPromo />
+
+      <SectionTitle>Our preplanned trips</SectionTitle>
       <View style={{ gap: 14 }}>
         {PACKAGES.map((p) => (
           <PackageCard key={p.id} pkg={p} />

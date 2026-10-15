@@ -18,6 +18,7 @@ import NewSharedTrip from './pages/NewSharedTrip'
 import JoinTrip from './pages/JoinTrip'
 import ShareScorecard from './pages/ShareScorecard'
 import SharedRyder from './pages/SharedRyder'
+import RyderLanding from './pages/RyderLanding'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/ryder-cup" element={<RyderLanding />} />
         <Route path="/trips" element={<MyTrips />} />
         <Route path="/new" element={<NewTrip />} />
         <Route path="/package/:packageId" element={<PackageDetail />} />

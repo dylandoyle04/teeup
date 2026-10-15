@@ -4,6 +4,7 @@ import { useStore } from '../store'
 import { PACKAGES } from '../packages'
 import { AvatarStack, fmtDateRange, money } from '../components/ui'
 import PackageCard from '../components/PackageCard'
+import RyderPromo from '../components/RyderPromo'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
 
 export default function Explore() {
@@ -28,6 +29,8 @@ export default function Explore() {
           keep score.
         </p>
       </div>
+
+      <RyderPromo />
 
       <h2 className="section-title explore-h2" data-reveal>
         Our Preplanned Trips

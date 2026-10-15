@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } fr
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PACKAGES } from '@shared/packages'
 import PackageCard from '@/components/PackageCard'
+import RyderPromo from '@/components/RyderPromo'
 import { Button, Card, SectionTitle, Serif, T } from '@/components/ui'
 import { openLink } from '@/lib/links'
 import { useLightStatusBar } from '@/lib/useLightStatusBar'
@@ -79,6 +80,10 @@ export default function Home() {
               </View>
             </Card>
           ))}
+        </View>
+
+        <View style={{ marginTop: 22 }}>
+          <RyderPromo />
         </View>
 
         <SectionTitle>Featured trips</SectionTitle>

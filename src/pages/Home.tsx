@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { gsap, reduceMotion } from '../anim'
 import ExpediaBadge from '../components/ExpediaBadge'
 import PackageCard from '../components/PackageCard'
+import RyderPromo from '../components/RyderPromo'
+import { playRyderCheer } from '../sound'
 import { hasBackend } from '../supabase'
 import { PACKAGES } from '../packages'
 
@@ -215,6 +217,9 @@ export default function Home() {
             <ExpediaBadge />
             <nav className="hero-topbar-nav">
               <Link to="/explore">Explore</Link>
+              <Link to="/ryder-cup" onClick={() => playRyderCheer()}>
+                Ryder Cup
+              </Link>
               {hasBackend && <Link to="/trips">My Trips</Link>}
               {hasBackend && <Link to="/signin">Sign in</Link>}
             </nav>
@@ -260,6 +265,10 @@ export default function Home() {
             <p>Restaurant picks near every course, drive times, and everything else the trip needs.</p>
           </div>
         </div>
+      </section>
+
+      <section className="home-section">
+        <RyderPromo />
       </section>
 
       <section className="home-section">

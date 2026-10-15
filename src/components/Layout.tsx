@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { hasBackend } from '../supabase'
 import { useAuth } from '../auth'
 import ExpediaBadge from './ExpediaBadge'
+import { playRyderCheer } from '../sound'
 
 function TripTabs({ tripId }: { tripId: string }) {
   const tabs = [
@@ -55,6 +56,8 @@ function NavAccountLabel() {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
+  // full-bleed pages draw their own hero edge to edge (no centred container)
+  const fullBleed = isHome || pathname === '/ryder-cup'
   // Layout sits above <Routes>, so derive the trip id from the path directly.
   const tripId = pathname.match(/^\/trip\/([^/]+)/)?.[1]
   const sharedMatch = pathname.match(/^\/shared\/([^/]+)/)?.[1]
@@ -98,6 +101,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 >
                   Explore
                 </NavLink>
+                <NavLink
+                  to="/ryder-cup"
+                  onClick={() => playRyderCheer()}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
+                >
+                  Ryder Cup
+                </NavLink>
                 {hasBackend && (
                   <NavLink
                     to="/trips"
@@ -122,7 +132,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       )}
 
       <main className={`content ${isHome ? 'content-home' : ''}`}>
-        {!isHome ? <div className="container">{children}</div> : children}
+        {!fullBleed ? <div className="container">{children}</div> : children}
       </main>
 
       {!isHome && (
@@ -136,6 +146,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </p>
             <div className="footer-links">
               <Link to="/explore">Explore trips</Link>
+              <Link to="/ryder-cup" onClick={() => playRyderCheer()}>
+                Ryder Cup
+              </Link>
               <Link to="/new">Create a trip</Link>
               {hasBackend && <AccountLink />}
               <Link to="/legal">Privacy &amp; Terms</Link>
