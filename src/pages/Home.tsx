@@ -90,39 +90,52 @@ export default function Home() {
       gsap.set('.putt-ball', { autoAlpha: 0 })
     })
 
-    // measure the cup ONLY after fonts have loaded — otherwise the logo
-    // reflows afterward and the ball lands where the cup used to be.
+    // The cup is never measured just once: the logo can still shift after the
+    // intro starts (late web-font swap, a scrollbar appearing, the mobile URL
+    // bar resizing the viewport, rotation). Instead the ball is re-anchored to
+    // the cup's *live* position every frame, so it always finishes dead centre.
+    const START_X = 36
+    const roll = { p: 0 } // 0 = at the start line, 1 = over the cup
+    let anchor: (() => void) | null = null
+
     const start = () => {
       if (cancelled || !root.current || !oRef.current) return
       ctx.add(() => {
-        const hero = root.current!.getBoundingClientRect()
-        const cup = oRef.current!.getBoundingClientRect()
-        const cx = cup.left - hero.left + cup.width / 2
-        const cy = cup.top - hero.top + cup.height / 2
-        const cupSize = Math.max(8, cup.width)
-        const ballSize = Math.max(9, cupSize * 0.78)
+        const ball = document.querySelector<HTMLElement>('.putt-ball')
+        if (!ball) return
 
-        const ball = '.putt-ball'
-        gsap.set(ball, {
-          width: ballSize,
-          height: ballSize,
-          x: 36,
-          y: cy - ballSize / 2,
-          scale: 1,
-          rotation: 0,
-          autoAlpha: 1,
-          transformOrigin: 'center center',
-        })
+        anchor = () => {
+          if (!root.current || !oRef.current) return
+          const hero = root.current.getBoundingClientRect()
+          const cup = oRef.current.getBoundingClientRect()
+          const cx = cup.left - hero.left + cup.width / 2
+          const cy = cup.top - hero.top + cup.height / 2
+          const size = Math.max(9, Math.max(8, cup.width) * 0.78)
+          gsap.set(ball, {
+            width: size,
+            height: size,
+            x: START_X + (cx - size / 2 - START_X) * roll.p,
+            y: cy - size / 2,
+          })
+        }
+        roll.p = 0
+        gsap.set(ball, { scale: 1, rotation: 0, autoAlpha: 1, transformOrigin: 'center center' })
+        anchor()
+        gsap.ticker.add(anchor)
 
+        const stopAnchor = () => {
+          if (anchor) gsap.ticker.remove(anchor)
+        }
         const t = gsap.timeline({
           onComplete: () => {
+            stopAnchor()
             introPlayed = true
             setShowIntro(false)
           },
         })
         tl.current = t
-        // roll to the cup's exact centre, then sink in
-        t.to(ball, { x: cx - ballSize / 2, duration: 1.4, ease: 'power2.out' }, 0)
+        // roll to the cup's live centre, then sink in
+        t.to(roll, { p: 1, duration: 1.4, ease: 'power2.out' }, 0)
           .to(ball, { rotation: 900, duration: 1.4, ease: 'power2.out' }, 0)
           .addLabel('drop')
           .to(ball, { scale: 0.14, autoAlpha: 0, duration: 0.42, ease: 'power2.in' }, 'drop')
@@ -138,15 +151,21 @@ export default function Home() {
       })
     }
 
+    // Best effort: start once the logo's own font is in, so the cup barely moves
+    // mid-roll. `fonts.ready` alone can resolve before Poppins is even
+    // requested. Capped at 1.5s — the live anchoring above handles the rest.
     const fonts = (document as Document & { fonts?: FontFaceSet }).fonts
-    if (fonts && fonts.status !== 'loaded') {
-      fonts.ready.then(() => requestAnimationFrame(start))
-    } else {
-      requestAnimationFrame(start)
-    }
+    const fontLoaded = fonts
+      ? fonts.load('700 64px Poppins').then(() => fonts.ready)
+      : Promise.resolve()
+    const timeout = new Promise((r) => setTimeout(r, 1500))
+    Promise.race([fontLoaded, timeout])
+      .catch(() => {})
+      .then(() => requestAnimationFrame(start))
 
     return () => {
       cancelled = true
+      if (anchor) gsap.ticker.remove(anchor)
       ctx.revert()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
