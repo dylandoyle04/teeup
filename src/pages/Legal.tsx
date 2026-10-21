@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const UPDATED = 'July 21, 2026'
+const UPDATED = 'October 21, 2026'
 const CONTACT = 'Flagstickfinder@outlook.com'
 
 export default function Legal() {
@@ -85,6 +85,15 @@ export default function Legal() {
           </li>
         </ul>
 
+        <h3 className="legal-h3">Location</h3>
+        <p>
+          If you tap &ldquo;Use my location&rdquo; or type a city on the
+          Explore page, we use it only to sort trips by distance. The
+          calculation happens on your device &mdash; your location isn&apos;t
+          sent to us or stored on our servers. Your last search is remembered
+          in your browser so you don&apos;t have to re-enter it.
+        </p>
+
         <h3 className="legal-h3">Children</h3>
         <p>
           This site isn't directed at children under 13, and we don't knowingly
@@ -151,6 +160,18 @@ export default function Legal() {
           they hold the booking.
         </p>
       </div>
+
+      <p className="hint" style={{ margin: '0 4px 12px' }}>
+        City and town locations from{' '}
+        <a href="https://www.geonames.org/" target="_blank" rel="noreferrer noopener">
+          GeoNames
+        </a>
+        , licensed under{' '}
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer noopener">
+          CC BY 4.0
+        </a>
+        .
+      </p>
 
       <Link to="/explore" className="btn ghost" style={{ marginTop: 8 }}>
         ← Back to trips

@@ -6,7 +6,16 @@ import type { TripPackage } from '@shared/packages'
 import { money } from '@/components/ui'
 import { colors, fonts, shadow } from '@/theme'
 
-export default function PackageCard({ pkg, width }: { pkg: TripPackage; width?: number }) {
+export default function PackageCard({
+  pkg,
+  width,
+  distance,
+}: {
+  pkg: TripPackage
+  width?: number
+  /** e.g. "533 mi · ~10 hr drive" when sorting by the user's location */
+  distance?: string
+}) {
   return (
     <Pressable
         onPress={() => router.push({ pathname: '/package/[id]', params: { id: pkg.id } })}
@@ -25,6 +34,11 @@ export default function PackageCard({ pkg, width }: { pkg: TripPackage; width?: 
         <View style={st.body}>
           <Text style={st.loc}>{pkg.region}</Text>
           <Text style={st.title}>{pkg.destination.split(',')[0]}</Text>
+          {distance ? (
+            <View style={st.dist}>
+              <Text style={st.distText}>📍 {distance}</Text>
+            </View>
+          ) : null}
           <Text style={st.tag}>
             {pkg.courses.length} courses · {money(pkg.budgetMin)}–{money(pkg.budgetMax)}/pp
           </Text>
@@ -70,5 +84,7 @@ const st = StyleSheet.create({
   body: { position: 'absolute', left: 18, right: 18, bottom: 16 },
   loc: { fontFamily: fonts.sansSemi, fontSize: 11, letterSpacing: 1.2, textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)' },
   title: { fontFamily: fonts.serifBold, fontSize: 30, color: '#fff', lineHeight: 34 },
+  dist: { alignSelf: 'flex-start', backgroundColor: 'rgba(255,255,255,0.92)', borderRadius: 999, paddingVertical: 3, paddingHorizontal: 10, marginVertical: 4 },
+  distText: { fontFamily: fonts.sansBold, fontSize: 12, color: colors.green900 },
   tag: { fontFamily: fonts.sans, fontSize: 13, color: 'rgba(255,255,255,0.9)' },
 })

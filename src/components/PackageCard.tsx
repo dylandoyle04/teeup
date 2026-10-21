@@ -11,9 +11,12 @@ import { money } from './ui'
 export default function PackageCard({
   pkg,
   reveal = false,
+  distance,
 }: {
   pkg: TripPackage
   reveal?: boolean
+  /** e.g. "533 mi · ~10 hr drive" when sorting by the visitor's location */
+  distance?: string
 }) {
   const images = useMemo(() => {
     const all = [pkg.image, ...pkg.courses.map((c) => c.images[0])].filter(
@@ -70,6 +73,7 @@ export default function PackageCard({
       <div className="slide-body">
         <div className="slide-loc">{pkg.region}</div>
         <h3 className="slide-title">{pkg.destination.split(',')[0]}</h3>
+        {distance && <p className="slide-dist">📍 {distance}</p>}
         <p className="slide-tag">
           {pkg.courses.length} courses · {money(pkg.budgetMin)}–
           {money(pkg.budgetMax)}/pp

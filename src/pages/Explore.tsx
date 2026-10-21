@@ -1,10 +1,23 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { PACKAGES } from '../packages'
 import { AvatarStack, fmtDateRange, money } from '../components/ui'
 import PackageCard from '../components/PackageCard'
 import RyderPromo from '../components/RyderPromo'
+import NearbySearch from '../components/NearbySearch'
+import { fmtMiles, rankDestinations, travelHint, type Place } from '../nearby'
+
+const NEAR_KEY = 'ff-near'
+
+function loadNear(): Place | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(NEAR_KEY) ?? 'null')
+    return v && typeof v.lat === 'number' && typeof v.lon === 'number' ? v : null
+  } catch {
+    return null
+  }
+}
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
 
 export default function Explore() {
@@ -13,6 +26,34 @@ export default function Explore() {
   const resetAll = useStore((s) => s.resetAll)
   const navigate = useNavigate()
   const root = useRef<HTMLDivElement>(null)
+  const [near, setNearState] = useState<Place | null>(loadNear)
+
+  function setNear(p: Place | null) {
+    setNearState(p)
+    try {
+      if (p) localStorage.setItem(NEAR_KEY, JSON.stringify(p))
+      else localStorage.removeItem(NEAR_KEY)
+    } catch {
+      /* private mode — just don't remember */
+    }
+  }
+
+  // nearest destinations first (stable within a destination), with a label
+  const { packages, distanceOf } = useMemo(() => {
+    if (!near) return { packages: PACKAGES, distanceOf: () => undefined }
+    const ranked = rankDestinations(near)
+    const rank = new Map(ranked.map((r, i) => [r.destination, i]))
+    const miles = new Map(ranked.map((r) => [r.destination, r.miles]))
+    return {
+      packages: [...PACKAGES].sort(
+        (a, b) => (rank.get(a.destination) ?? 99) - (rank.get(b.destination) ?? 99),
+      ),
+      distanceOf: (dest: string) => {
+        const m = miles.get(dest)
+        return m == null ? undefined : `${fmtMiles(m)} · ${travelHint(m)}`
+      },
+    }
+  }, [near])
 
   useLayoutEffect(() => {
     if (reduceMotion()) return
@@ -32,12 +73,14 @@ export default function Explore() {
 
       <RyderPromo />
 
+      <NearbySearch value={near} onChange={setNear} />
+
       <h2 className="section-title explore-h2" data-reveal>
-        Our Preplanned Trips
+        {near ? 'Trips closest to you' : 'Our Preplanned Trips'}
       </h2>
       <div className="pkg-grid">
-        {PACKAGES.map((p) => (
-          <PackageCard key={p.id} pkg={p} reveal />
+        {packages.map((p) => (
+          <PackageCard key={p.id} pkg={p} distance={distanceOf(p.destination)} reveal />
         ))}
       </div>
 
