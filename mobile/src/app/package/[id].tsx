@@ -2,6 +2,7 @@ import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router, useLocalSearchParams } from 'expo-router'
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { courseLinks } from '@shared/courseLinks'
 import { getPackage } from '@shared/packages'
 import { useStore } from '@shared/store'
 import Carousel from '@/components/Carousel'
@@ -63,11 +64,17 @@ export default function PackageDetail() {
               <View style={{ padding: 16, gap: 8 }}>
                 <Serif style={{ fontSize: 24, lineHeight: 27 }}>{c.name}</Serif>
                 <T style={{ color: colors.muted, fontSize: 14 }}>{c.blurb}</T>
-                {c.golfNow ? (
-                  <Button title="Tee times on GolfNow ↗" small variant="subtle" onPress={() => openLink(c.golfNow!)} style={{ alignSelf: 'flex-start' }} />
-                ) : c.website ? (
-                  <Button title="Visit course website ↗" small variant="subtle" onPress={() => openLink(c.website!)} style={{ alignSelf: 'flex-start' }} />
-                ) : null}
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                  {courseLinks(c, pkg.destination).map((l) => (
+                    <Button
+                      key={l.kind}
+                      title={l.kind === 'website' ? 'Course website ↗' : 'Tee times on GolfNow ↗'}
+                      small
+                      variant={l.kind === 'website' ? 'subtle' : 'ghost'}
+                      onPress={() => openLink(l.url)}
+                    />
+                  ))}
+                </View>
               </View>
             </Card>
           ))}

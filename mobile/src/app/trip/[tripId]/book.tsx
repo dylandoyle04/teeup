@@ -14,7 +14,7 @@ import {
 import { getPackage } from '@shared/packages'
 import { getRestaurants, mapsLink, reserveLink } from '@shared/restaurants'
 import { useStore } from '@shared/store'
-import { BookCourse, BookLink, BookRow, CourseLink } from '@/components/BookLinks'
+import { BookCourse, BookLink, BookRow, CourseLink, CourseLinks } from '@/components/BookLinks'
 import { Field, Input } from '@/components/Field'
 import Screen from '@/components/Screen'
 import StayGallery from '@/components/StayGallery'
@@ -22,8 +22,6 @@ import { Button, Card, Hint, PageTitle, SectionTitle, Serif, T } from '@/compone
 import { openLink } from '@/lib/links'
 import { colors, fonts, radius, shadow } from '@/theme'
 
-const golfNowSearch = (name: string) =>
-  `https://www.golfnow.com/tee-times/search?q=${encodeURIComponent(name)}`
 
 export default function Booking() {
   const { tripId } = useLocalSearchParams<{ tripId: string }>()
@@ -52,15 +50,11 @@ export default function Booking() {
   const photos = stayPhotos(trip.destination)
   const gallery = photos.length ? photos : pkg?.image ? [pkg.image] : []
 
-  // Tee-time links: prefer the package's per-course GolfNow/website links,
-  // otherwise fall back to a GolfNow search for each course on the trip.
-  const teeLinks = pkg
-    ? pkg.courses.map((c) => ({
-        name: c.name,
-        href: c.golfNow ?? c.website ?? golfNowSearch(c.name),
-        golfNow: Boolean(c.golfNow),
-      }))
-    : trip.courses.map((c) => ({ name: c.name, href: golfNowSearch(c.name), golfNow: true }))
+  // Tee-time links: the package's courses (their own site + GolfNow),
+  // otherwise the courses typed into the trip (GolfNow search fallback).
+  const teeLinks: { name: string; website?: string; golfNow?: string }[] = pkg
+    ? pkg.courses
+    : trip.courses.map((c) => ({ name: c.name }))
 
   const hotelTrim = hotel.trim()
 
@@ -114,7 +108,7 @@ export default function Booking() {
         ) : (
           teeLinks.map((c, i) => (
             <BookCourse key={c.name} name={c.name} last={i === teeLinks.length - 1}>
-              <CourseLink title={c.golfNow ? 'GolfNow ↗' : 'Website ↗'} url={c.href} gold={c.golfNow} />
+              <CourseLinks course={c} area={trip.destination} />
             </BookCourse>
           ))
         )}
@@ -128,11 +122,7 @@ export default function Booking() {
           <Card style={{ paddingVertical: 4 }}>
             {more.map((c, i) => (
               <BookCourse key={c.name} name={c.name} last={i === more.length - 1}>
-                <CourseLink
-                  title={c.golfNow ? 'GolfNow ↗' : 'Website ↗'}
-                  url={c.golfNow ?? c.website ?? golfNowAreaLink(`${c.name}, ${trip.destination}`)}
-                  gold={Boolean(c.golfNow)}
-                />
+                <CourseLinks course={c} area={trip.destination} />
               </BookCourse>
             ))}
           </Card>

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { courseLinks } from '@shared/courseLinks'
 import { openLink } from '@/lib/links'
 import { colors, fonts } from '@/theme'
 
@@ -34,6 +35,23 @@ export function CourseLink({ title, url, gold }: { title: string; url: string; g
   )
 }
 
+/** A course's booking links: its own site plus GolfNow (search as a fallback). */
+export function CourseLinks({
+  course,
+  area,
+}: {
+  course: { name: string; website?: string; golfNow?: string }
+  area: string
+}) {
+  return (
+    <View style={st.linkStack}>
+      {courseLinks(course, area).map((l) => (
+        <CourseLink key={l.kind} title={`${l.label} ↗`} url={l.url} gold={l.kind === 'golfnow'} />
+      ))}
+    </View>
+  )
+}
+
 /** One course row inside a card: name on the left, action on the right. */
 export function BookCourse({ name, last, children }: { name: string; last?: boolean; children: ReactNode }) {
   return (
@@ -46,6 +64,7 @@ export function BookCourse({ name, last, children }: { name: string; last?: bool
 
 const st = StyleSheet.create({
   bookRow: { gap: 12 },
+  linkStack: { gap: 6, alignItems: 'flex-end' },
   bookLink: {
     backgroundColor: '#fff',
     borderWidth: 1.5,

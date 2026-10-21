@@ -13,7 +13,32 @@ import {
   moreCourses,
   golfNowAreaLink,
 } from '../affiliates'
+import { courseLinks } from '../courseLinks'
 import StayGallery from '../components/StayGallery'
+
+function CourseLinks({
+  course,
+  area,
+}: {
+  course: { name: string; website?: string; golfNow?: string }
+  area: string
+}) {
+  return (
+    <span className="course-links-inline">
+      {courseLinks(course, area).map((l) => (
+        <a
+          key={l.kind}
+          className={`course-link ${l.kind === 'golfnow' ? 'gn' : ''}`}
+          href={l.url}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          {l.label} ↗
+        </a>
+      ))}
+    </span>
+  )
+}
 
 export default function Booking() {
   const { tripId = '' } = useParams()
@@ -42,26 +67,11 @@ export default function Booking() {
   const photos = stayPhotos(trip.destination)
   const gallery = photos.length ? photos : pkg?.image ? [pkg.image] : []
 
-  // tee-time links: prefer the package's per-course GolfNow/website links,
-  // otherwise fall back to a GolfNow search for each course on the trip.
-  const teeLinks = pkg
-    ? pkg.courses.map((c) => ({
-        name: c.name,
-        href:
-          c.golfNow ??
-          c.website ??
-          `https://www.golfnow.com/tee-times/search?q=${encodeURIComponent(
-            c.name,
-          )}`,
-        golfNow: Boolean(c.golfNow),
-      }))
-    : trip.courses.map((c) => ({
-        name: c.name,
-        href: `https://www.golfnow.com/tee-times/search?q=${encodeURIComponent(
-          c.name,
-        )}`,
-        golfNow: true,
-      }))
+  // tee-time links: the package's courses (with their own site + GolfNow),
+  // otherwise the courses typed into the trip (GolfNow search fallback).
+  const teeLinks: { name: string; website?: string; golfNow?: string }[] = pkg
+    ? pkg.courses
+    : trip.courses.map((c) => ({ name: c.name }))
 
   return (
     <>
@@ -151,14 +161,7 @@ export default function Booking() {
           teeLinks.map((c) => (
             <div className="book-course" key={c.name}>
               <span className="book-course-name">⛳ {c.name}</span>
-              <a
-                className={`course-link ${c.golfNow ? 'gn' : ''}`}
-                href={c.href}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {c.golfNow ? 'GolfNow ↗' : 'Website ↗'}
-              </a>
+              <CourseLinks course={c} area={trip.destination} />
             </div>
           ))
         )}
@@ -173,18 +176,7 @@ export default function Booking() {
             {more.map((c) => (
               <div className="book-course" key={c.name}>
                 <span className="book-course-name">⛳ {c.name}</span>
-                <a
-                  className={`course-link ${c.golfNow ? 'gn' : ''}`}
-                  href={
-                    c.golfNow ??
-                    c.website ??
-                    golfNowAreaLink(`${c.name}, ${trip.destination}`)
-                  }
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  {c.golfNow ? 'GolfNow ↗' : 'Website ↗'}
-                </a>
+                <CourseLinks course={c} area={trip.destination} />
               </div>
             ))}
           </div>

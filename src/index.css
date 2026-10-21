@@ -3992,3 +3992,24 @@ table.scorecard .yard-row .name-cell {
     padding: 9px 10px;
   }
 }
+
+/* booking rows: course site + GolfNow side by side */
+.course-links-inline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  max-width: 60%;
+}
+
+@media (max-width: 480px) {
+  .book-course {
+    flex-wrap: wrap;
+  }
+
+  .course-links-inline {
+    max-width: none;
+    justify-content: flex-start;
+  }
+}

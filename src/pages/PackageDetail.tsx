@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import { getPackage } from '../packages'
+import { courseLinks } from '../courseLinks'
 import { money } from '../components/ui'
 import Carousel from '../components/Carousel'
 import { gsap, reduceMotion, revealOnScroll } from '../anim'
@@ -93,29 +94,19 @@ export default function PackageDetail() {
               <div className="course-info">
                 <h3 className="course-name">{c.name}</h3>
                 <p className="course-blurb">{c.blurb}</p>
-                {c.golfNow ? (
-                  <div className="course-links">
+                <div className="course-links">
+                  {courseLinks(c, pkg.destination).map((l) => (
                     <a
-                      className="course-link gn"
-                      href={c.golfNow}
+                      key={l.kind}
+                      className={`course-link ${l.kind === 'golfnow' ? 'gn' : ''}`}
+                      href={l.url}
                       target="_blank"
                       rel="noreferrer noopener"
                     >
-                      Tee times on GolfNow ↗
+                      {l.kind === 'website' ? 'Visit course website' : 'Tee times on GolfNow'} ↗
                     </a>
-                  </div>
-                ) : c.website ? (
-                  <div className="course-links">
-                    <a
-                      className="course-link"
-                      href={c.website}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                    >
-                      Visit course website ↗
-                    </a>
-                  </div>
-                ) : null}
+                  ))}
+                </div>
               </div>
             </div>
           ))}

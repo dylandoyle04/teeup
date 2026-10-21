@@ -97,17 +97,17 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
   'Las Vegas, NV': [
     { name: 'Reflection Bay (Lake Las Vegas)', golfNow: 'https://www.golfnow.com/tee-times/facility/881-reflection-bay-golf-club/search', website: 'https://www.reflectionbaygolf.com/' },
     { name: 'Wildhorse Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1111-wildhorse-golf-course/search', website: 'https://www.golfwildhorse.com/' },
-    { name: 'Las Vegas Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1293-las-vegas-golf-club/search' },
+    { name: 'Las Vegas Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1293-las-vegas-golf-club/search', website: 'https://lasvegasgc.com/' },
   ],
   'Orlando, FL': [
     { name: "Falcon's Fire (Kissimmee)", golfNow: 'https://www.golfnow.com/tee-times/facility/4673-falcons-fire-golf-club/search', website: 'https://www.falconsfire.com/' },
     { name: 'Celebration Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/1806-celebration-golf-club/search', website: 'https://www.celebrationgolf.com/' },
-    { name: 'Mystic Dunes', golfNow: 'https://www.golfnow.com/tee-times/facility/466-mystic-dunes-golf-club/search' },
+    { name: 'Mystic Dunes', golfNow: 'https://www.golfnow.com/tee-times/facility/466-mystic-dunes-golf-club/search', website: 'https://www.mysticdunesgolf.com/' },
   ],
   'Palm Springs, CA': [
     { name: 'Classic Club (Palm Desert)', golfNow: 'https://www.golfnow.com/tee-times/facility/1662-classic-club-golf/search', website: 'https://www.classicclubgolf.com/' },
-    { name: 'JW Marriott Desert Springs — Palm', golfNow: 'https://www.golfnow.com/tee-times/facility/6429-jw-marriott-desert-springs-palm-course/search' },
-    { name: 'JW Marriott Desert Springs — Valley', golfNow: 'https://www.golfnow.com/tee-times/facility/209-jw-marriott-desert-springs-valley-course/search' },
+    { name: 'JW Marriott Desert Springs — Palm', golfNow: 'https://www.golfnow.com/tee-times/facility/6429-jw-marriott-desert-springs-palm-course/search', website: 'https://www.marriott.com/en-us/hotels/ctdca-jw-marriott-desert-springs-resort-and-spa/experiences/' },
+    { name: 'JW Marriott Desert Springs — Valley', golfNow: 'https://www.golfnow.com/tee-times/facility/209-jw-marriott-desert-springs-valley-course/search', website: 'https://www.marriott.com/en-us/hotels/ctdca-jw-marriott-desert-springs-resort-and-spa/experiences/' },
   ],
   'San Diego, CA': [
     { name: 'Coronado Municipal', golfNow: 'https://www.golfnow.com/tee-times/facility/10985-coronado-municipal-golf-course-ca/search', website: 'https://www.golfcoronado.com/' },
@@ -116,7 +116,7 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
   ],
   'Pinehurst, NC': [
     { name: 'Southern Pines Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/3847-southern-pines-golf-club/search', website: 'https://southernpinesgolfclub.com/golf/' },
-    { name: 'Hyland Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/4504-hyland-golf-club/search' },
+    { name: 'Hyland Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/4504-hyland-golf-club/search', website: 'https://www.hylandgolfclub.com/' },
     { name: 'Pine Needles Lodge & Golf Club', website: 'https://www.pineneedles-midpines.com/' },
   ],
   'Charleston, SC': [
@@ -145,7 +145,7 @@ const MORE_COURSES: Record<string, AreaCourse[]> = {
     { name: "Port Royal — Robber's Row", golfNow: 'https://www.golfnow.com/tee-times/facility/13548-port-royal-robbers-row/search', website: 'https://hiltonheadgolf.net/book-tee-times' },
   ],
   'Naples, FL': [
-    { name: 'Hibiscus Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5132-hibiscus-golf-club/search' },
+    { name: 'Hibiscus Golf Club', golfNow: 'https://www.golfnow.com/tee-times/facility/5132-hibiscus-golf-club/search', website: 'https://www.hibiscusgolf.com/' },
     { name: 'Naples Grande Golf Club', website: 'https://www.naplesgrandegolf.com/' },
   ],
 }
