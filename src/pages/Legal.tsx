@@ -16,7 +16,7 @@ export default function Legal() {
       <div className="card legal-card">
         <p>
           Flagstick Finder participates in affiliate programs. Some links on
-          this site — including links to tee times, hotels, flights, rental
+          our website and in our app — including links to tee times, hotels, flights, rental
           cars, and restaurant reservations — are affiliate links. If you click
           one and make a booking or purchase, we may earn a commission.
         </p>
@@ -39,72 +39,102 @@ export default function Legal() {
       {/* ---------------- Privacy ---------------- */}
       <h2 className="section-title explore-h2">Privacy Policy</h2>
       <div className="card legal-card">
+        <p>
+          This policy covers the Flagstick Finder website
+          (flagstickfinder.com) and the Flagstick Finder iPhone app.
+        </p>
+
         <h3 className="legal-h3">The short version</h3>
         <p>
-          Flagstick Finder has no accounts and no server of its own. Everything
-          you enter — trips, players, scores, and bets — is saved{' '}
-          <strong>only in your own browser</strong>, on your own device. We
-          never receive it and cannot see it.
+          You can use Flagstick Finder without an account. Trips, players,
+          scores and bets you enter that way are saved{' '}
+          <strong>only on your own device</strong> &mdash; in your browser on
+          the website, or inside the app on your iPhone. We never receive that
+          data. We don&apos;t run ads, analytics or tracking, and we never sell
+          personal information.
         </p>
 
-        <h3 className="legal-h3">What we store, and where</h3>
+        <h3 className="legal-h3">Data saved on your device</h3>
         <p>
-          Your trip data is kept in your browser's local storage. It stays on
-          your device until you clear it. If you clear your browser data, use a
-          different browser or device, or press "Reset demo data" in the app,
-          that information is gone — we hold no copy and cannot restore it.
+          Guest trips stay on your device until you delete them, clear your
+          browser data, use &ldquo;Reset app data&rdquo; in the app&apos;s
+          Settings, or delete the app. We hold no copy and can&apos;t restore
+          them. Small preferences (such as sound on/off or your last
+          &ldquo;trips near you&rdquo; search) are stored the same way.
         </p>
 
-        <h3 className="legal-h3">What we don't do</h3>
+        <h3 className="legal-h3">Optional account (website)</h3>
         <p>
-          We don't run analytics, advertising, or tracking cookies. We don't
-          collect names, emails, or payment details, and we don't sell or share
-          personal information — we don't have any to sell.
+          On the website you can sign in with your email to share a trip and
+          keep score live with friends. If you do, we store your email
+          address, the display name you choose, and the shared trips you create
+          or join &mdash; trip details, member names, rounds and scores. Only
+          members of a trip can see it. This data is held by our database
+          provider, Supabase, on our behalf. To delete your account and its
+          data, email us at <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and
+          we&apos;ll remove it within 30 days. The iPhone app doesn&apos;t
+          offer accounts yet.
+        </p>
+
+        <h3 className="legal-h3">Permissions in the app</h3>
+        <ul className="legal-list">
+          <li>
+            <strong>Location (optional, while using the app).</strong> Only
+            used when you tap &ldquo;Use my location&rdquo;, to sort trips by
+            distance. The calculation happens on your phone; your location
+            isn&apos;t sent to us. The website works the same way.
+          </li>
+          <li>
+            <strong>Calendar (add-only).</strong> Only used when you tap
+            &ldquo;Add to Calendar&rdquo;, to add your trip. The app can&apos;t
+            read your calendar.
+          </li>
+          <li>
+            <strong>Photos (add-only).</strong> Only used if you choose
+            &ldquo;Save Image&rdquo; when sharing a scorecard. The app
+            can&apos;t see your photo library.
+          </li>
+        </ul>
+        <p>
+          When you share a scorecard image or trip plan, it goes only where you
+          send it through your phone&apos;s share sheet.
         </p>
 
         <h3 className="legal-h3">Third parties</h3>
-        <p>
-          A few services are unavoidably involved in delivering the site:
-        </p>
         <ul className="legal-list">
           <li>
-            <strong>Hosting (GitHub Pages).</strong> Like any website host,
-            GitHub records standard technical request logs, which can include
-            your IP address and browser type.
+            <strong>Hosting (GitHub Pages).</strong> The website and the
+            app&apos;s course photos are served by GitHub, which records
+            standard technical request logs that can include your IP address.
           </li>
           <li>
-            <strong>Fonts (Google Fonts).</strong> Our typefaces load from
-            Google's servers, so Google receives your IP address as part of that
-            request.
+            <strong>Fonts (Google Fonts).</strong> The website&apos;s typefaces
+            load from Google&apos;s servers, so Google receives your IP address
+            as part of that request.
           </li>
           <li>
-            <strong>Partner links.</strong> When you follow a link to GolfNow,
-            Expedia, Vrbo, OpenTable, or Google Maps, you leave this site.
-            Those companies set their own cookies and follow their own privacy
-            policies, which govern anything you do there.
+            <strong>Accounts (Supabase).</strong> Stores account and shared-trip
+            data for website sign-in, as described above.
+          </li>
+          <li>
+            <strong>Partner links.</strong> When you follow a link to a golf
+            course, GolfNow, Expedia, Vrbo, OpenTable, or Google Maps, you leave
+            Flagstick Finder. Those companies set their own cookies and follow
+            their own privacy policies, which govern anything you do there.
           </li>
         </ul>
 
-        <h3 className="legal-h3">Location</h3>
-        <p>
-          If you tap &ldquo;Use my location&rdquo; or type a city on the
-          Explore page, we use it only to sort trips by distance. The
-          calculation happens on your device &mdash; your location isn&apos;t
-          sent to us or stored on our servers. Your last search is remembered
-          in your browser so you don&apos;t have to re-enter it.
-        </p>
-
         <h3 className="legal-h3">Children</h3>
         <p>
-          This site isn't directed at children under 13, and we don't knowingly
-          collect information from them.
+          Flagstick Finder isn&apos;t directed at children under 13, and we
+          don&apos;t knowingly collect information from them.
         </p>
 
         <h3 className="legal-h3">Changes</h3>
         <p>
-          We may update this policy as the app grows — for example, if we add
-          accounts so friends can share a live scorecard. Material changes will
-          be reflected in the "last updated" date above.
+          We&apos;ll update this policy as Flagstick Finder grows &mdash; for
+          example, when accounts come to the app. Material changes will be
+          reflected in the &ldquo;last updated&rdquo; date above.
         </p>
       </div>
 
@@ -138,15 +168,15 @@ export default function Legal() {
 
         <h3 className="legal-h3">Your data is your responsibility</h3>
         <p>
-          Because trip data lives only in your browser, we can't back it up or
-          recover it. Keep your own record of anything you'd hate to lose.
+          Guest trips live only on your device (your browser or the app), so we
+          can't back them up or recover them. Keep your own record of anything you'd hate to lose.
         </p>
 
         <h3 className="legal-h3">No warranty</h3>
         <p>
-          The site is provided "as is," without warranties of any kind. To the
+          Flagstick Finder (the website and the app) is provided "as is," without warranties of any kind. To the
           fullest extent permitted by law, we aren't liable for any loss arising
-          from your use of the site, from third-party bookings, or from
+          from your use of Flagstick Finder, from third-party bookings, or from
           inaccurate information.
         </p>
 
