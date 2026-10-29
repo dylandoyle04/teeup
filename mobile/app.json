@@ -13,6 +13,9 @@
       "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "Lets you save scorecard and Ryder Cup images to your Photos."
       }
     },
     "android": {
@@ -55,6 +58,16 @@
           "motionUsagePermission": false,
           "isIosBackgroundLocationEnabled": false,
           "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
+      "expo-sharing",
+      [
+        "expo-calendar",
+        {
+          "writeOnlyAccess": true,
+          "writeOnlyCalendarPermission": "Flagstick Finder adds your trip dates and tee times to your calendar when you tap \"Add to Calendar\".",
+          "calendarPermission": "Flagstick Finder adds your trip dates and tee times to your calendar when you tap \"Add to Calendar\".",
+          "remindersPermission": false
         }
       ]
     ],
