@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, Share, StyleSheet, Text, View } from 'react-native'
 import { useStore } from '@shared/store'
 import type { HotelTier } from '@shared/types'
 import { DateInput, Field, Input, Row } from '@/components/Field'
@@ -19,7 +19,12 @@ import {
   fmtDateRange,
   money,
 } from '@/components/ui'
+import { addTripToCalendar } from '@/lib/calendar'
+import { tripCourseNames, tripPlanText } from '@/lib/tripPlan'
 import { colors, fonts } from '@/theme'
+
+/** The trip the store seeds on first launch (see ../src/seed.ts). */
+const EXAMPLE_TRIP_ID = 'trip_sample'
 
 const TIERS: { value: HotelTier; label: string }[] = [
   { value: 'budget', label: 'Budget' },
@@ -58,6 +63,28 @@ export default function TripSetup() {
     setNewName('')
   }
 
+  function sharePlan() {
+    Share.share({ message: tripPlanText(trip!, members) }).catch(() => {})
+  }
+
+  async function addToCalendar() {
+    const notes = [
+      tripCourseNames(trip!).map((c) => `⛳ ${c}`).join('\n'),
+      members.length > 1 ? `Crew: ${members.map((m) => m.name).join(', ')}` : '',
+      'Planned with Flagstick Finder',
+    ]
+      .filter(Boolean)
+      .join('\n\n')
+    const result = await addTripToCalendar(trip!, notes)
+    if (result === 'no-dates') {
+      Alert.alert('Add trip dates first', 'Tap Edit above and set a start date, then add it to your calendar.')
+    } else if (result === 'denied') {
+      Alert.alert('Calendar access is off', 'Allow Flagstick Finder to add events in Settings › Privacy & Security › Calendars.')
+    } else if (result === 'failed') {
+      Alert.alert('Couldn’t open your calendar', 'Please try again.')
+    }
+  }
+
   function confirmDelete() {
     Alert.alert(`Delete "${trip!.name}"?`, "This can't be undone.", [
       { text: 'Cancel', style: 'cancel' },
@@ -74,6 +101,19 @@ export default function TripSetup() {
 
   return (
     <Screen>
+      {tripId === EXAMPLE_TRIP_ID && (
+        <Card style={st.example}>
+          <T style={{ fontFamily: fonts.sansBold, color: colors.green900 }}>👋 This is an example trip</T>
+          <Hint style={{ color: '#5d5a3c' }}>
+            Look around the scorecard, Ryder Cup and bets to see how it works — then delete it and plan your own.
+          </Hint>
+          <View style={{ flexDirection: 'row', gap: 8, marginTop: 10 }}>
+            <Button title="Plan my own trip" small onPress={() => router.navigate('/explore')} />
+            <Button title="Delete example" small variant="danger" onPress={confirmDelete} />
+          </View>
+        </Card>
+      )}
+
       {/* Trip header / organizer setup */}
       <Card>
         <View style={st.between}>
@@ -184,12 +224,16 @@ export default function TripSetup() {
           <Button title="Add" small onPress={add} />
         </View>
         <Hint style={{ marginTop: 8 }}>
-          Add names to keep score on this phone — or share the trip link below so friends join and score from their own.
+          Add everyone&apos;s name to keep score for the whole group on this phone.
         </Hint>
 
         <View style={st.shareBox}>
-          <T style={{ fontFamily: fonts.sansBold, marginBottom: 6 }}>🔗 Share the trip link</T>
-          <Hint>Sign-in and invite links are coming to the app soon.</Hint>
+          <T style={{ fontFamily: fonts.sansBold, marginBottom: 2 }}>Get the crew on the same page</T>
+          <Hint style={{ marginBottom: 10 }}>Send the plan to your group chat and put the dates on your calendar.</Hint>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button title="✉️ Send the plan" small variant="subtle" onPress={sharePlan} style={{ flex: 1 }} />
+            <Button title="🗓️ Add to Calendar" small variant="subtle" onPress={addToCalendar} style={{ flex: 1 }} />
+          </View>
         </View>
       </Card>
 
@@ -252,6 +296,7 @@ const st = StyleSheet.create({
   iconBtn: { fontSize: 18, color: colors.muted },
   addRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   shareBox: { marginTop: 14, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 14 },
+  example: { backgroundColor: '#fbf6e3', borderColor: '#ecdca6', marginBottom: 14, gap: 4 },
   grayPill: {
     backgroundColor: '#eef1ec',
     borderRadius: 999,

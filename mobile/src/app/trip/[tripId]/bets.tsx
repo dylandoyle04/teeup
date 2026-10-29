@@ -6,7 +6,7 @@ import type { ID, Member } from '@shared/types'
 import BetMemberPicker from '@/components/BetMemberPicker'
 import { Field, Input } from '@/components/Field'
 import Screen from '@/components/Screen'
-import { Avatar, Button, Card, PageTitle, SectionTitle, T, money } from '@/components/ui'
+import { Avatar, Button, Card, Hint, PageTitle, SectionTitle, T, money } from '@/components/ui'
 import { colors, fonts } from '@/theme'
 
 interface Settlement {
@@ -99,8 +99,8 @@ export default function Bets() {
 
   return (
     <Screen>
-      <PageTitle sub="Everyone pays their own way. Log wagers and side games — we'll tally who owes whom.">
-        Betting Tracker
+      <PageTitle sub="Keep a running tab of side games and friendly wagers in your group — we'll tally who owes whom.">
+        Side Bets Tally
       </PageTitle>
 
       {/* Settle up summary */}
@@ -222,6 +222,9 @@ export default function Bets() {
           })}
         </Card>
       )}
+      <Hint style={{ textAlign: 'center', marginTop: 16, marginHorizontal: 12 }}>
+        This is a scorekeeping tally only. Flagstick Finder never holds, sends or collects money — settle up between yourselves.
+      </Hint>
     </Screen>
   )
 }

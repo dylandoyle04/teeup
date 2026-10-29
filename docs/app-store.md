@@ -1,81 +1,78 @@
-# Shipping Flagstick Finder to the App Store & Play Store
+# Shipping Flagstick Finder to the App Store (Expo + EAS)
 
-The app is wrapped with [Capacitor](https://capacitorjs.com/) — the same React
-web app runs inside a native shell. The web side is fully set up
-(`capacitor.config.ts`, app icon, manifest). What's left needs a Mac with Xcode
-(iOS) and/or Android Studio, plus the developer accounts.
+The iPhone app lives in `mobile/` (Expo SDK 57, Expo Router). It shares its
+trip/scoring logic with the website through `src/` (see `mobile/metro.config.js`).
+EAS builds and submits in the cloud — **no Xcode or macOS update needed**.
 
-## 0. Accounts to start NOW (they take days to approve)
+Listing copy, review notes and questionnaire answers: [`app-store-listing.md`](./app-store-listing.md).
 
-- **Apple Developer Program** — $99/year, https://developer.apple.com/programs/
-  Enrollment/identity verification can take 24–48h (sometimes longer). Start this first.
-- **Google Play Console** — one-time $25, https://play.google.com/console
-  Approval is usually quick.
+## 0. Accounts
 
-## 1. One-time tooling install (on the Mac)
+- **Apple Developer Program** — $99/yr, https://developer.apple.com/programs/
+  - *Individual*: your legal name is shown as the seller. ~1–2 days.
+  - *Organization*: an LLC name is shown; needs a free D-U-N-S number (days–weeks).
+- **Expo** — already set up (`dylanrowan510`).
 
-```bash
-# iOS
-xcode-select --install            # or install Xcode from the App Store (~10GB)
-sudo gem install cocoapods
-
-# Android
-# install Android Studio from https://developer.android.com/studio
-```
-
-## 2. Add the native projects (once)
+## 1. One-time: link the project to EAS
 
 ```bash
-npm install
-npm run build
-npx cap add ios
-npx cap add android
+cd ~/golf-trip-planner/mobile
+npx eas-cli@latest login          # Expo account
+npx eas-cli@latest init           # adds extra.eas.projectId to app.json — commit it
 ```
 
-This creates the `ios/` and `android/` folders — commit them.
-
-## 3. Every time the app changes
+## 2. Build for the App Store
 
 ```bash
-npm run cap:sync      # builds the web app + copies it into both native projects
+npx eas-cli@latest build --platform ios --profile production
 ```
 
-## 4. Build & submit — iOS
+The first run asks you to sign in with your Apple ID; let EAS create the
+certificates and register the bundle ID `com.flagstickfinder.app`. Build
+numbers auto-increment (`eas.json`), so you only bump `version` in
+`mobile/app.json` for a new release (1.0.0 → 1.0.1 …).
+
+## 3. Upload to TestFlight
 
 ```bash
-npm run cap:ios       # builds, syncs, opens Xcode
+npx eas-cli@latest submit --platform ios --latest
 ```
 
-In Xcode:
-1. Select the project → **Signing & Capabilities** → pick your Apple team (auto-signing).
-2. Set the version/build number.
-3. **Product → Archive**, then **Distribute App → App Store Connect**.
-4. In https://appstoreconnect.apple.com create the app listing (name, screenshots,
-   description, privacy questionnaire, the flagstickfinder.com privacy URL), attach
-   the build, submit for review.
+This creates the app in App Store Connect (if needed) and uploads the build.
+After processing (~10–30 min) it appears in **TestFlight** — install the
+TestFlight app on your iPhone and test the real build (sound, haptics, share,
+calendar, location all behave as shipped). Add a few golf buddies as testers.
 
-## 5. Build & submit — Android
+## 4. Submit for review
+
+In https://appstoreconnect.apple.com → your app:
+1. Paste the listing text, keywords, URLs from `app-store-listing.md`.
+2. Upload screenshots (6.9" iPhone required: 1320×2868 or 1290×2796).
+3. Answer **App Privacy** and **Age Rating** as in `app-store-listing.md`.
+4. Pick the TestFlight build, paste the **App Review notes**, submit.
+First reviews usually take 1–3 days.
+
+## Every update after that
 
 ```bash
-npm run cap:android   # builds, syncs, opens Android Studio
+cd ~/golf-trip-planner/mobile
+# bump "version" in app.json, then:
+npx eas-cli@latest build --platform ios --profile production --auto-submit
 ```
 
-In Android Studio:
-1. **Build → Generate Signed Bundle / APK → Android App Bundle (.aab)**; create a keystore (keep it safe — you need it for every future update).
-2. In the Play Console, create the app, upload the `.aab`, fill the store listing +
-   data-safety form (point to the flagstickfinder.com privacy page), submit.
+## Day-to-day development
 
-## App identity (already configured)
+```bash
+cd ~/golf-trip-planner/mobile && npx expo start      # scan QR with Expo Go
+npx tsc --noEmit && npx expo lint && npx expo-doctor # before shipping
+```
 
-- **App ID:** `com.flagstickfinder.app` (`capacitor.config.ts`)
-- **Name:** Flagstick Finder
-- **Icon:** `public/icon-1024.png` (source). Generate the per-platform icon sets with
-  `@capacitor/assets`: `npx @capacitor/assets generate --iconBackgroundColor '#0b3d2c'`.
+## Notes
 
-## Notes / gotchas
-
-- Uses `HashRouter`, which works cleanly inside Capacitor.
-- Data is still local to each device (localStorage). Shared/live scoring across
-  phones needs a backend (accounts + sync) — a separate project.
-- Apple rejects thin "just a website" wrappers; the scorecard, Ryder Cup, betting
-  tracker and offline use make this a real utility, which satisfies that rule.
+- Package/stay/hero photos load from flagstickfinder.com (not bundled), so
+  keep the website deployed.
+- Permissions the app declares (all optional, all explained in-app):
+  location while using, calendar add-only, Photos add-only. No microphone,
+  no background modes, no tracking.
+- `ITSAppUsesNonExemptEncryption = false` is set, so there's no export
+  compliance question per upload.
