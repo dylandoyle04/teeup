@@ -142,6 +142,7 @@ export default function RyderTab() {
         <Pressable
           onPress={() => setMuted(!muted)}
           style={[st.mute, { top: insets.top + 8 }]}
+          accessibilityRole="button"
           accessibilityLabel={muted ? 'Turn sound on' : 'Turn sound off'}
           hitSlop={8}
         >
@@ -149,9 +150,9 @@ export default function RyderTab() {
         </Pressable>
 
         <Animated.View style={[{ alignItems: 'center' }, titleStyle]}>
-          <Text style={st.kicker}>ONLY ON FLAGSTICK FINDER</Text>
-          <Text style={st.title}>The Ryder Cup</Text>
-          <Text style={st.sub}>Turn your golf trip into a team showdown.</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.kicker}>ONLY ON FLAGSTICK FINDER</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.title}>The Ryder Cup</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.sub}>Turn your golf trip into a team showdown.</Text>
         </Animated.View>
 
         <View style={st.trophyWrap}>
@@ -168,14 +169,14 @@ export default function RyderTab() {
         <Animated.View style={[st.board, boardStyle]} accessibilityLabel={`Sample score: Team USA ${fmtPts(RC_FINAL_A)}, Team Europe ${fmtPts(RC_FINAL_B)}`}>
           <Animated.View style={[{ flex: 1 }, popStyle]}>
             <LinearGradient colors={[BLUE, '#14477f']} style={st.team}>
-              <Text style={st.teamName}>Team USA</Text>
-              <Text style={st.pts}>{fmtPts(a)}</Text>
+              <Text maxFontSizeMultiplier={1.3} style={st.teamName}>Team USA</Text>
+              <Text maxFontSizeMultiplier={1.3} style={st.pts}>{fmtPts(a)}</Text>
             </LinearGradient>
           </Animated.View>
-          <Text style={st.vs}>vs</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.vs}>vs</Text>
           <LinearGradient colors={[GOLD, '#9c7414']} style={[st.team, { flex: 1 }]}>
-            <Text style={st.teamName}>Team Europe</Text>
-            <Text style={st.pts}>{fmtPts(b)}</Text>
+            <Text maxFontSizeMultiplier={1.3} style={st.teamName}>Team Europe</Text>
+            <Text maxFontSizeMultiplier={1.3} style={st.pts}>{fmtPts(b)}</Text>
           </LinearGradient>
         </Animated.View>
 

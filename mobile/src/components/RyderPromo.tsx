@@ -19,13 +19,13 @@ export default function RyderPromo() {
         end={{ x: 1, y: 0.8 }}
         style={st.card}
       >
-        <Text style={{ fontSize: 38 }}>🏆</Text>
+        <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 38 }}>🏆</Text>
         <View style={{ flex: 1, gap: 2 }}>
-          <Text style={st.kicker}>TEAM GOLF, TRIP-LONG</Text>
-          <Text style={st.title}>Play your own Ryder Cup</Text>
-          <Text style={st.sub}>Two teams, three formats, one cup. Points update live.</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.kicker}>TEAM GOLF, TRIP-LONG</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.title}>Play your own Ryder Cup</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.sub}>Two teams, three formats, one cup. Points update live.</Text>
         </View>
-        <Text style={st.arrow}>→</Text>
+        <Text maxFontSizeMultiplier={1.3} style={st.arrow}>→</Text>
       </LinearGradient>
     </Pressable>
   )

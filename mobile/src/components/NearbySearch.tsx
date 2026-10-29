@@ -127,6 +127,8 @@ export default function NearbySearch({
             <Pressable
               key={r.label}
               onPress={() => pick(r)}
+              accessibilityRole="button"
+              accessibilityHint="Sorts trips by distance from here"
               style={({ pressed }) => [st.result, i > 0 && st.resultLine, pressed && { backgroundColor: colors.green100 }]}
             >
               <Text style={st.resultText}>{r.label}</Text>

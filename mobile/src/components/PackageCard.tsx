@@ -29,17 +29,17 @@ export default function PackageCard({
           <View style={st.pennant} />
         </View>
         <View style={[st.tier, pkg.tier === 'luxury' ? st.lux : st.val]}>
-          <Text style={[st.tierText, { color: pkg.tier === 'luxury' ? '#3a2e07' : '#133d12' }]}>{pkg.tierLabel}</Text>
+          <Text maxFontSizeMultiplier={1.3} style={[st.tierText, { color: pkg.tier === 'luxury' ? '#3a2e07' : '#133d12' }]}>{pkg.tierLabel}</Text>
         </View>
         <View style={st.body}>
-          <Text style={st.loc}>{pkg.region}</Text>
-          <Text style={st.title}>{pkg.destination.split(',')[0]}</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.loc}>{pkg.region}</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.title}>{pkg.destination.split(',')[0]}</Text>
           {distance ? (
             <View style={st.dist}>
-              <Text style={st.distText}>📍 {distance}</Text>
+              <Text maxFontSizeMultiplier={1.3} style={st.distText}>📍 {distance}</Text>
             </View>
           ) : null}
-          <Text style={st.tag}>
+          <Text maxFontSizeMultiplier={1.3} style={st.tag}>
             {pkg.courses.length} courses · {money(pkg.budgetMin)}–{money(pkg.budgetMax)}/pp
           </Text>
         </View>
