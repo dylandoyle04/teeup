@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router'
-import { useMemo } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 import { computeRyder, type Side } from '@shared/ryder'
 import { useStore } from '@shared/store'
@@ -8,7 +8,9 @@ import Screen from '@/components/Screen'
 import { Input } from '@/components/Field'
 import RyderPlayingOrder from '@/components/RyderPlayingOrder'
 import RyderScoreboard, { TEAM_A, TEAM_B } from '@/components/RyderScoreboard'
+import { OffscreenCapture, RyderShareCard, ShareButton } from '@/components/ShareCards'
 import { Avatar, Button, Card, Hint, PageTitle, SectionTitle, T } from '@/components/ui'
+import { shareViewAsImage } from '@/lib/shareImage'
 import { colors, fonts } from '@/theme'
 
 export default function RyderCupScreen() {
@@ -16,6 +18,8 @@ export default function RyderCupScreen() {
   const trip = useStore((s) => s.trips.find((t) => t.id === tripId))
   const allMembers = useStore((s) => s.members)
   const setRyderCup = useStore((s) => s.setRyderCup)
+  const shareRef = useRef<View>(null)
+  const [sharing, setSharing] = useState(false)
 
   const members = useMemo(() => {
     if (!trip) return []
@@ -54,8 +58,19 @@ export default function RyderCupScreen() {
 
   const aCount = rc ? Object.values(rc.teamOf).filter((s) => s === 'A').length : 0
   const bCount = rc ? Object.values(rc.teamOf).filter((s) => s === 'B').length : 0
+  const canShare = !!rc && !!standings && standings.played > 0
+
+  async function shareStandings() {
+    setSharing(true)
+    try {
+      await shareViewAsImage(shareRef, { dialogTitle: 'Ryder Cup standings' })
+    } finally {
+      setSharing(false)
+    }
+  }
 
   return (
+    <View style={{ flex: 1, backgroundColor: colors.cream }}>
     <Screen>
       <PageTitle sub="Two teams, one trip. Play a different format each day and rack up points toward the cup.">
         Ryder Cup
@@ -72,6 +87,15 @@ export default function RyderCupScreen() {
       ) : (
         <>
           {standings && <RyderScoreboard trip={trip} />}
+          {canShare && (
+            <ShareButton
+              title="Share standings"
+              accessibilityLabel="Share Ryder Cup standings as an image"
+              loading={sharing}
+              onPress={shareStandings}
+              style={{ marginTop: 12 }}
+            />
+          )}
 
           <SectionTitle>Teams</SectionTitle>
           <View style={st.names}>
@@ -120,6 +144,13 @@ export default function RyderCupScreen() {
         </>
       )}
     </Screen>
+    {/* Off-screen (outside the ScrollView) so "Share standings" can capture it. */}
+    {canShare && (
+      <OffscreenCapture>
+        <RyderShareCard ref={shareRef} trip={trip} members={members} />
+      </OffscreenCapture>
+    )}
+    </View>
   )
 }
 

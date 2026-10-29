@@ -2,7 +2,7 @@
 // games, per-round leaderboards and stats. All scoring is local (zustand).
 // TODO: live shared scoring (Supabase / @shared/cloud) isn't wired on mobile yet.
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { coursePlayOptions, yardsForCourseName } from '@shared/coursePars'
 import { GAMES, isTeamGame, sum } from '@shared/games'
@@ -17,7 +17,6 @@ import {
   Results,
   SelectBox,
   StatsSummary,
-  TEAM_COLORS,
   TeamSetup,
   TripStandings,
   WolfPanel,
@@ -26,7 +25,10 @@ import {
   type ScoreRow,
 } from '@/components/ScoreParts'
 import Screen from '@/components/Screen'
+import { OffscreenCapture, RoundShareCard, ShareButton, roundComplete, roundHasScores, roundRows } from '@/components/ShareCards'
 import { Button, Card, Hint, PageTitle, SectionTitle, Segmented, T } from '@/components/ui'
+import { maybeAskForReview } from '@/lib/review'
+import { shareViewAsImage } from '@/lib/shareImage'
 import { colors, fonts, radius } from '@/theme'
 
 const GAME_OPTIONS = GAMES.map((g) => ({ value: g as string, label: g }))
@@ -44,6 +46,7 @@ export default function Scorecard() {
   const [date, setDate] = useState('')
   const [game, setGame] = useState<string>(GAMES[0])
   const [gamePicker, setGamePicker] = useState(false)
+  const shareRef = useRef<View>(null)
 
   // tripMembers() builds a new array per call — derive it from stable state instead
   const members = useMemo<Member[]>(() => {
@@ -79,6 +82,7 @@ export default function Scorecard() {
   }
 
   return (
+    <View style={{ flex: 1, backgroundColor: colors.cream }}>
     <Screen automaticallyAdjustKeyboardInsets>
       <PageTitle sub="Live scoring, games & leaderboards for the whole trip.">Scorecard</PageTitle>
 
@@ -118,6 +122,7 @@ export default function Scorecard() {
           tripId={tripId}
           round={active}
           members={members}
+          shareRef={shareRef}
           onDelete={() =>
             Alert.alert(`Delete the round at ${active.courseName}?`, undefined, [
               { text: 'Cancel', style: 'cancel' },
@@ -177,6 +182,13 @@ export default function Scorecard() {
         <Button title="+ New round" variant="gold" onPress={() => setAdding(true)} />
       )}
     </Screen>
+    {/* Off-screen (outside the ScrollView) so "Share results" can capture it. */}
+    {active && roundHasScores(active) && (
+      <OffscreenCapture>
+        <RoundShareCard ref={shareRef} tripName={trip.name} round={active} members={members} />
+      </OffscreenCapture>
+    )}
+    </View>
   )
 }
 
@@ -184,11 +196,13 @@ function RoundCard({
   tripId,
   round,
   members,
+  shareRef,
   onDelete,
 }: {
   tripId: string
   round: Round
   members: Member[]
+  shareRef: RefObject<View | null>
   onDelete: () => void
 }) {
   const setRoundGame = useStore((s) => s.setRoundGame)
@@ -216,11 +230,33 @@ function RoundCard({
   }, [team, round.teams.length, members, tripId, round.id, setRoundTeams])
 
   const scramble = round.game === 'Scramble'
-  const teamRows: ScoreRow[] =
-    round.teams.length >= 2
-      ? round.teams.map((t, i) => ({ id: t.id, name: t.name, color: TEAM_COLORS[i % TEAM_COLORS.length] }))
-      : []
-  const rows: ScoreRow[] = scramble && teamRows.length ? teamRows : members
+  const rows: ScoreRow[] = roundRows(round, members)
+  const hasScores = roundHasScores(round)
+  const complete = roundComplete(round, rows)
+  const [sharing, setSharing] = useState(false)
+
+  // Ask for an App Store rating once, on the transition to a fully-scored round
+  // (not on mounting a round that was already complete). RoundCard is keyed by
+  // round id, so switching rounds remounts and resets this.
+  const wasComplete = useRef(complete)
+  useEffect(() => {
+    if (complete && !wasComplete.current) {
+      wasComplete.current = true
+      const t = setTimeout(() => void maybeAskForReview(), 1500)
+      return () => clearTimeout(t)
+    }
+    wasComplete.current = complete
+  }, [complete])
+
+  async function shareResults() {
+    tick()
+    setSharing(true)
+    try {
+      await shareViewAsImage(shareRef, { dialogTitle: `${round.courseName} results` })
+    } finally {
+      setSharing(false)
+    }
+  }
 
   const yards = yardsForCourseName(round.courseName)
   const totalYards = yards ? yards.reduce((a, b) => a + b, 0) : 0
@@ -260,6 +296,15 @@ function RoundCard({
 
       <SectionTitle>{round.game === 'Stroke Play' ? 'Leaderboard' : `${round.game} standings`}</SectionTitle>
       <Results round={round} members={members} rows={rows} />
+      {hasScores && (
+        <ShareButton
+          title={complete ? 'Share final results' : 'Share results'}
+          accessibilityLabel="Share round results as an image"
+          loading={sharing}
+          onPress={shareResults}
+          style={{ marginTop: 10 }}
+        />
+      )}
 
       {round.game === 'Wolf' && <WolfPanel round={round} members={members} onPick={setWolfHole} />}
       {wolfOpts && (
