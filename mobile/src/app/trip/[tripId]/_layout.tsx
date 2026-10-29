@@ -25,12 +25,17 @@ export default function TripLayout() {
     <View style={{ flex: 1, backgroundColor: colors.cream }}>
       <View style={[st.header, { paddingTop: insets.top + 6 }]}>
         <View style={st.titleRow}>
-          <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/trips'))} hitSlop={12} accessibilityLabel="Back">
+          <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/trips'))} hitSlop={12} accessibilityLabel="Back" accessibilityRole="button">
             <Text style={st.back}>‹</Text>
           </Pressable>
           <Text style={st.title} numberOfLines={1}>
             {trip?.name ?? 'Trip'}
           </Text>
+          {tripId === 'trip_sample' ? (
+            <View style={st.example}>
+              <Text style={st.exampleText}>Example</Text>
+            </View>
+          ) : null}
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, paddingHorizontal: 12 }}>
           {TABS.map((t) => {
@@ -64,7 +69,9 @@ const st = StyleSheet.create({
   header: { backgroundColor: colors.green900, paddingBottom: 10 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, marginBottom: 10 },
   back: { color: '#fff', fontSize: 34, lineHeight: 34, marginTop: -4 },
-  title: { flex: 1, color: '#fff', fontFamily: fonts.serifBold, fontSize: 24 },
+  title: { flexShrink: 1, color: '#fff', fontFamily: fonts.serifBold, fontSize: 24 },
+  example: { backgroundColor: colors.gold, borderRadius: 999, paddingVertical: 2, paddingHorizontal: 8 },
+  exampleText: { fontFamily: fonts.sansSemi, fontSize: 11, color: '#2b2205' },
   tab: { paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.1)' },
   tabOn: { backgroundColor: colors.teeGreen },
   tabText: { fontFamily: fonts.sansSemi, fontSize: 13, color: '#fff' },
