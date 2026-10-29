@@ -28,8 +28,8 @@ const FEATURED = (() => {
 
 const STEPS = [
   ['Plan', 'Pick a curated destination package or build your own — courses, hotels, flights, drive times, and dining.'],
-  ['Invite', 'Share one link. Friends sign in and join the trip — everyone on the same page.'],
-  ['Score', 'Keep score live together — a shared scorecard, side games, and a trip-long Ryder Cup.'],
+  ['Invite', 'Add the crew and send them the plan — dates, courses and rounds, straight to the group chat.'],
+  ['Score', 'Keep score for the whole group on one phone — side games, a trip-long Ryder Cup, and results you can share.'],
   ['Eat & more', 'Restaurant picks near every course, drive times, and everything else the trip needs.'],
 ]
 
@@ -58,7 +58,7 @@ export default function Home() {
           </View>
           <Text style={st.lead}>Book the trip. Invite the crew. Keep score.</Text>
           <Text style={st.sub}>
-            Courses, hotels & travel — with a live shared scorecard, side games, and a trip-long Ryder Cup.
+            Courses, hotels & travel — with a group scorecard, side games, and a trip-long Ryder Cup.
           </Text>
           <Pressable style={({ pressed }) => [st.cta, pressed && { backgroundColor: 'rgba(255,255,255,0.2)' }]} onPress={() => router.push('/explore')}>
             <Text style={st.ctaText}>Plan your trip</Text>
@@ -121,6 +121,9 @@ export default function Home() {
           <Text style={st.footLink} onPress={() => openLink('mailto:Flagstickfinder@outlook.com')}>
             Contact
           </Text>
+          <Text style={st.footLink} onPress={() => router.push('/settings')} accessibilityRole="link">
+            Settings
+          </Text>
         </View>
       </View>
     </ScrollView>
@@ -156,5 +159,5 @@ const st = StyleSheet.create({
   stepN: { width: 34, height: 34, borderRadius: 17, backgroundColor: colors.green100, alignItems: 'center', justifyContent: 'center' },
   stepNText: { fontFamily: fonts.sansBold, color: colors.green700 },
   badge: { fontFamily: fonts.sansBold, fontSize: 11, letterSpacing: 1, color: colors.gold },
-  footLink: { fontFamily: fonts.sansMedium, color: colors.green700, fontSize: 14 },
+  footLink: { fontFamily: fonts.sansMedium, color: colors.green700, fontSize: 14, paddingVertical: 12 },
 })

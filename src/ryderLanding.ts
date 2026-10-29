@@ -17,7 +17,7 @@ export const RC_SAMPLE_SESSIONS = [
 ] as const
 
 export const RC_FEATURES = [
-  ['📊', 'Live points', 'Standings update as every score goes in — on everyone’s phone.'],
+  ['📊', 'Live points', 'Standings update the moment each score goes in.'],
   ['🔁', 'Pairings & tee order', 'Alternate-shot partners and who tees off on each hole, worked out for you.'],
   ['🏆', 'Clinch alerts', 'Know the moment a side can’t be caught.'],
   ['⛳', 'Your rounds, your rules', 'Count or skip any round toward the cup.'],
