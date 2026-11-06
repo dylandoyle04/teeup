@@ -29,7 +29,7 @@ const FEATURED = (() => {
 const STEPS = [
   ['Plan', 'Pick a curated destination package or build your own — courses, hotels, flights, drive times, and dining.'],
   ['Invite', 'Add the crew and send them the plan — dates, courses and rounds, straight to the group chat.'],
-  ['Score', 'Keep score for the whole group on one phone — side games, a trip-long Ryder Cup, and results you can share.'],
+  ['Score', 'Keep score for the whole group on one phone — side games, a trip-long team cup, and results you can share.'],
   ['Eat & more', 'Restaurant picks near every course, drive times, and everything else the trip needs.'],
 ]
 
@@ -58,7 +58,7 @@ export default function Home() {
           </View>
           <Text style={st.lead}>Book the trip. Invite the crew. Keep score.</Text>
           <Text style={st.sub}>
-            Courses, hotels & travel — with a group scorecard, side games, and a trip-long Ryder Cup.
+            Courses, hotels & travel — with a group scorecard, side games, and a trip-long team cup.
           </Text>
           <Pressable style={({ pressed }) => [st.cta, pressed && { backgroundColor: 'rgba(255,255,255,0.2)' }]} onPress={() => router.push('/explore')}>
             <Text style={st.ctaText}>Plan your trip</Text>

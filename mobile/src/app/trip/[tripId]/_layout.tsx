@@ -9,7 +9,7 @@ const TABS = [
   { seg: 'setup', label: 'Trip' },
   { seg: 'book', label: 'Book' },
   { seg: 'score', label: 'Scorecard' },
-  { seg: 'ryder', label: 'Ryder Cup' },
+  { seg: 'ryder', label: 'The Cup' },
   { seg: 'bets', label: 'Bets' },
 ] as const
 

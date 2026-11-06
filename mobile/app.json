@@ -15,7 +15,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "NSPhotoLibraryAddUsageDescription": "Lets you save scorecard and Ryder Cup images to your Photos."
+        "NSPhotoLibraryAddUsageDescription": "Lets you save scorecard and Cup standings images to your Photos."
       }
     },
     "android": {

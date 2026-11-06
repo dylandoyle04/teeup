@@ -151,7 +151,7 @@ export default function RyderTab() {
 
         <Animated.View style={[{ alignItems: 'center' }, titleStyle]}>
           <Text maxFontSizeMultiplier={1.3} style={st.kicker}>ONLY ON FLAGSTICK FINDER</Text>
-          <Text maxFontSizeMultiplier={1.3} style={st.title}>The Ryder Cup</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.title}>The Cup</Text>
           <Text maxFontSizeMultiplier={1.3} style={st.sub}>Turn your golf trip into a team showdown.</Text>
         </Animated.View>
 
@@ -181,7 +181,7 @@ export default function RyderTab() {
         </Animated.View>
 
         <View style={st.actions}>
-          <Button title="Start a Ryder Cup trip →" variant="gold" onPress={() => router.navigate('/explore')} style={{ flexShrink: 1 }} />
+          <Button title="Plan your Cup trip →" variant="gold" onPress={() => router.navigate('/explore')} style={{ flexShrink: 1 }} />
           <Pressable onPress={run} style={st.replay} accessibilityRole="button">
             <Text style={st.replayText}>↻ Replay</Text>
           </Pressable>

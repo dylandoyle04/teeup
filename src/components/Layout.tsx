@@ -10,7 +10,7 @@ function TripTabs({ tripId }: { tripId: string }) {
     { to: `/trip/${tripId}/setup`, label: 'Trip' },
     { to: `/trip/${tripId}/book`, label: 'Book' },
     { to: `/trip/${tripId}/score`, label: 'Scorecard' },
-    { to: `/trip/${tripId}/ryder`, label: 'Ryder Cup' },
+    { to: `/trip/${tripId}/ryder`, label: 'The Cup' },
     { to: `/trip/${tripId}/bets`, label: 'Bets' },
   ]
   return (
@@ -37,7 +37,7 @@ function SharedTripTabs({ id }: { id: string }) {
         Scorecard
       </NavLink>
       <NavLink to={`/shared/${id}/ryder`} className={onRyder ? 'active' : ''}>
-        Ryder Cup
+        The Cup
       </NavLink>
     </nav>
   )
@@ -57,7 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
   // full-bleed pages draw their own hero edge to edge (no centred container)
-  const fullBleed = isHome || pathname === '/ryder-cup'
+  const fullBleed = isHome || pathname === '/the-cup'
   // Layout sits above <Routes>, so derive the trip id from the path directly.
   const tripId = pathname.match(/^\/trip\/([^/]+)/)?.[1]
   const sharedMatch = pathname.match(/^\/shared\/([^/]+)/)?.[1]
@@ -102,11 +102,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   Explore
                 </NavLink>
                 <NavLink
-                  to="/ryder-cup"
+                  to="/the-cup"
                   onClick={() => playRyderCheer()}
                   className={({ isActive }) => (isActive ? 'active' : '')}
                 >
-                  Ryder Cup
+                  The Cup
                 </NavLink>
                 {hasBackend && (
                   <NavLink
@@ -146,8 +146,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </p>
             <div className="footer-links">
               <Link to="/explore">Explore trips</Link>
-              <Link to="/ryder-cup" onClick={() => playRyderCheer()}>
-                Ryder Cup
+              <Link to="/the-cup" onClick={() => playRyderCheer()}>
+                The Cup
               </Link>
               <Link to="/new">Create a trip</Link>
               {hasBackend && <AccountLink />}

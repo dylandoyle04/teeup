@@ -105,7 +105,7 @@ export default function TripSetup() {
         <Card style={st.example}>
           <T style={{ fontFamily: fonts.sansBold, color: colors.green900 }}>👋 This is an example trip</T>
           <Hint style={{ color: '#5d5a3c' }}>
-            Look around the scorecard, Ryder Cup and bets to see how it works — then delete it and plan your own.
+            Look around the scorecard, The Cup and bets to see how it works — then delete it and plan your own.
           </Hint>
           <View style={{ flexDirection: 'row', gap: 8, marginTop: 10 }}>
             <Button title="Plan my own trip" small onPress={() => router.navigate('/explore')} />

@@ -2,12 +2,10 @@
 
 Paste these into App Store Connect. Character limits noted; all within limits.
 
-## ⚠️ Trademark note — "Ryder Cup"
-"Ryder Cup" is a registered trademark (PGA of America / Ryder Cup Europe).
-Apple rejects apps that use third-party trademarks in the **name, subtitle or
-keywords** without permission, so this listing never uses it there and
-describes the feature as a "team match-play cup". Inside the app it's used
-descriptively; if Review objects, rename the tab to e.g. "The Cup" / "Team Cup".
+## Trademark note
+The team competition is called **The Cup** everywhere (app, website, listing).
+Don't use "Ryder Cup" — it's a registered trademark (PGA of America / Ryder Cup
+Europe) and Apple rejects third-party trademarks in names, subtitles and keywords.
 
 ## Name (30)
 Flagstick Finder
@@ -35,7 +33,7 @@ KEEP SCORE TOGETHER
 • Live leaderboards and trip-long standings
 • Share the results to your group chat as a clean scorecard image
 
-THE TEAM CUP
+THE CUP
 • Split the group into two teams for a trip-long match-play cup
 • A different format each day: Fourball, Foursomes (alternate shot), then Singles
 • Points update as you score, with tee order for alternate shot and clinch alerts
@@ -91,7 +89,7 @@ Uses encryption: **No** (already declared in the build — no prompt).
 ## App Review notes (paste into "Notes")
 No login is required — the app has no accounts in this version.
 
-On first launch a short welcome tour appears. The app opens with an example trip ("Myrtle Beach Buddies Trip", under My Trips) so you can try the scorecard, team cup and side bets tally right away; it's labelled "Example" and can be deleted.
+On first launch a short welcome tour appears. The app opens with an example trip ("Myrtle Beach Buddies Trip", under My Trips) so you can try the scorecard, The Cup and the side bets tally right away; it's labelled "Example" and can be deleted.
 
 Suggested path: Explore → pick any trip package → "Start a trip from this package" → Book shows course websites / tee times and stay links (these open the partner's own site; some are affiliate links) → Scorecard → "+ New round" to score with +/– buttons → "Share results" sends a scorecard image via the share sheet.
 
@@ -105,6 +103,6 @@ Optional permissions, each requested only when the user taps the related button:
 3. A package page with course photos
 4. Scorecard hole-by-hole entry (+/– buttons)
 5. Leaderboard / side game standings
-6. Team cup scoreboard (blue vs gold)
+6. The Cup scoreboard (blue vs gold)
 7. Side bets "who pays whom"
 8. Shared scorecard image

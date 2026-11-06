@@ -59,7 +59,7 @@ export default function RyderCup() {
   }
 
   function endCup() {
-    if (confirm('Turn off the Ryder Cup for this trip? Team assignments are cleared.'))
+    if (confirm('Turn off The Cup for this trip? Team assignments are cleared.'))
       setRyderCup(tripId, undefined)
   }
 
@@ -68,7 +68,7 @@ export default function RyderCup() {
 
   return (
     <>
-      <h1 className="page-title">Ryder Cup</h1>
+      <h1 className="page-title">The Cup</h1>
       <p className="page-sub">
         Two teams, one trip. Play a different format each day and rack up points
         toward the cup.
@@ -78,11 +78,11 @@ export default function RyderCup() {
         <div className="card empty">
           <div className="big">🏆</div>
           <p>
-            Start a Ryder Cup to split the group into two teams and compete
+            Start The Cup to split the group into two teams and compete
             across every round of the trip.
           </p>
           <button className="btn full gold" onClick={startCup} style={{ marginTop: 10 }}>
-            Start the Ryder Cup
+            Start The Cup
           </button>
         </div>
       ) : (
@@ -143,7 +143,7 @@ export default function RyderCup() {
           )}
 
           <button className="btn ghost" style={{ marginTop: 16 }} onClick={endCup}>
-            End Ryder Cup
+            End The Cup
           </button>
         </>
       )}
@@ -233,7 +233,7 @@ function RyderScoreboard({ trip }: { trip: NonNullable<ReturnType<typeof useStor
           ))}
           <p className="hint" style={{ margin: '8px 4px 0' }}>
             Toggle a round off to keep it casual — only counting rounds award
-            Ryder Cup points.
+            Cup points.
           </p>
         </div>
       )}

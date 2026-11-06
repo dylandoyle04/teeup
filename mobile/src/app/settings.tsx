@@ -36,7 +36,7 @@ export default function Settings() {
   const confirmReset = () => {
     Alert.alert(
       'Reset app data?',
-      'This deletes every trip, round, Ryder Cup and bet on this phone and restores the example trip. It can’t be undone.',
+      'This deletes every trip, round, cup and bet on this phone and restores the example trip. It can’t be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -54,7 +54,7 @@ export default function Settings() {
   return (
     <Screen>
       <Group title="Sound">
-        <Row label="Sound effects" detail="The Ryder Cup cheer">
+        <Row label="Sound effects" detail="The Cup cheer">
           <Switch
             value={!muted}
             onValueChange={(on) => setMuted(!on)}

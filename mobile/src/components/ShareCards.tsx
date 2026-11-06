@@ -336,7 +336,7 @@ export function RyderShareCard({ ref, trip, members }: { ref?: Ref<View>; trip: 
   const played = s.sessions.filter((x) => x.counts && x.winner != null)
 
   return (
-    <ShareFrame ref={ref} eyebrow="RYDER CUP STANDINGS" title={trip.name} subtitle={`${s.played} of ${s.totalSessions} sessions played`}>
+    <ShareFrame ref={ref} eyebrow="THE CUP STANDINGS" title={trip.name} subtitle={`${s.played} of ${s.totalSessions} sessions played`}>
       <View style={st.ryderBoard}>
         <LinearGradient colors={[TEAM_A, TEAM_A_DARK]} start={{ x: 0.2, y: 0 }} end={{ x: 0.8, y: 1 }} style={st.ryderSide}>
           <Text style={st.duelName} numberOfLines={2}>

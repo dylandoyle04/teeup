@@ -197,7 +197,7 @@ export default function ShareScorecard() {
 
       <Link className="card shared-row" to={`/shared/${id}/ryder`}>
         <div>
-          <div className="shared-row-name">🏆 Ryder Cup</div>
+          <div className="shared-row-name">🏆 The Cup</div>
           <div className="shared-row-dest">Teams &amp; live points across the trip</div>
         </div>
         <span className="shared-row-go">›</span>

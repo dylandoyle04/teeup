@@ -117,7 +117,7 @@ export default function SharedRyder() {
   }, [id, reload])
 
   if (ready && !user)
-    return <div className="auth-wrap"><div className="card empty"><p>Sign in to view the Ryder Cup.</p><Link to="/signin" className="btn full gold" style={{ marginTop: 10 }}>Sign in</Link></div></div>
+    return <div className="auth-wrap"><div className="card empty"><p>Sign in to view The Cup.</p><Link to="/signin" className="btn full gold" style={{ marginTop: 10 }}>Sign in</Link></div></div>
   if (loading) return <div className="card empty"><p>Loading…</p></div>
 
   const sideA = members.filter((m) => config?.teamOf[m.id] === 'A')
@@ -157,11 +157,11 @@ export default function SharedRyder() {
   if (!config) {
     return (
       <>
-        <div className="page-head"><h1 className="page-title">Ryder Cup</h1>
+        <div className="page-head"><h1 className="page-title">The Cup</h1>
           <p className="page-sub">Two teams across the whole trip, points tallied live.</p></div>
         <div className="card empty"><div className="big">🏆</div>
           <p>Split the group into two teams, then add matches and pick a format for each.</p>
-          <button className="btn full gold" style={{ marginTop: 10 }} onClick={startCup}>Start the Ryder Cup</button>
+          <button className="btn full gold" style={{ marginTop: 10 }} onClick={startCup}>Start The Cup</button>
         </div>
         <Link to={`/shared/${id}`} className="btn ghost" style={{ marginTop: 16 }}>← Back to trip</Link>
       </>
@@ -172,7 +172,7 @@ export default function SharedRyder() {
 
   return (
     <>
-      <div className="page-head"><h1 className="page-title">Ryder Cup</h1></div>
+      <div className="page-head"><h1 className="page-title">The Cup</h1></div>
 
       <div className="ryder-board">
         <div className={`ryder-side a ${s.aPoints > s.bPoints ? 'lead' : ''}`}><div className="ryder-side-name">{config.teamAName}</div><div className="ryder-side-pts">{fmt(s.aPoints)}</div></div>

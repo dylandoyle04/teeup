@@ -97,7 +97,7 @@ export default function RyderScoreboard({ trip }: { trip: Trip }) {
             </View>
           ))}
           <Hint style={{ marginTop: 8, marginBottom: 8, marginHorizontal: 4 }}>
-            Toggle a round off to keep it casual — only counting rounds award Ryder Cup points.
+            Toggle a round off to keep it casual — only counting rounds award Cup points.
           </Hint>
         </Card>
       )}

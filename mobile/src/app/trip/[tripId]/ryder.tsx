@@ -50,9 +50,9 @@ export default function RyderCupScreen() {
   }
 
   function endCup() {
-    Alert.alert('End Ryder Cup?', 'Turn off the Ryder Cup for this trip? Team assignments are cleared.', [
+    Alert.alert('End The Cup?', 'Turn off The Cup for this trip? Team assignments are cleared.', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'End Ryder Cup', style: 'destructive', onPress: () => setRyderCup(tripId, undefined) },
+      { text: 'End The Cup', style: 'destructive', onPress: () => setRyderCup(tripId, undefined) },
     ])
   }
 
@@ -63,7 +63,7 @@ export default function RyderCupScreen() {
   async function shareStandings() {
     setSharing(true)
     try {
-      await shareViewAsImage(shareRef, { dialogTitle: 'Ryder Cup standings' })
+      await shareViewAsImage(shareRef, { dialogTitle: 'Cup standings' })
     } finally {
       setSharing(false)
     }
@@ -73,16 +73,16 @@ export default function RyderCupScreen() {
     <View style={{ flex: 1, backgroundColor: colors.cream }}>
     <Screen>
       <PageTitle sub="Two teams, one trip. Play a different format each day and rack up points toward the cup.">
-        Ryder Cup
+        The Cup
       </PageTitle>
 
       {!rc ? (
         <Card style={{ alignItems: 'center', paddingVertical: 28 }}>
           <Text style={{ fontSize: 40, marginBottom: 8 }}>🏆</Text>
           <T style={{ textAlign: 'center', color: colors.muted }}>
-            Start a Ryder Cup to split the group into two teams and compete across every round of the trip.
+            Start The Cup to split the group into two teams and compete across every round of the trip.
           </T>
-          <Button title="Start the Ryder Cup" variant="gold" onPress={startCup} style={{ marginTop: 16, alignSelf: 'stretch' }} />
+          <Button title="Start The Cup" variant="gold" onPress={startCup} style={{ marginTop: 16, alignSelf: 'stretch' }} />
         </Card>
       ) : (
         <>
@@ -90,7 +90,7 @@ export default function RyderCupScreen() {
           {canShare && (
             <ShareButton
               title="Share standings"
-              accessibilityLabel="Share Ryder Cup standings as an image"
+              accessibilityLabel="Share Cup standings as an image"
               loading={sharing}
               onPress={shareStandings}
               style={{ marginTop: 12 }}
@@ -140,7 +140,7 @@ export default function RyderCupScreen() {
 
           {aCount > 0 && bCount > 0 && <RyderPlayingOrder trip={trip} members={members} />}
 
-          <Button title="End Ryder Cup" variant="ghost" onPress={endCup} style={{ marginTop: 16 }} />
+          <Button title="End The Cup" variant="ghost" onPress={endCup} style={{ marginTop: 16 }} />
         </>
       )}
     </Screen>

@@ -10,7 +10,7 @@ export default function RyderPromo() {
       onPress={() => router.navigate('/ryder' as Href)}
       style={({ pressed }) => [st.wrap, pressed && { transform: [{ scale: 0.99 }] }]}
       accessibilityRole="button"
-      accessibilityLabel="Play your own Ryder Cup"
+      accessibilityLabel="Play The Cup on your trip"
     >
       <LinearGradient
         colors={['#1d5fb0', '#0d2f5c', '#9c7414', '#c6952a']}
@@ -22,7 +22,7 @@ export default function RyderPromo() {
         <Text maxFontSizeMultiplier={1.3} style={{ fontSize: 38 }}>🏆</Text>
         <View style={{ flex: 1, gap: 2 }}>
           <Text maxFontSizeMultiplier={1.3} style={st.kicker}>TEAM GOLF, TRIP-LONG</Text>
-          <Text maxFontSizeMultiplier={1.3} style={st.title}>Play your own Ryder Cup</Text>
+          <Text maxFontSizeMultiplier={1.3} style={st.title}>Play The Cup on your trip</Text>
           <Text maxFontSizeMultiplier={1.3} style={st.sub}>Two teams, three formats, one cup. Points update live.</Text>
         </View>
         <Text maxFontSizeMultiplier={1.3} style={st.arrow}>→</Text>

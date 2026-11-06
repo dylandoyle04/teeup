@@ -96,7 +96,7 @@ export default function RyderLanding() {
 
         <div className="rc-hero-inner">
           <p className="rc-kicker">Only on Flagstick Finder</p>
-          <h1 className="rc-title">The Ryder Cup</h1>
+          <h1 className="rc-title">The Cup</h1>
           <p className="rc-sub">Turn your golf trip into a team showdown.</p>
 
           <div className="rc-trophy-wrap">
@@ -143,7 +143,7 @@ export default function RyderLanding() {
 
           <div className="rc-actions">
             <Link to="/explore" className="btn gold">
-              Start a Ryder Cup trip →
+              Plan your Cup trip →
             </Link>
             <button className="rc-replay" onClick={replay}>
               ↻ Replay

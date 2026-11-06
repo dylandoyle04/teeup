@@ -14,7 +14,7 @@ export default function TabsLayout() {
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="ryder">
         <NativeTabs.Trigger.Icon sf={{ default: 'trophy', selected: 'trophy.fill' }} md="emoji_events" />
-        <NativeTabs.Trigger.Label>Ryder Cup</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>The Cup</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="trips">
         <NativeTabs.Trigger.Icon sf={{ default: 'figure.golf', selected: 'figure.golf' }} md="sports_golf" />

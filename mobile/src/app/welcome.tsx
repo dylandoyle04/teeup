@@ -60,7 +60,7 @@ const PAGES: Page[] = [
   },
   {
     key: 'ryder',
-    eyebrow: 'The Ryder Cup',
+    eyebrow: 'The Cup',
     title: 'Two teams. Three formats. One cup.',
     body: 'Split the crew into two teams and play for the cup all trip long — every match adds to the running total.',
     extra: () => <RyderBadge />,

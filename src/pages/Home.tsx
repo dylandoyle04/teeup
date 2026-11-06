@@ -215,7 +215,7 @@ export default function Home() {
         </p>
         <p className="hero-tag hero-tag-sub">
           Courses, hotels &amp; travel — with a live shared scorecard, side
-          games, and a trip-long Ryder Cup.
+          games, and a trip-long team cup.
         </p>
 
         <button className="hero-cta" onClick={() => navigate('/explore')}>
@@ -236,8 +236,8 @@ export default function Home() {
             <ExpediaBadge />
             <nav className="hero-topbar-nav">
               <Link to="/explore">Explore</Link>
-              <Link to="/ryder-cup" onClick={() => playRyderCheer()}>
-                Ryder Cup
+              <Link to="/the-cup" onClick={() => playRyderCheer()}>
+                The Cup
               </Link>
               {hasBackend && <Link to="/trips">My Trips</Link>}
               {hasBackend && <Link to="/signin">Sign in</Link>}
@@ -276,7 +276,7 @@ export default function Home() {
           <div className="step">
             <span className="step-n">3</span>
             <h3>Score</h3>
-            <p>Keep score live together — a shared scorecard, side games, and a trip-long Ryder Cup.</p>
+            <p>Keep score live together — a shared scorecard, side games, and a trip-long team cup.</p>
           </div>
           <div className="step">
             <span className="step-n">4</span>

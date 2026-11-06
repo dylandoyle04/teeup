@@ -251,10 +251,10 @@ export default function SharedTrip() {
         </>
       )}
 
-      <div className="section-title">Ryder Cup</div>
+      <div className="section-title">The Cup</div>
       <Link className="card shared-row" to={`/shared/${id}/ryder`}>
         <div>
-          <div className="shared-row-name">🏆 Ryder Cup</div>
+          <div className="shared-row-name">🏆 The Cup</div>
           <div className="shared-row-dest">Two teams, live points across the trip</div>
         </div>
         <span className="shared-row-go">›</span>

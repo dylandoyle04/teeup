@@ -27,7 +27,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/explore" element={<Explore />} />
-        <Route path="/ryder-cup" element={<RyderLanding />} />
+        <Route path="/the-cup" element={<RyderLanding />} />
+        <Route path="/ryder-cup" element={<Navigate to="/the-cup" replace />} />
         <Route path="/trips" element={<MyTrips />} />
         <Route path="/new" element={<NewTrip />} />
         <Route path="/package/:packageId" element={<PackageDetail />} />
