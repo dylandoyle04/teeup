@@ -4,6 +4,7 @@ import { gsap, reduceMotion } from '../anim'
 import ExpediaBadge from '../components/ExpediaBadge'
 import PackageCard from '../components/PackageCard'
 import RyderPromo from '../components/RyderPromo'
+import AppStoreBadge from '../components/AppStoreBadge'
 import { playRyderCheer } from '../sound'
 import { hasBackend } from '../supabase'
 import { PACKAGES } from '../packages'
@@ -63,6 +64,9 @@ export default function Home() {
         )
         .from('.hero-tag', { y: 20, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: 'power3.out' }, '-=0.25')
         .from('.hero-cta', { y: 18, autoAlpha: 0, duration: 0.6, ease: 'power3.out' }, '-=0.25')
+      // App Store badge only exists once the app is live (src/appStore.ts)
+      if (document.querySelector('.hero-badge'))
+        t.from('.hero-badge', { y: 14, autoAlpha: 0, duration: 0.5, ease: 'power3.out' }, '-=0.3')
     }
 
     ctx.add(() => {
@@ -221,6 +225,7 @@ export default function Home() {
         <button className="hero-cta" onClick={() => navigate('/explore')}>
           Plan your trip
         </button>
+        <AppStoreBadge className="hero-badge" />
       </div>
 
       {!showIntro && (
@@ -324,6 +329,7 @@ export default function Home() {
         <Link to="/explore" className="btn gold home-cta-btn">
           Plan your trip →
         </Link>
+        <AppStoreBadge className="cta-badge" />
         <div className="home-foot">
           <Link to="/legal">Privacy &amp; Terms</Link>
           <a href="mailto:Flagstickfinder@outlook.com">Contact</a>

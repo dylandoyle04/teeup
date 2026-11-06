@@ -52,6 +52,18 @@ In https://appstoreconnect.apple.com → your app:
 4. Pick the TestFlight build, paste the **App Review notes**, submit.
 First reviews usually take 1–3 days.
 
+## Launch day (once Apple approves)
+
+1. In App Store Connect → App Information, copy the app's **Apple ID** (a number like `6741234567`).
+2. Put it in `src/appStore.ts` → `APP_STORE_ID`. That switches on the official
+   "Download on the App Store" badges (home hero, home call-to-action, every footer).
+3. In `index.html`, add the Smart App Banner inside `<head>` so Safari on iPhone
+   offers the app at the top of the site:
+   ```html
+   <meta name="apple-itunes-app" content="app-id=6741234567" />
+   ```
+4. Commit and push to `main` (deploys the website).
+
 ## Every update after that
 
 ```bash

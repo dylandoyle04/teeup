@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { hasBackend } from '../supabase'
 import { useAuth } from '../auth'
 import ExpediaBadge from './ExpediaBadge'
+import AppStoreBadge from './AppStoreBadge'
 import { playRyderCheer } from '../sound'
 
 function TripTabs({ tripId }: { tripId: string }) {
@@ -154,6 +155,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/legal">Privacy &amp; Terms</Link>
               <a href="mailto:Flagstickfinder@outlook.com">Contact support</a>
             </div>
+            <AppStoreBadge height={40} className="footer-badge" />
             <p className="footer-disclosure">
               Some links on this site are affiliate links — if you book through
               them we may earn a commission, at no extra cost to you.{' '}

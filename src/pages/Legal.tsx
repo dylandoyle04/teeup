@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const UPDATED = 'October 21, 2026'
+const UPDATED = 'November 5, 2026'
 const CONTACT = 'Flagstickfinder@outlook.com'
 
 export default function Legal() {

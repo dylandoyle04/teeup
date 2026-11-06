@@ -4142,3 +4142,30 @@ table.scorecard .yard-row .name-cell {
   font-size: 12px;
   font-weight: 700;
 }
+
+/* Apple "Download on the App Store" badge — official artwork, unmodified;
+   Apple asks for clear space of at least a quarter of its height around it. */
+.app-store-badge {
+  display: inline-block;
+  line-height: 0;
+  border-radius: 9px;
+}
+
+.app-store-badge img {
+  display: block;
+  height: auto;
+}
+
+.hero-badge {
+  margin-top: 22px;
+}
+
+.cta-badge {
+  display: block;
+  width: max-content;
+  margin: 18px auto 0;
+}
+
+.footer-badge {
+  margin: 14px 0 4px;
+}
