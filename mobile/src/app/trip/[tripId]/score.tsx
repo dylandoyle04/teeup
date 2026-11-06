@@ -3,7 +3,7 @@
 // TODO: live shared scoring (Supabase / @shared/cloud) isn't wired on mobile yet.
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View, type ViewInstance } from 'react-native'
 import { coursePlayOptions, yardsForCourseName } from '@shared/coursePars'
 import { GAMES, isTeamGame, sum } from '@shared/games'
 import { useStore } from '@shared/store'
@@ -46,7 +46,7 @@ export default function Scorecard() {
   const [date, setDate] = useState('')
   const [game, setGame] = useState<string>(GAMES[0])
   const [gamePicker, setGamePicker] = useState(false)
-  const shareRef = useRef<View>(null)
+  const shareRef = useRef<ViewInstance>(null)
 
   // tripMembers() builds a new array per call — derive it from stable state instead
   const members = useMemo<Member[]>(() => {
@@ -202,7 +202,7 @@ function RoundCard({
   tripId: string
   round: Round
   members: Member[]
-  shareRef: RefObject<View | null>
+  shareRef: RefObject<ViewInstance | null>
   onDelete: () => void
 }) {
   const setRoundGame = useStore((s) => s.setRoundGame)

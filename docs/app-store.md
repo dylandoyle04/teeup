@@ -1,6 +1,6 @@
 # Shipping Flagstick Finder to the App Store (Expo + EAS)
 
-The iPhone app lives in `mobile/` (Expo SDK 57, Expo Router). It shares its
+The iPhone app lives in `mobile/` (Expo SDK 58, Expo Router). It shares its
 trip/scoring logic with the website through `src/` (see `mobile/metro.config.js`).
 EAS builds and submits in the cloud — **no Xcode or macOS update needed**.
 

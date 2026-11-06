@@ -4,7 +4,7 @@
 // functions the Scorecard + Ryder screens use — so the image always matches.
 import { LinearGradient } from 'expo-linear-gradient'
 import type { ReactNode, Ref } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View, type StyleProp, type ViewInstance, type ViewStyle } from 'react-native'
 import {
   computeBestBall,
   computeHighLow,
@@ -123,7 +123,7 @@ function ShareFrame({
   subtitle,
   children,
 }: {
-  ref?: Ref<View>
+  ref?: Ref<ViewInstance>
   eyebrow: string
   title: string
   subtitle?: string
@@ -249,7 +249,7 @@ export function RoundShareCard({
   round,
   members,
 }: {
-  ref?: Ref<View>
+  ref?: Ref<ViewInstance>
   tripName: string
   round: Round
   members: Member[]
@@ -318,7 +318,7 @@ function DuelBlock({ duel }: { duel: Duel }) {
 
 // ---------- Ryder Cup card ----------
 
-export function RyderShareCard({ ref, trip, members }: { ref?: Ref<View>; trip: Trip; members: Member[] }) {
+export function RyderShareCard({ ref, trip, members }: { ref?: Ref<ViewInstance>; trip: Trip; members: Member[] }) {
   const s = computeRyder(trip)
   const rc = trip.ryderCup
   if (!s || !rc) return null

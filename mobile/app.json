@@ -57,7 +57,9 @@
           "locationAlwaysPermission": false,
           "motionUsagePermission": false,
           "isIosBackgroundLocationEnabled": false,
-          "isAndroidBackgroundLocationEnabled": false
+          "isAndroidBackgroundLocationEnabled": false,
+          "locationFullAccuracyPermission": false,
+          "isIosReducedAccuracyByDefault": true
         }
       ],
       "expo-sharing",
@@ -69,7 +71,10 @@
           "calendarPermission": "Flagstick Finder adds your trip dates and tee times to your calendar when you tap \"Add to Calendar\".",
           "remindersPermission": false
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

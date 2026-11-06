@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router'
 import { useMemo, useRef, useState } from 'react'
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, Pressable, StyleSheet, Text, View, type ViewInstance } from 'react-native'
 import { computeRyder, type Side } from '@shared/ryder'
 import { useStore } from '@shared/store'
 import type { Member } from '@shared/types'
@@ -18,7 +18,7 @@ export default function RyderCupScreen() {
   const trip = useStore((s) => s.trips.find((t) => t.id === tripId))
   const allMembers = useStore((s) => s.members)
   const setRyderCup = useStore((s) => s.setRyderCup)
-  const shareRef = useRef<View>(null)
+  const shareRef = useRef<ViewInstance>(null)
   const [sharing, setSharing] = useState(false)
 
   const members = useMemo(() => {

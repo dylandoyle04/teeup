@@ -3,7 +3,16 @@
 // 'quick' = type straight into cells (auto-advances to the next player),
 // 'detailed' = tap a cell to open the hole entry sheet.
 import { useRef } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  type ScrollViewInstance,
+  type TextInputInstance,
+} from 'react-native'
 import { sum } from '@shared/games'
 import type { Round } from '@shared/types'
 import { cellColor, thud, type ScoreRow } from '@/components/ScoreParts'
@@ -47,8 +56,8 @@ export default function ScoreGrid({
   commitScore: (rowId: string, hole: number, value: number | null) => void
   onCellTap: (rowId: string, hole: number) => void
 }) {
-  const inputs = useRef(new Map<string, TextInput | null>())
-  const scroller = useRef<ScrollView>(null)
+  const inputs = useRef(new Map<string, TextInputInstance | null>())
+  const scroller = useRef<ScrollViewInstance>(null)
 
   // move focus down to the next player's same hole; wrap to the first
   // player of the next hole after the last player

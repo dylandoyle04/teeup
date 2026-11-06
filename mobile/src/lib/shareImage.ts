@@ -3,11 +3,11 @@
 // accounts yet, so a picture in the group chat is how everyone sees results.
 import * as Sharing from 'expo-sharing'
 import type { RefObject } from 'react'
-import { Alert, type View } from 'react-native'
+import { Alert, type ViewInstance } from 'react-native'
 import { captureRef, releaseCapture } from 'react-native-view-shot'
 
 export async function shareViewAsImage(
-  ref: RefObject<View | null>,
+  ref: RefObject<ViewInstance | null>,
   { dialogTitle = 'Share' }: { dialogTitle?: string } = {},
 ): Promise<boolean> {
   let uri: string | null = null
