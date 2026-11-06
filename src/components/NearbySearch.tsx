@@ -56,18 +56,31 @@ export default function NearbySearch({
     }
     setBusy(true)
     setError('')
+    const found = async (pos: GeolocationPosition) => {
+      const p = { lat: pos.coords.latitude, lon: pos.coords.longitude }
+      // the town name is just a label — never let it block sorting
+      const label = await nearestPlaceLabel(p).catch(() => 'your location')
+      setBusy(false)
+      pick({ ...p, label })
+    }
+    const failed = (err: GeolocationPositionError) => {
+      setBusy(false)
+      setError(
+        err.code === err.PERMISSION_DENIED
+          ? 'Location is blocked for this site — allow it in your browser settings, or type your city.'
+          : err.code === err.POSITION_UNAVAILABLE
+            ? 'Your device couldn’t find your location (check that Location Services are on) — type your city instead.'
+            : 'Finding your location took too long — type your city instead.',
+      )
+    }
+    // a coarse, recent fix is plenty for sorting by distance; retry once on timeout
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const p = { lat: pos.coords.latitude, lon: pos.coords.longitude }
-        const label = await nearestPlaceLabel(p)
-        setBusy(false)
-        pick({ ...p, label })
-      },
-      () => {
-        setBusy(false)
-        setError('Couldn’t get your location — type your city instead.')
-      },
-      { maximumAge: 10 * 60 * 1000, timeout: 10000 },
+      found,
+      (err) =>
+        err.code === err.TIMEOUT
+          ? navigator.geolocation.getCurrentPosition(found, failed, { maximumAge: 60 * 60 * 1000, timeout: 20000 })
+          : failed(err),
+      { enableHighAccuracy: false, maximumAge: 30 * 60 * 1000, timeout: 12000 },
     )
   }
 

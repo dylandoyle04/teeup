@@ -67,22 +67,27 @@ export default function NearbySearch({
     setBusy(true)
     setError('')
     try {
+      if (!(await Location.hasServicesEnabledAsync())) {
+        setError('Location Services are off — turn them on in Settings › Privacy & Security, or type your city.')
+        return
+      }
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== 'granted') {
         setError('Location is off for Flagstick Finder — type your city instead, or allow it in Settings.')
         return
       }
-      const pos =
-        (await Location.getLastKnownPositionAsync({ maxAge: 10 * 60 * 1000 })) ??
-        (await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }))
-      const p = { lat: pos.coords.latitude, lon: pos.coords.longitude }
-      pick({ ...p, label: await nearestPlaceLabel(p) })
-    } catch {
-      setError('Couldn’t get your location — type your city instead.')
+      const p = await currentPoint()
+      // the town name is just a label — never let it block sorting
+      const label = await nearestPlaceLabel(p).catch(() => 'your location')
+      pick({ ...p, label })
+    } catch (e) {
+      const detail = __DEV__ && e instanceof Error ? ` (${e.message})` : ''
+      setError(`Couldn’t get your location — type your city instead.${detail}`)
     } finally {
       setBusy(false)
     }
   }
+
 
   // short queries show nothing (stale results from a longer query are hidden)
   const shown = text.trim().length >= 2 ? results : []
@@ -143,6 +148,29 @@ export default function NearbySearch({
       {error ? <Text style={st.error}>{error}</Text> : null}
     </Card>
   )
+}
+
+/** Rejects if `p` hasn't settled within `ms`. */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error('Timed out finding your location')), ms)),
+  ])
+}
+
+/**
+ * A rough fix is plenty for sorting trips by distance: reuse a recent one if
+ * the phone has it, otherwise ask for a coarse reading and retry once at the
+ * lowest accuracy (iOS can fail the first attempt indoors).
+ */
+async function currentPoint(): Promise<{ lat: number; lon: number }> {
+  const last = await Location.getLastKnownPositionAsync({ maxAge: 30 * 60 * 1000 }).catch(() => null)
+  const fix =
+    last ??
+    (await withTimeout(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low }), 12000).catch(() =>
+      withTimeout(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Lowest }), 15000),
+    ))
+  return { lat: fix.coords.latitude, lon: fix.coords.longitude }
 }
 
 const st = StyleSheet.create({

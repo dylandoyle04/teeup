@@ -1,6 +1,7 @@
 // "Trips near me": turn a typed place or the device location into a point,
 // then rank the trip destinations by distance. Shared by the website and app.
 import { PACKAGES } from './packages'
+import { loadUsPlaces } from './platform'
 
 export interface Point {
   lat: number
@@ -105,12 +106,16 @@ let loading: Promise<Row[]> | null = null
 /** Lazily loads the ~7.5k US places list (biggest first). */
 function loadPlaces(): Promise<Row[]> {
   if (rows) return Promise.resolve(rows)
-  loading ??= import('./data/usPlaces').then((m) => {
-    rows = m.default.split('\n').map((line) => {
+  loading ??= loadUsPlaces().then((text) => {
+    rows = text.split('\n').map((line) => {
       const [name, st, lat, lon] = line.split('|')
       return { name, key: fold(name), st, lat: Number(lat), lon: Number(lon) }
     })
     return rows
+  })
+  // don't cache a failure — let the next search try again
+  loading.catch(() => {
+    loading = null
   })
   return loading
 }

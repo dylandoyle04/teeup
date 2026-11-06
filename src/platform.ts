@@ -9,6 +9,9 @@ export const ASSET_BASE: string = import.meta.env.BASE_URL
 /** Where the local (guest) trip store is persisted. */
 export const persistStorage = createJSONStorage(() => localStorage)
 
+/** US places list for "trips near you" — split out so the site only downloads it on use. */
+export const loadUsPlaces = (): Promise<string> => import('./data/usPlaces').then((m) => m.default)
+
 /** Full URL for an in-app route, e.g. an invite link to share. */
 export function appLink(path: string): string {
   return `${window.location.origin}${window.location.pathname}#${path}`
