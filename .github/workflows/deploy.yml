@@ -38,3 +38,7 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # GitHub's Pages backend sometimes takes >10 min (the default) to
+          # publish our ~110 MB of photos; give it longer before giving up.
+          timeout: 1800000
