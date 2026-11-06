@@ -1,0 +1,35 @@
+name: Keep Supabase awake
+
+# Supabase pauses free-tier projects after ~7 days without activity, which
+# breaks website sign-in and shared trips. A real database query every 3 days
+# keeps it active. The URL and publishable key are the same public values the
+# website ships (src/supabase.ts); row-level security still protects the data.
+#
+# Note: GitHub disables scheduled workflows in public repos after 60 days with
+# no commits — any push re-arms it (GitHub emails a warning first).
+
+on:
+  schedule:
+    - cron: '17 14 */3 * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SUPABASE_URL: https://wgzntovaggovrrmwqgsb.supabase.co
+      SUPABASE_KEY: sb_publishable_UhoKfvEAmHeA0-mzvgBehg_qGzMPZx0
+    steps:
+      - name: Query the database
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --retry 3 --retry-delay 20 \
+            "$SUPABASE_URL/rest/v1/trips?select=id&limit=1" \
+            -H "apikey: $SUPABASE_KEY" -H "Authorization: Bearer $SUPABASE_KEY")
+          echo "Supabase REST responded $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Supabase didn't respond normally ($code) — it may be paused. Restore it at https://supabase.com/dashboard"
+            exit 1
+          fi
