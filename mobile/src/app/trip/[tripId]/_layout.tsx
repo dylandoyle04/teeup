@@ -1,7 +1,9 @@
 import { Slot, router, useGlobalSearchParams, usePathname } from 'expo-router'
+import { useEffect } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useStore } from '@shared/store'
+import { useLastTrip, type TripSection } from '@/lib/lastTrip'
 import { useLightStatusBar } from '@/lib/useLightStatusBar'
 import { colors, fonts } from '@/theme'
 
@@ -20,6 +22,14 @@ export default function TripLayout() {
   const insets = useSafeAreaInsets()
   useLightStatusBar()
   const active = pathname.split('/').pop()
+  const visit = useLastTrip((s) => s.visit)
+
+  // remember where they were, for Home's "Jump back in"
+  const tripExists = Boolean(trip)
+  useEffect(() => {
+    const seg = TABS.find((t) => t.seg === active)?.seg
+    if (tripId && seg && tripExists) visit(tripId, seg as TripSection)
+  }, [tripId, active, tripExists, visit])
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.cream }}>

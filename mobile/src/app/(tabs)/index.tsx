@@ -4,6 +4,7 @@ import { router } from 'expo-router'
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PACKAGES } from '@shared/packages'
+import ContinueCard from '@/components/ContinueCard'
 import PackageCard from '@/components/PackageCard'
 import RyderPromo from '@/components/RyderPromo'
 import { Button, Card, SectionTitle, Serif, T } from '@/components/ui'
@@ -40,7 +41,8 @@ export default function Home() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.cream }} contentContainerStyle={{ paddingBottom: 40 }}>
-      <View style={{ height: height * 0.82 }}>
+      {/* minHeight (not height) so a returning user's card never squeezes the logo on small phones */}
+      <View style={{ minHeight: height * 0.82 }}>
         <Image source={`${ASSET_BASE}hero.jpg?v=wekopa`} style={StyleSheet.absoluteFill} contentFit="cover" transition={400} cachePolicy="memory-disk" />
         <LinearGradient
           colors={['rgba(4,22,10,0.55)', 'rgba(4,22,10,0.18)', 'rgba(4,22,10,0.25)', 'rgba(4,22,10,0.72)']}
@@ -64,6 +66,7 @@ export default function Home() {
             <Text style={st.ctaText}>Plan your trip</Text>
           </Pressable>
         </View>
+        <ContinueCard />
       </View>
 
       <View style={{ padding: 16 }}>
