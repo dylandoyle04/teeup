@@ -1,0 +1,50 @@
+# What EAS Build uploads for the iPhone app (mobile/). When this file exists
+# EAS ignores every .gitignore, so their rules are repeated here.
+# The app needs mobile/ and the shared logic in src/ — not the website's
+# photos (the app loads them from flagstickfinder.com) or other repo extras.
+
+# --- website-only / repo extras ---
+/public/
+/dist/
+/docs/
+/scripts/
+/supabase/
+/inspiration/
+/page_*.html
+*.numbers
+*.docx
+~$*
+/Screenshot*.png
+/index.html
+/vite.config.ts
+
+# --- from /.gitignore ---
+node_modules
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+.env.local
+.env
+
+# --- from /mobile/.gitignore ---
+/mobile/.expo/
+/mobile/dist/
+/mobile/web-build/
+/mobile/expo-env.d.ts
+/mobile/.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.pem
+*.tsbuildinfo
+/mobile/example
+/mobile/ios
+/mobile/android
