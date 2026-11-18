@@ -7,6 +7,7 @@ import { useStore } from '@shared/store'
 import Screen from '@/components/Screen'
 import { Hint } from '@/components/ui'
 import { openLink } from '@/lib/links'
+import { useLastTrip } from '@/lib/lastTrip'
 import { useSoundPrefs } from '@/lib/sound'
 import { showWelcomeAgain } from '@/lib/welcome'
 import { colors, fonts, radius } from '@/theme'
@@ -24,7 +25,8 @@ function appVersion(): string {
 export default function Settings() {
   const muted = useSoundPrefs((s) => s.muted)
   const setMuted = useSoundPrefs((s) => s.setMuted)
-  const resetAll = useStore((s) => s.resetAll)
+  const clearAll = useStore((s) => s.clearAll)
+  const forgetLastTrip = useLastTrip((s) => s.forget)
   const [canRate, setCanRate] = useState(false)
 
   useEffect(() => {
@@ -35,16 +37,17 @@ export default function Settings() {
 
   const confirmReset = () => {
     Alert.alert(
-      'Reset app data?',
-      'This deletes every trip, round, cup and bet on this phone and restores the example trip. It can’t be undone.',
+      'Delete all trips?',
+      'This deletes every trip, round, cup and bet on this phone, including the example trip. It can’t be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Reset',
+          text: 'Delete all',
           style: 'destructive',
           onPress: () => {
-            resetAll()
-            Alert.alert('App data reset', 'You’re back to a fresh start with the example trip.')
+            clearAll()
+            forgetLastTrip()
+            Alert.alert('All trips deleted', 'You’re starting fresh. Plan a trip from the Explore tab.')
           },
         },
       ],
@@ -80,7 +83,7 @@ export default function Settings() {
       </Group>
 
       <Group title="Data" footer="Your trips, scores and bets are stored only on this phone — there’s no account or cloud backup in this version.">
-        <Row label="Reset app data" destructive onPress={confirmReset} />
+        <Row label="Delete all trips" destructive onPress={confirmReset} />
       </Group>
 
       <Group

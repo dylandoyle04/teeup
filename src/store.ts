@@ -40,6 +40,8 @@ interface State {
   // global
   setCurrentMember: (memberId: ID) => void
   resetAll: () => void
+  /** wipe everything (no example trip); keeps just the 'You' player */
+  clearAll: () => void
 
   // trips
   createTrip: (input: {
@@ -152,6 +154,12 @@ export const useStore = create<State>()(
         set({
           members: makeSampleMembers(),
           trips: [makeSampleTrip()],
+          currentMemberId: 'm1',
+        }),
+      clearAll: () =>
+        set({
+          members: makeSampleMembers().slice(0, 1),
+          trips: [],
           currentMemberId: 'm1',
         }),
 
