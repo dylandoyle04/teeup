@@ -46,7 +46,7 @@ export default function Explore() {
   }, [near])
 
   return (
-    <Screen>
+    <Screen statusBarShield>
       <PageTitle sub="Start from a curated package or build your own — then invite friends to keep score.">
         Plan your golf trip
       </PageTitle>

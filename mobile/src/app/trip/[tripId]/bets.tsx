@@ -160,7 +160,11 @@ export default function Bets() {
           <BetMemberPicker members={members} value={fromId} onChange={setFromId} />
         </Field>
         <Field label="Pays">
-          <BetMemberPicker members={members.filter((m) => m.id !== fromId)} value={otherId} onChange={setToId} />
+          {members.length < 2 ? (
+            <Hint>Add at least one more player on the Trip tab to log a bet between you.</Hint>
+          ) : (
+            <BetMemberPicker members={members.filter((m) => m.id !== fromId)} value={otherId} onChange={setToId} />
+          )}
         </Field>
         <Field label="Amount">
           <Input

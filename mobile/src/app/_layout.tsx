@@ -13,6 +13,7 @@ import { Stack, router, useRootNavigationState } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useRef, useState } from 'react'
+import { useStatusBarLight } from '@/lib/useLightStatusBar'
 import { hasSeenWelcome } from '@/lib/welcome'
 import { colors, fonts } from '@/theme'
 
@@ -40,6 +41,7 @@ export default function RootLayout() {
   const ready = fontsReady && welcomeSeen !== null
   const navKey = useRootNavigationState()?.key
   const launched = useRef(false)
+  const lightStatusBar = useStatusBarLight((s) => s.count > 0)
 
   useEffect(() => {
     if (!ready || !navKey || launched.current) return
@@ -63,7 +65,7 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={lightStatusBar ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: colors.green900 },

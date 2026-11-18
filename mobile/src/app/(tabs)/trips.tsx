@@ -14,7 +14,7 @@ export default function Trips() {
   const sorted = [...trips].sort((a, b) => b.createdAt - a.createdAt)
 
   return (
-    <Screen>
+    <Screen statusBarShield>
       <View style={st.titleRow}>
         <View style={{ flex: 1 }}>
           <PageTitle sub="Trips saved on this phone.">My trips</PageTitle>

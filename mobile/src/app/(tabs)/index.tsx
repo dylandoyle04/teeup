@@ -40,7 +40,11 @@ export default function Home() {
   useLightStatusBar()
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.cream }} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.cream }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+      contentInsetAdjustmentBehavior="never"
+    >
       {/* minHeight (not height) so a returning user's card never squeezes the logo on small phones */}
       <View style={{ minHeight: height * 0.82 }}>
         <Image source={`${ASSET_BASE}hero.jpg?v=wekopa`} style={StyleSheet.absoluteFill} contentFit="cover" transition={400} cachePolicy="memory-disk" />
