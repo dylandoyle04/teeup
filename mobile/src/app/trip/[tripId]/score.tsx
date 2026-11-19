@@ -27,6 +27,7 @@ import {
 import Screen from '@/components/Screen'
 import { OffscreenCapture, RoundShareCard, ShareButton, roundComplete, roundHasScores, roundRows } from '@/components/ShareCards'
 import { Button, Card, Hint, PageTitle, SectionTitle, Segmented, T } from '@/components/ui'
+import { openPlayMode } from '@/lib/playMode'
 import { maybeAskForReview } from '@/lib/review'
 import { shareViewAsImage } from '@/lib/shareImage'
 import { colors, fonts, radius } from '@/theme'
@@ -265,6 +266,19 @@ function RoundCard({
 
   return (
     <>
+      <Pressable
+        onPress={() => {
+          tick()
+          openPlayMode(tripId, round.id)
+        }}
+        style={({ pressed }) => [st.playBtn, pressed && { opacity: 0.9, transform: [{ scale: 0.98 }] }]}
+        accessibilityRole="button"
+        accessibilityLabel={`Full-screen scoring for ${round.courseName}`}
+      >
+        <Text style={st.playBtnText} maxFontSizeMultiplier={1.4}>
+          ▶ Full-screen scoring
+        </Text>
+      </Pressable>
       <Card>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
           <View style={{ flex: 1 }}>
@@ -382,6 +396,16 @@ const st = StyleSheet.create({
   roundBtn: { paddingVertical: 9, paddingHorizontal: 14, borderRadius: 9 },
   roundText: { fontFamily: fonts.sansSemi, fontSize: 13, color: colors.green700 },
   label: { fontFamily: fonts.sansSemi, fontSize: 13, color: colors.ink, marginBottom: 6 },
+  playBtn: {
+    minHeight: 54,
+    borderRadius: 999,
+    backgroundColor: colors.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+  playBtnText: { fontFamily: fonts.sansBold, fontSize: 16, color: '#2b2205' },
   iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', borderRadius: 20 },
   suggestions: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 8 },
   suggestion: { backgroundColor: colors.green100, borderRadius: 999, paddingVertical: 6, paddingHorizontal: 12 },

@@ -81,6 +81,15 @@ export default function RootLayout() {
         <Stack.Screen name="trip/[tripId]" options={{ headerShown: false }} />
         <Stack.Screen name="settings" options={{ title: 'Settings' }} />
         <Stack.Screen
+          name="play/[tripId]/[roundId]"
+          options={{
+            presentation: 'fullScreenModal',
+            headerShown: false,
+            gestureEnabled: false,
+            contentStyle: { backgroundColor: colors.green900 },
+          }}
+        />
+        <Stack.Screen
           name="welcome"
           options={{ presentation: 'fullScreenModal', headerShown: false, gestureEnabled: false }}
         />

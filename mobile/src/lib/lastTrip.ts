@@ -3,7 +3,7 @@ import { create } from 'zustand'
 
 const KEY = 'ff-last-trip'
 
-export type TripSection = 'setup' | 'book' | 'score' | 'ryder' | 'bets'
+export type TripSection = 'setup' | 'book' | 'score' | 'stats' | 'ryder' | 'bets'
 
 interface LastTrip {
   tripId: string | null

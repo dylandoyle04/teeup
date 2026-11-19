@@ -6,6 +6,7 @@ import { fmtPts } from '@shared/ryderLanding'
 import type { Trip } from '@shared/types'
 import { fmtDateRange } from '@/components/ui'
 import type { TripSection } from '@/lib/lastTrip'
+import { openPlayMode } from '@/lib/playMode'
 import { colors, fonts, shadow } from '@/theme'
 
 export const EXAMPLE_TRIP_ID = 'trip_sample'
@@ -42,6 +43,16 @@ function roundLine(trip: Trip): string | null {
   return `${round.date === today ? 'Today · ' : ''}${round.courseName} · ${where}`
 }
 
+/** Today's (else the latest) round, if it still has holes to score. */
+function roundInProgress(trip: Trip) {
+  const today = todayISO()
+  const round = trip.rounds.find((r) => r.date === today) ?? trip.rounds[trip.rounds.length - 1]
+  if (!round) return undefined
+  const rows = Object.values(round.scores)
+  const unfinished = rows.length === 0 || rows.some((row) => row.some((v) => v == null))
+  return unfinished ? round : undefined
+}
+
 const go = (tripId: string, section: TripSection) =>
   router.push({ pathname: `/trip/[tripId]/${section}`, params: { tripId } })
 
@@ -50,8 +61,11 @@ export function TripCard({ trip }: { trip: Trip }) {
   const cup = cupLine(trip)
   const round = roundLine(trip)
   const meta = [trip.destination, trip.startDate ? fmtDateRange(trip.startDate, trip.endDate) : null].filter(Boolean).join(' · ')
-  const shortcuts: { section: TripSection; label: string }[] = [
-    { section: 'score', label: '⛳ Scorecard' },
+  const live = roundInProgress(trip)
+  const shortcuts: { section: TripSection; label: string; onPress?: () => void }[] = [
+    live
+      ? { section: 'score', label: '▶ Keep scoring', onPress: () => openPlayMode(trip.id, live.id) }
+      : { section: 'score', label: '⛳ Scorecard' },
     { section: 'ryder', label: '🏆 The Cup' },
     { section: 'bets', label: '💵 Bets' },
   ]
@@ -93,7 +107,7 @@ export function TripCard({ trip }: { trip: Trip }) {
           {shortcuts.map((s, i) => (
             <Pressable
               key={s.section}
-              onPress={() => go(trip.id, s.section)}
+              onPress={s.onPress ?? (() => go(trip.id, s.section))}
               style={({ pressed }) => [st.btn, i === 0 ? st.btnPrimary : st.btnGhost, pressed && { opacity: 0.85 }]}
               accessibilityRole="button"
             >
