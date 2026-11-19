@@ -9,17 +9,20 @@ import { colors, fonts, shadow } from '@/theme'
 export default function PackageCard({
   pkg,
   width,
+  height,
   distance,
 }: {
   pkg: TripPackage
   width?: number
+  /** default 210; shorter for Home's horizontal row */
+  height?: number
   /** e.g. "533 mi · ~10 hr drive" when sorting by the user's location */
   distance?: string
 }) {
   return (
     <Pressable
         onPress={() => router.push({ pathname: '/package/[id]', params: { id: pkg.id } })}
-        style={({ pressed }) => [st.card, width ? { width } : null, pressed && { transform: [{ scale: 0.98 }] }]}
+        style={({ pressed }) => [st.card, width ? { width } : null, height ? { height } : null, pressed && { transform: [{ scale: 0.98 }] }]}
         accessibilityRole="button"
         accessibilityLabel={`${pkg.destination}, ${pkg.tierLabel}`}
       >

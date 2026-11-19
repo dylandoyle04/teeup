@@ -1,34 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { router } from 'expo-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { PACKAGES } from '@shared/packages'
-import { fmtMiles, rankDestinations, travelHint, type Place } from '@shared/nearby'
+import { fmtMiles, rankDestinations, travelHint } from '@shared/nearby'
 import NearbySearch from '@/components/NearbySearch'
+import { useNear } from '@/lib/near'
 import PackageCard from '@/components/PackageCard'
 import RyderPromo from '@/components/RyderPromo'
 import Screen from '@/components/Screen'
 import { PageTitle, SectionTitle, Serif, T } from '@/components/ui'
 import { colors, fonts, shadow } from '@/theme'
 
-const NEAR_KEY = 'ff-near'
-
 export default function Explore() {
-  const [near, setNearState] = useState<Place | null>(null)
-
-  useEffect(() => {
-    AsyncStorage.getItem(NEAR_KEY)
-      .then((v) => {
-        const p = v ? JSON.parse(v) : null
-        if (p && typeof p.lat === 'number' && typeof p.lon === 'number') setNearState(p)
-      })
-      .catch(() => {})
-  }, [])
-
-  function setNear(p: Place | null) {
-    setNearState(p)
-    ;(p ? AsyncStorage.setItem(NEAR_KEY, JSON.stringify(p)) : AsyncStorage.removeItem(NEAR_KEY)).catch(() => {})
-  }
+  const near = useNear((st) => st.place)
+  const setNear = useNear((st) => st.setPlace)
 
   // nearest destinations first, each card labelled with distance + travel time
   const { packages, distanceOf } = useMemo(() => {

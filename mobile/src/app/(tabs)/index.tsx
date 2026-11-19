@@ -1,170 +1,151 @@
 import { Image } from 'expo-image'
-import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
-import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useMemo } from 'react'
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { fmtMiles, rankDestinations, travelHint } from '@shared/nearby'
 import { PACKAGES } from '@shared/packages'
-import ContinueCard from '@/components/ContinueCard'
+import { useStore } from '@shared/store'
 import PackageCard from '@/components/PackageCard'
 import RyderPromo from '@/components/RyderPromo'
-import { Button, Card, SectionTitle, Serif, T } from '@/components/ui'
-import { openLink } from '@/lib/links'
-import { useLightStatusBar } from '@/lib/useLightStatusBar'
-import { ASSET_BASE } from '@/platform'
-import { colors, fonts } from '@/theme'
+import Screen from '@/components/Screen'
+import { EXAMPLE_TRIP_ID, StartCard, TripCard, pickActiveTrip } from '@/components/TripDashboard'
+import { fmtDateRange } from '@/components/ui'
+import { useLastTrip } from '@/lib/lastTrip'
+import { useNear } from '@/lib/near'
+import { colors, fonts, shadow } from '@/theme'
 
-// one package per destination, top 4 by popularity order (same as the website)
-const FEATURED = (() => {
+// one package per destination (popularity order) — the website's featured set
+const ONE_PER_DESTINATION = (() => {
   const seen = new Set<string>()
-  const out: typeof PACKAGES = []
-  for (const p of PACKAGES) {
-    if (!seen.has(p.destination)) {
-      seen.add(p.destination)
-      out.push(p)
-    }
-    if (out.length === 4) break
-  }
-  return out
+  return PACKAGES.filter((p) => !seen.has(p.destination) && seen.add(p.destination))
 })()
 
-const STEPS = [
-  ['Plan', 'Pick a curated destination package or build your own — courses, hotels, flights, drive times, and dining.'],
-  ['Invite', 'Add the crew and send them the plan — dates, courses and rounds, straight to the group chat.'],
-  ['Score', 'Keep score for the whole group on one phone — side games, a trip-long team cup, and results you can share.'],
-  ['Eat & more', 'Restaurant picks near every course, drive times, and everything else the trip needs.'],
-]
+function greeting(): string {
+  const h = new Date().getHours()
+  return h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'
+}
 
 export default function Home() {
-  const { height, width } = useWindowDimensions()
-  const insets = useSafeAreaInsets()
-  useLightStatusBar()
+  const trips = useStore((s) => s.trips)
+  const lastId = useLastTrip((s) => s.tripId)
+  const near = useNear((s) => s.place)
+
+  // lead with the trip you were in / on today, else your newest real trip
+  const realTrips = trips.filter((t) => t.id !== EXAMPLE_TRIP_ID)
+  const active =
+    pickActiveTrip(trips, lastId) ?? [...realTrips].sort((a, b) => b.createdAt - a.createdAt)[0]
+  const others = [...realTrips].filter((t) => t.id !== active?.id).sort((a, b) => b.createdAt - a.createdAt)
+
+  const { picks, distanceOf } = useMemo(() => {
+    if (!near) return { picks: ONE_PER_DESTINATION.slice(0, 6), distanceOf: (): string | undefined => undefined }
+    const ranked = rankDestinations(near)
+    const order = new Map(ranked.map((r, i) => [r.destination, i]))
+    const miles = new Map(ranked.map((r) => [r.destination, r.miles]))
+    return {
+      picks: [...ONE_PER_DESTINATION].sort((a, b) => (order.get(a.destination) ?? 99) - (order.get(b.destination) ?? 99)).slice(0, 6),
+      distanceOf: (dest: string) => {
+        const m = miles.get(dest)
+        return m == null ? undefined : `${fmtMiles(m)} · ${travelHint(m)}`
+      },
+    }
+  }, [near])
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.cream }}
-      contentContainerStyle={{ paddingBottom: 40 }}
-      contentInsetAdjustmentBehavior="never"
-    >
-      {/* minHeight (not height) so a returning user's card never squeezes the logo on small phones */}
-      <View style={{ minHeight: height * 0.82 }}>
-        <Image source={`${ASSET_BASE}hero.jpg?v=wekopa`} style={StyleSheet.absoluteFill} contentFit="cover" transition={400} cachePolicy="memory-disk" />
-        <LinearGradient
-          colors={['rgba(4,22,10,0.55)', 'rgba(4,22,10,0.18)', 'rgba(4,22,10,0.25)', 'rgba(4,22,10,0.72)']}
-          locations={[0, 0.28, 0.58, 1]}
-          style={StyleSheet.absoluteFill}
-        />
-        <View style={[st.hero, { paddingTop: insets.top }]}>
-          <Text style={st.logo} adjustsFontSizeToFit numberOfLines={1}>
+    <Screen statusBarShield>
+      {/* header */}
+      <View style={st.header}>
+        <Image source={require('@/assets/images/icon.png')} style={st.logo} accessibilityIgnoresInvertColors />
+        <View style={{ flex: 1 }}>
+          <Text style={st.brand} maxFontSizeMultiplier={1.3}>
             Flagstick<Text style={{ color: colors.brandAccent }}> Finder</Text>
           </Text>
-          <View style={st.divider}>
-            <View style={st.line} />
-            <View style={st.ball} />
-            <View style={st.line} />
-          </View>
-          <Text style={st.lead}>Book the trip. Invite the crew. Keep score.</Text>
-          <Text style={st.sub}>
-            Courses, hotels & travel — with a group scorecard, side games, and a trip-long team cup.
+          <Text style={st.greeting} maxFontSizeMultiplier={1.3}>
+            {greeting()}
           </Text>
-          <Pressable style={({ pressed }) => [st.cta, pressed && { backgroundColor: 'rgba(255,255,255,0.2)' }]} onPress={() => router.push('/explore')}>
-            <Text style={st.ctaText}>Plan your trip</Text>
-          </Pressable>
         </View>
-        <ContinueCard />
+        <Pressable
+          onPress={() => router.push('/settings')}
+          hitSlop={10}
+          style={st.gear}
+          accessibilityRole="button"
+          accessibilityLabel="Settings"
+        >
+          <Text style={{ fontSize: 22 }}>⚙︎</Text>
+        </Pressable>
       </View>
 
-      <View style={{ padding: 16 }}>
-        <SectionTitle>How it works</SectionTitle>
-        <View style={{ gap: 10 }}>
-          {STEPS.map(([title, body], i) => (
-            <Card key={title} style={{ flexDirection: 'row', gap: 14 }}>
-              <View style={st.stepN}>
-                <Text style={st.stepNText}>{i + 1}</Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Serif style={{ fontSize: 22 }}>{title}</Serif>
-                <T style={{ color: colors.muted, fontSize: 14 }}>{body}</T>
-              </View>
-            </Card>
-          ))}
-        </View>
+      {active ? <TripCard trip={active} /> : <StartCard hasExample={trips.some((t) => t.id === EXAMPLE_TRIP_ID)} />}
 
+      {others.length > 0 && (
         <View style={{ marginTop: 22 }}>
-          <RyderPromo />
+          <View style={st.sectionRow}>
+            <Text style={st.section}>Your other trips</Text>
+            <Pressable onPress={() => router.navigate('/trips')} hitSlop={8} accessibilityRole="button">
+              <Text style={st.seeAll}>All trips</Text>
+            </Pressable>
+          </View>
+          <View style={st.list}>
+            {others.slice(0, 3).map((t, i) => (
+              <Pressable
+                key={t.id}
+                onPress={() => router.push({ pathname: '/trip/[tripId]/setup', params: { tripId: t.id } })}
+                style={({ pressed }) => [st.listRow, i > 0 && st.listLine, pressed && { backgroundColor: colors.green100 }]}
+                accessibilityRole="button"
+              >
+                <View style={{ flex: 1 }}>
+                  <Text style={st.rowName} numberOfLines={1}>
+                    {t.name}
+                  </Text>
+                  <Text style={st.rowMeta} numberOfLines={1}>
+                    {[t.destination || 'Destination TBD', t.startDate ? fmtDateRange(t.startDate, t.endDate) : null].filter(Boolean).join(' · ')}
+                  </Text>
+                </View>
+                <Text style={st.chev}>›</Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
+      )}
 
-        <SectionTitle>Featured trips</SectionTitle>
+      <View style={[st.sectionRow, { marginTop: 26 }]}>
+        <Text style={st.section}>{near ? 'Trips near you' : 'Featured trips'}</Text>
+        <Pressable onPress={() => router.navigate('/explore')} hitSlop={8} accessibilityRole="button">
+          <Text style={st.seeAll}>{near ? 'See all' : 'Sort by distance'}</Text>
+        </Pressable>
       </View>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        snapToInterval={width * 0.82 + 12}
         decelerationRate="fast"
+        snapToInterval={262}
+        style={{ marginHorizontal: -16 }}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
       >
-        {FEATURED.map((p) => (
-          <PackageCard key={p.id} pkg={p} width={width * 0.82} />
+        {picks.map((p) => (
+          <PackageCard key={p.id} pkg={p} width={250} height={176} distance={distanceOf(p.destination)} />
         ))}
       </ScrollView>
-      <View style={{ padding: 16, gap: 16 }}>
-        <Button title="See all trips →" variant="ghost" onPress={() => router.push('/explore')} />
 
-        <Card style={{ backgroundColor: colors.green900, borderColor: colors.green900 }}>
-          <Text style={st.badge}>SAME PRICE, ALWAYS</Text>
-          <Serif style={{ color: '#fff', fontSize: 26, marginVertical: 6 }}>Booking here keeps it free</Serif>
-          <T style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14 }}>
-            Book your hotels, flights, rental cars, and tee times right from Flagstick Finder — it costs you exactly the same
-            as going direct. When you do, we earn a small referral that keeps the app free and growing.
-          </T>
-        </Card>
-
-        <T style={{ textAlign: 'center', color: colors.muted, fontSize: 13 }}>
-          11 destinations · 70+ courses · one live scorecard
-        </T>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 24 }}>
-          <Text style={st.footLink} onPress={() => openLink('https://flagstickfinder.com/#/legal')}>
-            Privacy & Terms
-          </Text>
-          <Text style={st.footLink} onPress={() => openLink('mailto:Flagstickfinder@outlook.com')}>
-            Contact
-          </Text>
-          <Text style={st.footLink} onPress={() => router.push('/settings')} accessibilityRole="link">
-            Settings
-          </Text>
-        </View>
+      <View style={{ marginTop: 26 }}>
+        <RyderPromo />
       </View>
-    </ScrollView>
+    </Screen>
   )
 }
 
 const st = StyleSheet.create({
-  hero: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
-  logo: {
-    fontFamily: fonts.sansBold,
-    fontSize: 44,
-    color: '#fff',
-    letterSpacing: -1,
-    textShadowColor: 'rgba(0,0,0,0.35)',
-    textShadowRadius: 14,
-    textShadowOffset: { width: 0, height: 3 },
-  },
-  divider: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 18, width: 180 },
-  line: { flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.7)' },
-  ball: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#fff' },
-  lead: { fontFamily: fonts.serif, fontSize: 26, color: '#fff', textAlign: 'center', lineHeight: 30 },
-  sub: { fontFamily: fonts.sans, fontSize: 14, color: 'rgba(255,255,255,0.9)', textAlign: 'center', marginTop: 10, lineHeight: 21 },
-  cta: {
-    marginTop: 30,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.85)',
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 999,
-    paddingVertical: 15,
-    paddingHorizontal: 44,
-  },
-  ctaText: { fontFamily: fonts.sansMedium, color: '#fff', fontSize: 14, letterSpacing: 2.6, textTransform: 'uppercase' },
-  stepN: { width: 34, height: 34, borderRadius: 17, backgroundColor: colors.green100, alignItems: 'center', justifyContent: 'center' },
-  stepNText: { fontFamily: fonts.sansBold, color: colors.green700 },
-  badge: { fontFamily: fonts.sansBold, fontSize: 11, letterSpacing: 1, color: colors.gold },
-  footLink: { fontFamily: fonts.sansMedium, color: colors.green700, fontSize: 14, paddingVertical: 12 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 18 },
+  logo: { width: 44, height: 44, borderRadius: 11 },
+  brand: { fontFamily: fonts.sansBold, fontSize: 15, color: colors.green900 },
+  greeting: { fontFamily: fonts.serifBold, fontSize: 30, lineHeight: 33, color: colors.green900 },
+  gear: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.paper, ...shadow },
+  sectionRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 },
+  section: { fontFamily: fonts.serifBold, fontSize: 24, color: colors.green900 },
+  seeAll: { fontFamily: fonts.sansSemi, fontSize: 14, color: colors.green600 },
+  list: { backgroundColor: colors.paper, borderRadius: 16, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.hair, overflow: 'hidden' },
+  listRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 14, minHeight: 56 },
+  listLine: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.line },
+  rowName: { fontFamily: fonts.sansSemi, fontSize: 15, color: colors.ink },
+  rowMeta: { fontFamily: fonts.sans, fontSize: 13, color: colors.muted },
+  chev: { fontFamily: fonts.sans, fontSize: 24, color: colors.muted, marginLeft: 8 },
 })
