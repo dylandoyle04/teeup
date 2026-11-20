@@ -4021,8 +4021,8 @@ table.scorecard .yard-row .name-cell {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 16px;
+  /* same width as The Cup banner above it */
   margin: 18px 0 4px;
-  max-width: 640px;
 }
 
 .near-label {
@@ -4168,4 +4168,20 @@ table.scorecard .yard-row .name-cell {
 
 .footer-badge {
   margin: 14px 0 4px;
+}
+
+/* centred "Find trips near you" (Explore): full-width card, centred content */
+form.near-card {
+  text-align: center;
+}
+
+form.near-card .near-row {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+form.near-card .near-locate {
+  display: block;
+  margin: 10px auto 0;
 }
