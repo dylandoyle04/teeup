@@ -80,6 +80,7 @@ export default function RootLayout() {
         <Stack.Screen name="new" options={{ title: 'New trip', presentation: 'modal' }} />
         <Stack.Screen name="trip/[tripId]" options={{ headerShown: false }} />
         <Stack.Screen name="settings" options={{ title: 'Settings' }} />
+        <Stack.Screen name="signin" options={{ title: 'Sign in', presentation: 'modal' }} />
         <Stack.Screen
           name="play/[tripId]/[roundId]"
           options={{

@@ -48,6 +48,15 @@ export function inviteUrl(code: string): string {
   return appLink(`/join/${code}`)
 }
 
+/** The organizer's display name: their profile name, else their email's local part. */
+async function organizerName(user: { id: string; email?: string | null }): Promise<string> {
+  const fallback = (user.email?.split('@')[0] || 'Organizer').slice(0, 40)
+  if (!supabase) return fallback
+  const { data } = await supabase.from('profiles').select('name').eq('id', user.id).maybeSingle()
+  const name = (data?.name as string | undefined)?.trim()
+  return (name || fallback).slice(0, 40)
+}
+
 export async function createSharedTrip(
   name: string,
   destination: string,
@@ -64,7 +73,7 @@ export async function createSharedTrip(
     .single()
   if (error) throw error
 
-  const displayName = (user.email?.split('@')[0] || 'Organizer').slice(0, 40)
+  const displayName = await organizerName(user)
   await supabase.from('trip_members').insert({
     trip_id: data.id,
     user_id: user.id,
@@ -100,7 +109,7 @@ export async function createSharedTripFromPackage(
     .single()
   if (error) throw error
 
-  const displayName = (user.email?.split('@')[0] || 'Organizer').slice(0, 40)
+  const displayName = await organizerName(user)
   await supabase.from('trip_members').insert({
     trip_id: data.id,
     user_id: user.id,

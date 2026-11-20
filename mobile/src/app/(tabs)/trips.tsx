@@ -1,9 +1,13 @@
-import { router } from 'expo-router'
+import { router, useFocusEffect } from 'expo-router'
 import { SymbolView } from 'expo-symbols'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useCallback, useState } from 'react'
+import { Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
+import { listMyTrips, type SharedTrip } from '@shared/cloud'
 import { useStore } from '@shared/store'
 import Screen from '@/components/Screen'
-import { AvatarStack, Button, Card, PageTitle, Pill, Serif, T, fmtDateRange, money } from '@/components/ui'
+import { SharedLoading, SharedNotice, SharedRow } from '@/components/SharedParts'
+import { AvatarStack, Button, Card, PageTitle, Pill, SectionTitle, Serif, T, fmtDateRange, money } from '@/components/ui'
+import { useAuth } from '@/lib/auth'
 import { colors, fonts } from '@/theme'
 
 const SAMPLE_TRIP_ID = 'trip_sample'
@@ -13,11 +17,47 @@ export default function Trips() {
   const tripMembers = useStore((s) => s.tripMembers)
   const sorted = [...trips].sort((a, b) => b.createdAt - a.createdAt)
 
+  const authReady = useAuth((s) => s.ready)
+  const userId = useAuth((s) => s.user?.id)
+  // Shared trips are keyed by the user they were loaded for, so a sign-out /
+  // account switch never shows someone else's list.
+  const [shared, setShared] = useState<{ uid: string; trips: SharedTrip[]; failed: boolean } | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
+  const sharedTrips = shared && shared.uid === userId ? shared : null
+
+  const loadShared = useCallback(async () => {
+    if (!userId) return
+    try {
+      const list = await listMyTrips()
+      setShared({ uid: userId, trips: list, failed: false })
+    } catch {
+      setShared((prev) => ({ uid: userId, trips: prev?.uid === userId ? prev.trips : [], failed: true }))
+    }
+  }, [userId])
+
+  // Reload whenever the tab comes back into view (after creating, joining or leaving a trip).
+  useFocusEffect(
+    useCallback(() => {
+      loadShared()
+    }, [loadShared]),
+  )
+
+  async function onRefresh() {
+    setRefreshing(true)
+    await loadShared()
+    setRefreshing(false)
+  }
+
   return (
-    <Screen statusBarShield>
+    <Screen
+      statusBarShield
+      refreshControl={
+        userId ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.green700} /> : undefined
+      }
+    >
       <View style={st.titleRow}>
         <View style={{ flex: 1 }}>
-          <PageTitle sub="Trips saved on this phone.">My trips</PageTitle>
+          <PageTitle sub="Trips on this phone, plus trips you share with your crew.">My trips</PageTitle>
         </View>
         <Pressable
           onPress={() => router.push('/settings')}
@@ -79,6 +119,46 @@ export default function Trips() {
             )
           })}
           <Button title="+ New trip" variant="ghost" onPress={() => router.push('/new')} style={{ marginTop: 8 }} />
+        </View>
+      )}
+
+      <SectionTitle>Shared trips</SectionTitle>
+      {!authReady ? (
+        <SharedLoading />
+      ) : !userId ? (
+        <SharedNotice
+          emoji="⛳"
+          title="Share trips & score live with your crew"
+          body="Sign in to create a trip your friends can join from a link — everyone keeps score together on their own phone."
+          action="Sign in"
+          onAction={() => router.push({ pathname: '/signin', params: { next: '/trips' } })}
+        />
+      ) : !sharedTrips ? (
+        <SharedLoading />
+      ) : (
+        <View style={{ gap: 12 }}>
+          {sharedTrips.failed ? (
+            <SharedNotice
+              body="Couldn’t load your shared trips. Check your connection and pull down to try again."
+              secondary="Try again"
+              onSecondary={onRefresh}
+            />
+          ) : sharedTrips.trips.length === 0 ? (
+            <SharedNotice body="No shared trips yet — create one, then send your crew the invite link." />
+          ) : (
+            <Card style={{ paddingVertical: 4 }}>
+              {sharedTrips.trips.map((t, i) => (
+                <SharedRow
+                  key={t.id}
+                  first={i === 0}
+                  title={t.name}
+                  sub={t.destination}
+                  onPress={() => router.push({ pathname: '/shared/[id]', params: { id: t.id } })}
+                />
+              ))}
+            </Card>
+          )}
+          <Button title="+ New shared trip" variant="gold" onPress={() => router.push('/shared/new')} />
         </View>
       )}
     </Screen>

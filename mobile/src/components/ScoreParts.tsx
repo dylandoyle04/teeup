@@ -18,7 +18,7 @@ import {
   wolfForHole,
 } from '@shared/games'
 import { useStore } from '@shared/store'
-import type { Member, Round, WolfMode } from '@shared/types'
+import type { Member, Round, Team, WolfMode, WolfPick } from '@shared/types'
 import { Avatar, Card, Hint, SectionTitle, T } from '@/components/ui'
 import { colors, fonts } from '@/theme'
 
@@ -405,7 +405,18 @@ export function StatsSummary({ round, rows }: { round: Round; rows: ScoreRow[] }
 
 // ---------- Team setup ----------
 
-export function TeamSetup({ tripId, round, members }: { tripId: string; round: Round; members: Member[] }) {
+export function TeamSetup({
+  tripId,
+  round,
+  members,
+  onSetTeams,
+}: {
+  tripId: string
+  round: Round
+  members: Member[]
+  /** optional override (shared/cloud rounds); defaults to the local store */
+  onSetTeams?: (teams: Team[]) => void
+}) {
   const setRoundTeams = useStore((s) => s.setRoundTeams)
   const teamOf = (id: string) => round.teams.findIndex((t) => t.memberIds.includes(id))
 
@@ -416,7 +427,8 @@ export function TeamSetup({ tripId, round, members }: { tripId: string; round: R
       memberIds:
         i === teamIdx ? Array.from(new Set([...t.memberIds, memberId])) : t.memberIds.filter((id) => id !== memberId),
     }))
-    setRoundTeams(tripId, round.id, teams)
+    if (onSetTeams) onSetTeams(teams)
+    else setRoundTeams(tripId, round.id, teams)
   }
 
   return (
@@ -503,8 +515,17 @@ export function WolfPanel({
 }
 
 /** Options + setter for the Wolf call picker on one hole. */
-export function useWolfOptions(tripId: string, round: Round, members: Member[], hole: number | null) {
-  const setWolfPick = useStore((s) => s.setWolfPick)
+export function useWolfOptions(
+  tripId: string,
+  round: Round,
+  members: Member[],
+  hole: number | null,
+  /** optional override (shared/cloud rounds); defaults to the local store */
+  onSetPick?: (hole: number, pick: WolfPick | null) => void,
+) {
+  const storeSetWolfPick = useStore((s) => s.setWolfPick)
+  const setWolfPick = (t: string, r: string, h: number, pick: WolfPick | null) =>
+    onSetPick ? onSetPick(h, pick) : storeSetWolfPick(t, r, h, pick)
   const memberIds = members.map((m) => m.id)
   const byId = new Map(members.map((m) => [m.id, m]))
   if (hole == null) return null
