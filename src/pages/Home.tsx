@@ -324,7 +324,7 @@ export default function Home() {
       </section>
 
       <section className="home-cta-band">
-        <p className="home-stat">100+ courses · curated trips · one live scorecard</p>
+        <p className="home-stat">11 destinations · 70+ courses · one live scorecard</p>
         <h2 className="home-cta-title">Ready to plan the trip?</h2>
         <Link to="/explore" className="btn gold home-cta-btn">
           Plan your trip →
