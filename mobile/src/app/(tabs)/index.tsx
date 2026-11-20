@@ -1,20 +1,30 @@
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { router } from 'expo-router'
-import type { ReactNode } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { moreCourses } from '@shared/affiliates'
 import { getPackage, PACKAGES } from '@shared/packages'
 import { useStore } from '@shared/store'
 import { EXAMPLE_TRIP_ID, cupLine, pickActiveTrip, roundInProgress, roundLine } from '@/lib/tripStatus'
+import NearbySearch from '@/components/NearbySearch'
 import { useLastTrip } from '@/lib/lastTrip'
 import { useNear } from '@/lib/near'
 import { openPlayMode } from '@/lib/playMode'
 import { useLightStatusBar } from '@/lib/useLightStatusBar'
 import { colors, fonts } from '@/theme'
 
-const OUR_TRIPS_PHOTO = PACKAGES[0]?.image
-const NEAR_PHOTO = (getPackage('pinehurst-luxury') ?? PACKAGES[1])?.image
+// three different destinations for the "Our trips" mosaic
+const MOSAIC = ['scottsdale-luxury', 'hhi-luxury', 'pinehurst-luxury']
+  .map((id) => getPackage(id)?.image)
+  .filter((src): src is string => Boolean(src))
+
+// "100+ courses": package courses plus each area's extra courses, rounded down
+const COURSE_COUNT = (() => {
+  const names = new Set(PACKAGES.flatMap((p) => p.courses.map((c) => c.name)))
+  for (const d of new Set(PACKAGES.map((p) => p.destination))) for (const c of moreCourses(d)) names.add(c.name)
+  return `${Math.floor(names.size / 10) * 10}+`
+})()
 
 /** App home: the brand up top, then a short menu of big tiles. */
 export default function Home() {
@@ -24,6 +34,7 @@ export default function Home() {
   const lastId = useLastTrip((s) => s.tripId)
   const lastSection = useLastTrip((s) => s.section)
   const near = useNear((s) => s.place)
+  const setNear = useNear((s) => s.setPlace)
 
   const realTrips = trips.filter((t) => t.id !== EXAMPLE_TRIP_ID)
   const trip = pickActiveTrip(trips, lastId) ?? [...realTrips].sort((a, b) => b.createdAt - a.createdAt)[0]
@@ -41,7 +52,7 @@ export default function Home() {
       <LinearGradient colors={['#12432f', '#0b3d2c', '#06170f']} locations={[0, 0.45, 1]} style={StyleSheet.absoluteFill} />
       <ScrollView
         contentInsetAdjustmentBehavior="never"
-        contentContainerStyle={{ paddingTop: insets.top + 18, paddingHorizontal: 18, paddingBottom: 120 }}
+        contentContainerStyle={{ paddingTop: insets.top + 18, paddingHorizontal: 18, paddingBottom: 104 }}
       >
         <View style={st.topRow}>
           <Pressable
@@ -105,16 +116,42 @@ export default function Home() {
           onPress={() => router.push('/welcome')}
         />
 
-        {/* 3 + 4. browse */}
-        <View style={st.pair}>
-          <PhotoTile photo={OUR_TRIPS_PHOTO} title="Our trips" sub="11 destinations" onPress={() => router.navigate('/explore')} />
-          <PhotoTile
-            photo={NEAR_PHOTO}
-            title="Trips near you"
-            sub={near ? `From ${near.label}` : 'Sorted by distance'}
-            onPress={() => router.navigate('/explore')}
-          />
-        </View>
+        {/* 3. trips near you — search right here, results open in Explore */}
+        <NearbySearch
+          dark
+          value={near}
+          onChange={(p) => {
+            setNear(p)
+            if (p) router.navigate('/explore')
+          }}
+          onOpen={() => router.navigate('/explore')}
+        />
+
+        {/* 4. our trips — big photo mosaic */}
+        <Pressable
+          onPress={() => router.navigate('/explore')}
+          style={({ pressed }) => [st.mosaic, pressed && st.pressed]}
+          accessibilityRole="button"
+          accessibilityLabel={`Our trips: ${COURSE_COUNT} courses`}
+        >
+          <View style={st.mosaicGrid}>
+            <Image source={MOSAIC[0]} style={st.mosaicBig} contentFit="cover" transition={250} cachePolicy="memory-disk" />
+            <View style={st.mosaicCol}>
+              <Image source={MOSAIC[1]} style={st.mosaicSmall} contentFit="cover" transition={250} cachePolicy="memory-disk" />
+              <Image source={MOSAIC[2]} style={st.mosaicSmall} contentFit="cover" transition={250} cachePolicy="memory-disk" />
+            </View>
+          </View>
+          <LinearGradient colors={['rgba(4,22,10,0)', 'rgba(4,22,10,0.88)']} locations={[0.35, 1]} style={StyleSheet.absoluteFill} />
+          <View style={st.photoText}>
+            <Text style={st.kicker}>{COURSE_COUNT} COURSES · HAND-PICKED</Text>
+            <Text style={st.tileTitle} maxFontSizeMultiplier={1.2}>
+              Our trips
+            </Text>
+            <Text style={st.tileSub} numberOfLines={2} maxFontSizeMultiplier={1.2}>
+              Curated golf getaways with courses, stays and tee times — browse them all ›
+            </Text>
+          </View>
+        </Pressable>
       </ScrollView>
     </View>
   )
@@ -133,23 +170,6 @@ function MenuTile({ icon, title, sub, onPress }: { icon: string; title: string; 
         </Text>
       </View>
       <Text style={[st.arrow, { position: 'relative', right: 0, top: 0 }]}>›</Text>
-    </Pressable>
-  )
-}
-
-function PhotoTile({ photo, title, sub, onPress }: { photo?: string; title: string; sub: string; onPress: () => void }): ReactNode {
-  return (
-    <Pressable onPress={onPress} style={({ pressed }) => [st.photoTile, pressed && st.pressed]} accessibilityRole="button" accessibilityLabel={title}>
-      {photo ? <Image source={photo} style={StyleSheet.absoluteFill} contentFit="cover" transition={250} cachePolicy="memory-disk" /> : null}
-      <LinearGradient colors={['rgba(0,0,0,0.05)', 'rgba(4,22,10,0.85)']} locations={[0.25, 1]} style={StyleSheet.absoluteFill} />
-      <View style={st.photoText}>
-        <Text style={st.tileTitleSm} maxFontSizeMultiplier={1.2}>
-          {title}
-        </Text>
-        <Text style={st.tileSub} numberOfLines={1} maxFontSizeMultiplier={1.2}>
-          {sub}
-        </Text>
-      </View>
     </Pressable>
   )
 }
@@ -203,7 +223,10 @@ const st = StyleSheet.create({
     paddingHorizontal: 18,
   },
   playText: { fontFamily: fonts.sansBold, fontSize: 14, color: '#2b2205' },
-  pair: { flexDirection: 'row', gap: 12 },
-  photoTile: { flex: 1, height: 170, borderRadius: 20, overflow: 'hidden', backgroundColor: colors.green700 },
+  mosaic: { height: 280, borderRadius: 22, overflow: 'hidden', backgroundColor: colors.green700 },
+  mosaicGrid: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 3 },
+  mosaicBig: { flex: 2 },
+  mosaicCol: { flex: 1, gap: 3 },
+  mosaicSmall: { flex: 1 },
   photoText: { position: 'absolute', left: 14, right: 14, bottom: 14 },
 })

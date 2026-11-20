@@ -1,6 +1,6 @@
 import * as Location from 'expo-location'
-import { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type StyleProp, type ViewStyle } from 'react-native'
 import { nearestPlaceLabel, searchPlaces, type Place } from '@shared/nearby'
 import { Button, Card, Hint, Serif } from '@/components/ui'
 import { colors, fonts } from '@/theme'
@@ -12,9 +12,15 @@ import { colors, fonts } from '@/theme'
 export default function NearbySearch({
   value,
   onChange,
+  dark = false,
+  onOpen,
 }: {
   value: Place | null
   onChange: (p: Place | null) => void
+  /** green-tile style for Home */
+  dark?: boolean
+  /** when set, the chosen-place row shows a "See trips" button */
+  onOpen?: () => void
 }) {
   const [text, setText] = useState('')
   const [results, setResults] = useState<Place[]>([])
@@ -92,23 +98,38 @@ export default function NearbySearch({
   // short queries show nothing (stale results from a longer query are hidden)
   const shown = text.trim().length >= 2 ? results : []
 
+  const Box = dark ? DarkTile : Card
+
   if (value) {
     return (
-      <Card style={st.setRow}>
+      <Box style={st.setRow}>
         <Text style={{ fontSize: 22 }}>📍</Text>
         <View style={{ flex: 1 }}>
-          <Text style={st.kicker}>CLOSEST TRIPS TO</Text>
-          <Text style={st.place}>{value.label}</Text>
+          <Text style={[st.kicker, dark && { color: colors.gold }]}>CLOSEST TRIPS TO</Text>
+          <Text style={[st.place, dark && { color: '#fff' }]}>{value.label}</Text>
+          {onOpen ? (
+            <Pressable onPress={() => onChange(null)} hitSlop={8} accessibilityRole="button">
+              <Text style={[st.locateText, { marginTop: 2 }, dark && { color: colors.teeGreen }]}>Change</Text>
+            </Pressable>
+          ) : null}
         </View>
-        <Button title="Change" small variant="subtle" onPress={() => onChange(null)} />
-      </Card>
+        {onOpen ? (
+          <Button title="See trips ›" small variant="gold" onPress={onOpen} />
+        ) : (
+          <Button title="Change" small variant="subtle" onPress={() => onChange(null)} />
+        )}
+      </Box>
     )
   }
 
   return (
-    <Card>
-      <Serif style={{ fontSize: 24 }}>Find trips near you</Serif>
-      <Hint style={{ marginBottom: 10 }}>Enter your city or where you want to play — we&apos;ll sort trips by distance.</Hint>
+    <Box>
+      <Serif style={[{ fontSize: 24 }, dark && { color: '#fff', fontFamily: fonts.serifBold, fontSize: 22 }]}>
+        {dark ? '📍 Find trips near you' : 'Find trips near you'}
+      </Serif>
+      <Hint style={[{ marginBottom: 10 }, dark && { color: 'rgba(255,255,255,0.8)' }]}>
+        Enter your city or ZIP — or where you want to play — and we&apos;ll sort trips by distance.
+      </Hint>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <TextInput
           value={text}
@@ -123,7 +144,7 @@ export default function NearbySearch({
           autoCorrect={false}
           style={st.input}
         />
-        <Button title="Search" small onPress={submit} style={{ minHeight: 46 }} />
+        <Button title="Search" small variant={dark ? 'gold' : 'primary'} onPress={submit} style={{ minHeight: 46 }} />
       </View>
 
       {shown.length > 0 && (
@@ -143,11 +164,20 @@ export default function NearbySearch({
       )}
 
       <Pressable onPress={useMyLocation} disabled={busy} style={st.locate} hitSlop={6} accessibilityRole="button">
-        {busy ? <ActivityIndicator color={colors.green600} /> : <Text style={st.locateText}>📍 Use my location</Text>}
+        {busy ? (
+          <ActivityIndicator color={dark ? '#fff' : colors.green600} />
+        ) : (
+          <Text style={[st.locateText, dark && { color: colors.teeGreen }]}>📍 Use my location</Text>
+        )}
       </Pressable>
-      {error ? <Text style={st.error}>{error}</Text> : null}
-    </Card>
+      {error ? <Text style={[st.error, dark && { color: '#ffb4a3' }]}>{error}</Text> : null}
+    </Box>
   )
+}
+
+/** Translucent tile matching Home's menu tiles. */
+function DarkTile({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  return <View style={[st.darkTile, style]}>{children}</View>
 }
 
 /** Rejects if `p` hasn't settled within `ms`. */
@@ -174,6 +204,14 @@ async function currentPoint(): Promise<{ lat: number; lon: number }> {
 }
 
 const st = StyleSheet.create({
+  darkTile: {
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.16)',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 12,
+  },
   setRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   kicker: { fontFamily: fonts.sansBold, fontSize: 10, letterSpacing: 1, color: colors.muted },
   place: { fontFamily: fonts.sansBold, fontSize: 16, color: colors.ink },
