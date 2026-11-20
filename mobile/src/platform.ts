@@ -14,7 +14,7 @@ export const persistStorage = createJSONStorage(() => AsyncStorage)
 /** US places list for "trips near you" — bundled with the app (no on-demand fetch). */
 export const loadUsPlaces = (): Promise<string> => Promise.resolve(usPlaces)
 
-/** Shareable links point at the website, which opens the trip in a browser. */
+/** Shareable links (e.g. /join/CODE): the app opens them if installed, else the website. */
 export function appLink(path: string): string {
-  return `https://flagstickfinder.com/#${path}`
+  return `https://flagstickfinder.com${path}`
 }

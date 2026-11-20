@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["3D7A3X5QQ2.com.flagstickfinder.app"],
+        "components": [{ "/": "/join/*", "comment": "Trip invite links open the iPhone app" }]
+      }
+    ]
+  }
+}

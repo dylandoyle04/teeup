@@ -2,6 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // /join/CODE links (opened in a browser when the app isn't installed) →
+      // the site's hash route. GitHub Pages serves this page as 404.html for them.
+      if (/^\/join\//.test(location.pathname)) location.replace('/#' + location.pathname + location.search)
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-itunes-app" content="app-id=6832401547" />
     <meta name="theme-color" content="#0b3d2c" />

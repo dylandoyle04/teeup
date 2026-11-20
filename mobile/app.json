@@ -16,7 +16,10 @@
       },
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "Lets you save scorecard and Cup standings images to your Photos."
-      }
+      },
+      "associatedDomains": [
+        "applinks:flagstickfinder.com"
+      ]
     },
     "android": {
       "package": "com.flagstickfinder.app",
