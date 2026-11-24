@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const UPDATED = 'November 5, 2026'
+const UPDATED = 'November 24, 2026'
 const CONTACT = 'Flagstickfinder@outlook.com'
 
 export default function Legal() {
@@ -63,17 +63,25 @@ export default function Legal() {
           &ldquo;trips near you&rdquo; search) are stored the same way.
         </p>
 
-        <h3 className="legal-h3">Optional account (website)</h3>
+        <h3 className="legal-h3">Optional account</h3>
         <p>
-          On the website you can sign in with your email to share a trip and
-          keep score live with friends. If you do, we store your email
-          address, the display name you choose, and the shared trips you create
-          or join &mdash; trip details, member names, rounds and scores. Only
-          members of a trip can see it. This data is held by our database
-          provider, Supabase, on our behalf. To delete your account and its
-          data, email us at <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and
-          we&apos;ll remove it within 30 days. The iPhone app doesn&apos;t
-          offer accounts yet.
+          On the website or in the iPhone app you can sign in with your email
+          (we send you a one-time code &mdash; there&apos;s no password) to
+          share a trip and keep score live with friends. If you do, we store
+          your email address, the display name you choose, and the shared
+          trips you create or join &mdash; trip details, member names, rounds,
+          scores and team cup data. Only members of a trip can see it. This
+          data is held by our database provider, Supabase, on our behalf.
+        </p>
+        <p>
+          <strong>Deleting your account:</strong> in the app, go to Settings
+          &rsaquo; Account &rsaquo; Delete account. This permanently deletes
+          your account, your profile, and any shared trips you organized (for
+          everyone in them); in trips you joined, your name and scores stay so
+          the group&apos;s results still add up, but they&apos;re no longer
+          linked to you. You can also email us at{' '}
+          <a href={`mailto:${CONTACT}`}>{CONTACT}</a> and we&apos;ll do it
+          within 30 days. Trips kept only on your device aren&apos;t affected.
         </p>
 
         <h3 className="legal-h3">Permissions in the app</h3>
@@ -132,9 +140,9 @@ export default function Legal() {
 
         <h3 className="legal-h3">Changes</h3>
         <p>
-          We&apos;ll update this policy as Flagstick Finder grows &mdash; for
-          example, when accounts come to the app. Material changes will be
-          reflected in the &ldquo;last updated&rdquo; date above.
+          We&apos;ll update this policy as Flagstick Finder grows. Material
+          changes will be reflected in the &ldquo;last updated&rdquo; date
+          above.
         </p>
       </div>
 
